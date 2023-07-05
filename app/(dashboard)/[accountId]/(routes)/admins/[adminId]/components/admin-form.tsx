@@ -51,19 +51,19 @@ const AdminForm = ({ initialData }: AdminPageProps) => {
     })
 
     const onSubmit = async (data: AdminFormValues) => {
-        try{
+        try {
             setLoading(true);
-            if(!initialData){
+            if (!initialData) {
                 await axios.post(`/api/${params.accountId}/admins`, data);
-            }else{
+            } else {
                 await axios.patch(`/api/${params.accountId}/admins/${params.adminId}`, data)
             }
             router.refresh();
             router.replace(`/${params.accountId}/admins`)
             toast.success(toastMessage)
-        }catch(error){
+        } catch (error) {
             toast.error("Something went wrong")
-        }finally{
+        } finally {
             setLoading(false)
         }
     }
@@ -78,7 +78,7 @@ const AdminForm = ({ initialData }: AdminPageProps) => {
         } catch (error) {
             toast.error("Qualcosa è andato storto");
         }
-        finally{
+        finally {
             setLoading(false)
             setOpen(false)
         }
@@ -97,8 +97,9 @@ const AdminForm = ({ initialData }: AdminPageProps) => {
             </div>
             <Separator />
             <Form {...form}>
-                <form className='space-y-8 w-full' onSubmit={form.handleSubmit(onSubmit)}>
-                    <div className='grid grid-cols-4 gap-8'>
+                <form className='space-y-8 w-full ' onSubmit={form.handleSubmit(onSubmit)}>
+                    <div className='grid grid-cols-4 space-x-5'>
+
                         <FormField
                             control={form.control}
                             name="username"
@@ -134,10 +135,10 @@ const AdminForm = ({ initialData }: AdminPageProps) => {
                                 </FormItem>
                             )}
                         />
-                        <div >
+                        <div className='flex justify-center items-center w-[102%]' >
                             <FormField control={form.control} name='superior' render={({ field }) => (
-                                <FormItem className='flex flex-row items-center justify-between'>
-                                    <div className='space-y-0.5'>
+                                <FormItem className='flex flex-row items-center justify-between '>
+                                    <div className='space-x-0.5 w-2/3'>
                                         <FormLabel>Superior</FormLabel>
                                         <FormDescription>
                                             Con la modalità Superior l'admin ha la piena libertà di fare quello che vuole

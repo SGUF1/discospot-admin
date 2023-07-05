@@ -20,6 +20,7 @@ const AdminsPage =  async ({params}: {params: {accountId: string}}) => {
     id: item.id,
     username: item.username,
     createdAt: format(item.createdAt, "MMMM do, yyyy"),
+    imageUrl: item.imageUrl,
     superior: item.superior,
     isSuperior: admin?.superior
   }))

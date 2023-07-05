@@ -23,7 +23,7 @@ export default async function DashboardLayout({
 
     return (
         <>
-            <Navbar />
+            <Navbar imageUrl={account ? account?.imageUrl : "https://res.cloudinary.com/dg2hpjtdh/image/upload/v1688595030/cqi5mouupo1g8vs7y6ql.jpg}"}/>
             <ModalProvider/>
             {children}
         </>

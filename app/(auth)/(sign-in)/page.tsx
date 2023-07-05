@@ -29,8 +29,9 @@ import {
   AlertDialogCancel,
   AlertDialogDescription,
 } from "@/components/ui/alert-dialog";
+
 const formSchema = z.object({
-  name: z.string().min(2).max(50),
+  name: z.string().min(2, {message: "Inserisci uno username"}).max(50),
   password: z.string().min(5),
 });
 
@@ -90,7 +91,7 @@ const LoginPage = () => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xl font-bold">Name:</FormLabel>
+                  <FormLabel className="font-bold">Username:</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
@@ -108,7 +109,7 @@ const LoginPage = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xl font-bold">Password:</FormLabel>
+                  <FormLabel className="font-bold">Password:</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
