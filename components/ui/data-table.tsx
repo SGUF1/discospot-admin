@@ -8,6 +8,8 @@ import {
   ColumnFiltersState,
   getPaginationRowModel,
   getFilteredRowModel,
+  SortingState,
+  getSortedRowModel
 } from "@tanstack/react-table";
 
 import {
@@ -33,6 +35,9 @@ export function DataTable<TData, TValue>({
   searchKey
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSroting] = useState<SortingState>([])
+
+  
   const table = useReactTable({
     data,
     columns,
@@ -40,11 +45,13 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onSortingChange: setSroting,
+    getSortedRowModel: getSortedRowModel(),
     state: {
+      sorting,
       columnFilters,
     },
   });
-
   return (
     <div>
       <div className="flex items-center py-4">
@@ -68,9 +75,9 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}

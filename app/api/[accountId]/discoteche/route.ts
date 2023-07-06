@@ -7,7 +7,7 @@ export async function POST(
 ) {
   try {
     const body = await req.json();
-    const { name, indirizzo, provincia, cap, imageUrl, civico, city } = body;
+    const { name, indirizzo, provinciaId, cap, imageUrl, civico, city } = body;
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
@@ -15,7 +15,7 @@ export async function POST(
     if (!indirizzo) {
       return new NextResponse("Indirizzo is required", { status: 400 });
     }
-    if (!provincia) {
+    if (!provinciaId) {
       return new NextResponse("Provincia is required", { status: 400 });
     }
     if (!cap) {
@@ -39,7 +39,7 @@ export async function POST(
         name,
         city,
         indirizzo,
-        provincia,
+        provinciaId,
         cap,
         imageUrl,
         civico,
@@ -49,6 +49,21 @@ export async function POST(
     return NextResponse.json(discoteca);
   } catch (error) {
     console.log("[DISCOTECA POST]", error);
+    return new NextResponse("Internal Error" + error, { status: 500 });
+  }
+}
+
+export async function GET(
+  req: Request,
+  { params }: { params: { accountId: string } }
+) {
+  try {
+
+    const discoteche = await prismadb.discoteca.findMany({});
+
+    return NextResponse.json(discoteche);
+  } catch (error) {
+    console.log("[DISCOTECA GET]", error);
     return new NextResponse("Internal Error" + error, { status: 500 });
   }
 }

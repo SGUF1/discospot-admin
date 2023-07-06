@@ -8,9 +8,12 @@ const DiscotechePage = async ({ params }: { params: { accountId: string } }) => 
   const discoteche = await prismadb.discoteca.findMany({
     orderBy: {
       name: 'desc'
+    },
+    include: {
+      provincia: true
     }
   })
-
+  
   const admin = await prismadb.accounts.findUnique({
     where: {
       id: params.accountId
@@ -23,7 +26,7 @@ const DiscotechePage = async ({ params }: { params: { accountId: string } }) => 
     city: item.city,
     createdAt: format(item.createdAt, "MMMM do, yyyy"),
     isSuperior: admin?.superior,
-    provincia: item.provincia
+    provincia: item.provincia.name
   }))
   return (
     <div className='flex-col'>

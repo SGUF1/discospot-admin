@@ -7,7 +7,7 @@ export async function PATCH(
 ) {
   try {
     const body = await req.json();
-    const { name, indirizzo, provincia, cap, imageUrl, civico, city } = body;
+    const { name, indirizzo, provinciaId, cap, imageUrl, civico, city } = body;
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
@@ -15,8 +15,8 @@ export async function PATCH(
     if (!indirizzo) {
       return new NextResponse("Indirizzo is required", { status: 400 });
     }
-    if (!provincia) {
-      return new NextResponse("Provincia is required", { status: 400 });
+    if (!provinciaId) {
+      return new NextResponse("Provincia is required" + provinciaId, { status: 400 });
     }
     if (!cap) {
       return new NextResponse("Cap is required", { status: 400 });
@@ -42,7 +42,7 @@ export async function PATCH(
         name,
         city,
         indirizzo,
-        provincia,
+        provinciaId,
         cap,
         imageUrl,
         civico,

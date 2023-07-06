@@ -21,18 +21,28 @@ model Accounts {
   updatedAt DateTime @updatedAt
 }
 
+model Provincia {
+  id String @id @default(uuid())
+  name String
+  discoteche Discoteca[] @relation("ProvinciaToDiscoteca")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 model Discoteca {
   id        String   @id @default(uuid())
   name      String
   indirizzo String
   civico    String
   city      String
-  provincia String
   cap       String
   imageUrl  String
+  provinciaId String
+  provincia Provincia @relation("ProvinciaToDiscoteca", fields: [provinciaId], references: [id])
   tavoli Tavolo[] @relation("DiscotecaToTavolo")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([provinciaId])
 }
 
 model Tavolo{

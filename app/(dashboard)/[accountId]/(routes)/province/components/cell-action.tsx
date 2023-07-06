@@ -1,5 +1,5 @@
 import { useParams, useRouter } from "next/navigation";
-import { DiscotecaColumn } from "./columns";
+import { ProvinciaColumn } from "./columns";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { AlertModal } from "@/components/modals/alert-modal";
@@ -10,7 +10,7 @@ import { Copy } from "lucide-react";
 import axios from "axios";
 
 interface CellActionProps {
-    data: DiscotecaColumn;
+    data: ProvinciaColumn;
 }
 
 const CellAction = ({ data, }: CellActionProps) => {
@@ -22,16 +22,16 @@ const CellAction = ({ data, }: CellActionProps) => {
 
     const onCopy = (id: string) => {
         navigator.clipboard.writeText(id)
-        toast.success("Discoteca Id copied")
+        toast.success("Provincia Id copied")
     }
     const onDelete = async () => {
         try {
             setLoading(true);
-            await axios.delete(`/api/${params.accountId}/discoteche/${data.id}`)
+            await axios.delete(`/api/${params.accountId}/province/${data.id}`)
             router.refresh()
-            toast.success("Discoteca deleted")
+            toast.success("Provincia deleted")
         } catch (error) {
-            toast.error("Qualcosa è andato storto")
+            toast.error("Elimina tutte le discoteche prima")
 
         } finally {
             setLoading(false)
@@ -55,11 +55,11 @@ const CellAction = ({ data, }: CellActionProps) => {
                         <Copy className="mr-2 h-4 w-4" />
                         Copy
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.replace(`/${params.accountId}/discoteche/${data.id}`)}>
+                    <DropdownMenuItem onClick={() => router.replace(`/${params.accountId}/province/${data.id}`)}>
                         <Edit className="mr-2 h-4 w-4" />
                         Edit
                     </DropdownMenuItem>
-                    {data.isSuperior && (
+                    {data.superior && (
                         <DropdownMenuItem onClick={() => setOpen(true)}>
                             <Trash className="mr-2 h-4 w-4" />
                             Delete

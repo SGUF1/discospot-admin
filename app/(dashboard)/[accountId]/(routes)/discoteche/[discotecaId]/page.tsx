@@ -9,14 +9,14 @@ const DiscotecaPage = async ({ params }: { params: { accountId: string, discotec
         }
     })
 
-
+    const province = await prismadb.provincia.findMany()
     return (
         <div className='flex-col'>
             <div className='flex-1 space-y-4 p-8 pt-6'>
-                <DiscotecaForm initialData={discoteca} />
+                <DiscotecaForm initialData={discoteca} province={province}/>
             </div>
         </div>
-    )
+    )   
 }
 
 export default DiscotecaPage

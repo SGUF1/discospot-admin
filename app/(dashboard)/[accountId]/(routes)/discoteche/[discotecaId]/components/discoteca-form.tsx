@@ -10,7 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import prismadb from '@/lib/prismadb';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Accounts, Discoteca } from '@prisma/client'
+import { Accounts, Discoteca, Provincia } from '@prisma/client'
 import axios from 'axios';
 import { Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -21,20 +21,21 @@ import * as z from 'zod';
 
 interface DiscotecaFormProps {
     initialData: Discoteca | null,
+    province: Provincia[]
 }
 
 const formSchema = z.object({
     name: z.string().min(3),
     city: z.string().min(2),
     indirizzo: z.string().min(3),
-    provincia: z.string().min(2).max(2),
+    provinciaId: z.string().min(2),
     cap: z.string().min(5, { message: "Il cap ha solo 5 numeri" }).max(5, { message: "Il cap ha solo 5 numeri" }),
     civico: z.string().min(1),
     imageUrl: z.string()
 })
 
 type DiscotecaFormValues = z.infer<typeof formSchema>
-const DiscotecaForm = ({ initialData }: DiscotecaFormProps) => {
+const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
 
     const params = useParams();
     const router = useRouter();
@@ -52,7 +53,7 @@ const DiscotecaForm = ({ initialData }: DiscotecaFormProps) => {
         defaultValues: initialData || {
             name: "",
             indirizzo: "",
-            provincia: "",
+            provinciaId: "",
             city: "",
             cap: "",
             imageUrl: "",
@@ -196,17 +197,22 @@ const DiscotecaForm = ({ initialData }: DiscotecaFormProps) => {
                             />
                             <FormField
                                 control={form.control}
-                                name="provincia"
+                                name="provinciaId"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Provincia discoteca:</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                disabled={loading}
-                                                placeholder="BS..."
-                                                {...field}
-                                            />
-                                        </FormControl>
+                                        <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue defaultValue={field.value} placeholder="Seleziona la provincia" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {province.map((provincia) => (
+                                                    <SelectItem key={provincia.id} value={provincia.id}>{provincia.name}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
                                         <FormMessage />
                                     </FormItem>
                                 )}

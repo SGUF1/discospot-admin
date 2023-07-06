@@ -1,8 +1,9 @@
+"use client"
 
 import { ColumnDef } from "@tanstack/react-table"
 import CellAction from "./cell-action"
-import { Check, X } from "lucide-react"
-
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
+import { Button } from "@/components/ui/button"
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type DiscotecaColumn = {
@@ -17,7 +18,12 @@ export type DiscotecaColumn = {
 export const columns: ColumnDef<DiscotecaColumn>[] = [
     {
         accessorKey: "name",
-        header: "Name",
+        header: ({ column }) => {
+            return <Button variant={"ghost"} onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                Nome Discoteca
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>}
+
     },
     {
         accessorKey: "city",
@@ -26,6 +32,7 @@ export const columns: ColumnDef<DiscotecaColumn>[] = [
     {
         accessorKey: "provincia",
         header: "Provincia"
+        
     },
     {
         accessorKey: "createdAt",
