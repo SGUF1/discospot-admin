@@ -33,3 +33,18 @@ export async function POST(
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
+
+export async function GET(
+  req: Request,
+) {
+  try {
+
+    const admin = await prismadb.accounts.findMany();
+
+    return NextResponse.json(admin);
+  } catch (error) {
+    console.log("[ADMIN GET]", error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
+

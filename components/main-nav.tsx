@@ -20,6 +20,11 @@ export function MainNav({imageUrl, className}: MainNavProps ) {
             active: pathname === `/${params.accountId}`
         },
         {
+            href: `/${params.accountId}/discoteche`,
+            label: "Discoteche",
+            active: pathname === `/${params.accountId}/discoteche`
+        },
+        {
             href: `/${params.accountId}/admins`,
             label: "Admins",
             active: pathname === `/${params.accountId}/admins`
