@@ -12,7 +12,7 @@ datasource db {
 
 model Accounts {
   id String @id @default(uuid())
-  username String
+  username String 
   password String
   imageUrl String @default("https://res.cloudinary.com/dg2hpjtdh/image/upload/v1688595030/cqi5mouupo1g8vs7y6ql.jpg")
   superior Boolean @default(false)

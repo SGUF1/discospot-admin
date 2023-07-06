@@ -9,8 +9,12 @@ export async function POST(req: Request) {
 
     const account = await prismadb.accounts.findFirst({
       where: {
-        username,
-        password,
+        username: {
+          equals: username
+        },
+        AND: {
+          password,
+        },
       },
     });
 

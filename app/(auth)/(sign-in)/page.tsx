@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const formSchema = z.object({
-  name: z.string().min(2, {message: "Inserisci uno username"}).max(50),
+  username: z.string().min(2, {message: "Inserisci uno username"}).max(50),
   password: z.string().min(5),
 });
 
@@ -48,7 +48,7 @@ const LoginPage = () => {
   const form = useForm<AuthFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      username: "",
       password: "",
     },
   });
@@ -88,7 +88,7 @@ const LoginPage = () => {
           >
             <FormField
               control={form.control}
-              name="name"
+              name="username"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-bold">Username:</FormLabel>
