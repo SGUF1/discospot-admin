@@ -7,6 +7,9 @@ import TavoliClient from './components/client'
 const TavoliPage = async ({ params }: { params: { discotecaId: string } }) => {
 
   const tavoli = await prismadb.tavolo.findMany({
+    where: {
+      discotecaId: params.discotecaId
+    },
     include: {
       piano: true,
       posti: true,
@@ -18,10 +21,11 @@ const TavoliPage = async ({ params }: { params: { discotecaId: string } }) => {
     id: item.id,
     numerotavolo: item.numeroTavolo,
     posizione: item.posizione.nome,
-    posti: item.posti.toString(),
+    posti: item.posti.length.toString(),
     createdAt: format(item.createdAt, "MMMM do, yyyy"),
     prezzo: item.prezzo,
     stato: item.stato.nome,
+    piano: item.piano.nome
   }))
 
 

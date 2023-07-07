@@ -84,6 +84,7 @@ model Tavolo {
   prezzoPosto  String
   descrizione  String
   prezzo       String
+  imageUrl     String
   pianoId      String
   piano        Piano     @relation("TavoloToPiano", fields: [pianoId], references: [id])
   statoId      String
@@ -118,7 +119,7 @@ model Posto {
   id        String   @id @default(uuid())
   numero    Int
   tavoloId  String
-  tavoli    Tavolo   @relation("TavoloToPosto", fields: [tavoloId], references: [id])
+  tavolo    Tavolo   @relation("TavoloToPosto", fields: [tavoloId], references: [id])
   stato     Stato    @relation("PostoToStato", fields: [statoId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

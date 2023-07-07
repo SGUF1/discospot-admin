@@ -2,7 +2,7 @@ import prismadb from '@/lib/prismadb'
 import React from 'react'
 import InformazioneForm from './components/informazione-form'
 
-const TavoloPage = async ({ params }: { params: { discotecaId: string, informazioneId: string } }) => {
+const InformazionePage = async ({ params }: { params: { discotecaId: string, informazioneId: string } }) => {
   
   const informazione = await prismadb.informazione.findUnique({
     where: {
@@ -21,4 +21,4 @@ const TavoloPage = async ({ params }: { params: { discotecaId: string, informazi
   )
 }
 
-export default TavoloPage
+export default InformazionePage

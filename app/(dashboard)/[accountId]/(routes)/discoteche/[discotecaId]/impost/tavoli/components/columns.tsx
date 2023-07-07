@@ -12,44 +12,81 @@ export type TavoloColumn = {
     stato: string,
     posizione: string
     createdAt: string
+    piano: string
 }
 
 export const columns: ColumnDef<TavoloColumn>[] = [
     {
         accessorKey: "numerotavolo",
         header: ({ column }) => {
-            return <Button variant={"ghost"} onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                Numero Tavolo
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
+            return <div className="text-center">
+                <Button variant={"ghost"} onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    Numero Tavolo
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            </div>
+
         },
+        cell: ({ row }) => (<div className="text-center">{row.original.numerotavolo}</div>)
+
     },
 
     {
         accessorKey: "prezzo",
         header: ({ column }) => {
-            return <Button variant={"ghost"} onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                Prezzo
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
+            return <div className="text-center">
+                <Button variant={"ghost"} onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    Prezzo
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            </div>
         },
+        cell: ({ row }) => (<div className="text-center">{row.original.prezzo}</div>)
+
     },
     {
         accessorKey: "posti",
         header: ({ column }) => {
-            return <Button variant={"ghost"} onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                Posti
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
+            return <div className="text-center">
+                <Button variant={"ghost"} onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    Posti
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            </div>
         },
+        cell: ({ row }) => (<div className="text-center">{row.original.posti}</div>)
+
+    },
+    {
+        accessorKey: "piani",
+        header: ({ column }) => {
+            return <div className="text-center">
+                <Button variant={"ghost"} onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    Piano
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            </div>
+        },
+        cell: ({ row }) => (<div className="text-center">{row.original.piano}</div>)
     },
     {
         accessorKey: "stato",
-        header: "Stato",
+        header: ({ column }) => {
+            return <div className="text-center">
+                Stato
+            </div>
+        },
+        cell: ({ row }) => (<div className="text-center">{row.original.stato}</div>)
+
     },
     {
         accessorKey: "posizione",
-        header: "Posizione",
+        header: ({ column }) => {
+            return <div className="text-center">
+                Posizione
+            </div>
+        },
+        cell: ({ row }) => (<div className="text-center">{row.original.posizione}</div>)
     },
     {
         id: "actions",
