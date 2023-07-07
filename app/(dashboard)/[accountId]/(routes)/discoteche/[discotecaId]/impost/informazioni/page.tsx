@@ -15,6 +15,9 @@ const InformazioniPage = async ({ params }: { params: { discotecaId: string } })
   const informazioni = await prismadb.informazione.findMany({
     include: {
       tipoInformazione: true
+    },
+    where: {
+      discotecaId: params.discotecaId
     }
   })
   const formattedTavoli: InformazioneColumn[] = informazioni.map((item) => ({

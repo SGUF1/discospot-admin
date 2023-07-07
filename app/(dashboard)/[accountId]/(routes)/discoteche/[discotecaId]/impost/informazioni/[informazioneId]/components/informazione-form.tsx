@@ -28,7 +28,7 @@ interface InformazioneFormProps {
 const formSchema = z.object({
     descrizione: z.string().min(1),
     numeroInformazione: z.string().min(1),
-    tipo: z.string().min(1)
+    tipoInformazioneId: z.string().min(1)
 })
 
 type InformazioneFormValues = z.infer<typeof formSchema>
@@ -49,7 +49,8 @@ const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormPro
         resolver: zodResolver(formSchema),
         defaultValues: initialData || {
             descrizione: "",
-            tipo: ""
+            numeroInformazione: "",
+            tipoInformazioneId: ""
         }
     })
 
@@ -57,12 +58,12 @@ const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormPro
         try {
             setLoading(true);
             if (!initialData) {
-                await axios.post(`/api/${params.accountId}/discoteche/${params.discotecaId}/informazioni`, data);
+                await axios.post(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/informazioni`, data);
             } else {
-                await axios.patch(`/api/${params.accountId}/discoteche/${params.discotecaId}/informazioni/${params.infomrazioneId}`, data)
+                await axios.patch(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/informazioni/${params.infomrazioneId}`, data)
             }
             router.refresh();
-            router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/informazioni`)
+            router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
             toast.success(toastMessage)
         } catch (error) {
             toast.error("Something went wrong")
@@ -74,9 +75,9 @@ const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormPro
     const onDelete = async () => {
         try {
             setLoading(true);
-            await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/informazioni/${params.informazioneId}`)
+            await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/informazioni/${params.informazioneId}`)
             router.refresh();
-            router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/informazioni`)
+            router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
             toast.success("Informazione deleted");
         } catch (error) {
             toast.error("Qualcosa è andato storto");
@@ -92,9 +93,11 @@ const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormPro
 
             <div className='flex items-center justify-between'>
                 <Heading title={title} description={description} />
-                <Button disabled={loading} variant={"destructive"} size={"sm"} onClick={() => setOpen(true)}>
-                    <Trash className='h-4 w-4' />
-                </Button>
+                {initialData && (
+                    <Button disabled={loading} variant={"destructive"} size={"sm"} onClick={() => setOpen(true)}>
+                        <Trash className='h-4 w-4' />
+                    </Button>
+                )}
             </div>
             <Separator />
             <Form {...form}>
@@ -125,6 +128,7 @@ const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormPro
                                     <FormLabel>Numero informazione:</FormLabel>
                                     <FormControl>
                                         <Input
+                                            type='number'
                                             disabled={loading}
                                             placeholder="numero informazione"
                                             {...field}
@@ -136,7 +140,7 @@ const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormPro
                         />
                         <FormField
                             control={form.control}
-                            name="tipo"
+                            name="tipoInformazioneId"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Tipo informazione:</FormLabel>
