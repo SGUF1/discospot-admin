@@ -22,39 +22,116 @@ model Accounts {
 }
 
 model Provincia {
-  id String @id @default(uuid())
-  name String
+  id         String      @id @default(uuid())
+  name       String
   discoteche Discoteca[] @relation("ProvinciaToDiscoteca")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 }
+
 model Discoteca {
-  id        String   @id @default(uuid())
-  name      String
-  indirizzo String
-  civico    String
-  city      String
-  cap       String
-  imageUrl  String
-  provinciaId String
-  provincia Provincia @relation("ProvinciaToDiscoteca", fields: [provinciaId], references: [id])
-  tavoli Tavolo[] @relation("DiscotecaToTavolo")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String         @id @default(uuid())
+  name         String
+  indirizzo    String
+  civico       String
+  city         String
+  cap          String
+  imageUrl     String
+  provinciaId  String
+  provincia    Provincia      @relation("ProvinciaToDiscoteca", fields: [provinciaId], references: [id])
+  piani        Piano[]        @relation("DiscotecaToPiano")
+  informazioni Informazione[] @relation("DiscotecaToInformazione")
+  tavoli       Tavolo[]       @relation("DiscotecaToTavolo")
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  caparra      Boolean        @default(false)
 
   @@index([provinciaId])
 }
 
-model Tavolo{
-  id String @id @default(uuid())
-  discotecaId String
-  discoteca Discoteca @relation("DiscotecaToTavolo", fields: [discotecaId], references: [id])
-  numeroTavolo String
-  numeroPosti String
-  posizione String
-  descrizione String
-  prezzo String
-  statoPrenotazione String
+model Piano {
+  id        String      @id @default(uuid())
+  nome      String
+  discoteca Discoteca[] @relation("DiscotecaToPiano")
+  tavoli    Tavolo[]    @relation("TavoloToPiano")
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model Informazione {
+  id                 String           @id @default(uuid())
+  descrizione        String
+  numeroInformazione String
+  discotecaId        String
+  tipoInformazioneId String
+  tipoInformazione   TipoInformazione @relation("InformazioneToTipoInformazione", fields: [tipoInformazioneId], references: [id])
+  discoteca          Discoteca        @relation("DiscotecaToInformazione", fields: [discotecaId], references: [id])
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
 
   @@index([discotecaId])
+  @@index([tipoInformazioneId])
+}
+
+model Tavolo {
+  id           String    @id @default(uuid())
+  discotecaId  String
+  discoteca    Discoteca @relation("DiscotecaToTavolo", fields: [discotecaId], references: [id])
+  numeroTavolo String
+  posizioneId  String
+  posizione    Posizione @relation("TavoloToPosizione", fields: [posizioneId], references: [id])
+  posti        Posto[]   @relation("TavoloToPosto")
+  prezzoPosto  String
+  descrizione  String
+  prezzo       String
+  pianoId      String
+  piano        Piano     @relation("TavoloToPiano", fields: [pianoId], references: [id])
+  statoId      String
+  stato        Stato     @relation("TavoloToStato", fields: [statoId], references: [id])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([discotecaId])
+  @@index([posizioneId])
+  @@index([pianoId])
+  @@index([statoId])
+}
+
+model Posizione {
+  id        String   @id @default(uuid())
+  nome      String
+  tavoli    Tavolo[] @relation("TavoloToPosizione")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Stato {
+  id        String   @id @default(uuid())
+  nome      String
+  tavoli    Tavolo[] @relation("TavoloToStato")
+  posti     Posto[]  @relation("PostoToStato")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Posto {
+  id        String   @id @default(uuid())
+  numero    Int
+  tavoloId  String
+  tavoli    Tavolo   @relation("TavoloToPosto", fields: [tavoloId], references: [id])
+  stato     Stato    @relation("PostoToStato", fields: [statoId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  statoId   String
+
+  @@index([tavoloId])
+  @@index([statoId])
+}
+
+model TipoInformazione {
+  id           String         @id @default(uuid())
+  nome         String
+  informazioni Informazione[] @relation("InformazioneToTipoInformazione")
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
 }

@@ -26,7 +26,8 @@ const DiscotechePage = async ({ params }: { params: { accountId: string } }) => 
     city: item.city,
     createdAt: format(item.createdAt, "MMMM do, yyyy"),
     isSuperior: admin?.superior,
-    provincia: item.provincia.name
+    provincia: item.provincia.name,
+    caparra: item.caparra
   }))
   return (
     <div className='flex-col'>

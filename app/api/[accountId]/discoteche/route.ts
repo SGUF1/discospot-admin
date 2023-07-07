@@ -7,7 +7,16 @@ export async function POST(
 ) {
   try {
     const body = await req.json();
-    const { name, indirizzo, provinciaId, cap, imageUrl, civico, city } = body;
+    const {
+      name,
+      indirizzo,
+      provinciaId,
+      cap,
+      imageUrl,
+      civico,
+      city,
+      caparra,
+    } = body;
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
@@ -27,10 +36,12 @@ export async function POST(
     if (!civico) {
       return new NextResponse("Civico is required", { status: 400 });
     }
-    if(!city){
-      return new NextResponse("Città is required", {status: 400})
+    if (!city) {
+      return new NextResponse("Città is required", { status: 400 });
     }
-
+    if (!caparra) {
+      return new NextResponse("Caparra is required", { status: 400 });
+    }
     if (!params.accountId)
       return new NextResponse("Account Id is required", { status: 400 });
 
@@ -43,6 +54,7 @@ export async function POST(
         cap,
         imageUrl,
         civico,
+        caparra
       },
     });
 
@@ -58,7 +70,6 @@ export async function GET(
   { params }: { params: { accountId: string } }
 ) {
   try {
-
     const discoteche = await prismadb.discoteca.findMany({});
 
     return NextResponse.json(discoteche);

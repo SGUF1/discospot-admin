@@ -2,8 +2,10 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import CellAction from "./cell-action"
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
+import { ArrowUpDown, Check, MoreHorizontal, X } from 'lucide-react'
 import { Button } from "@/components/ui/button"
+import { useParams, useRouter } from "next/navigation"
+import CellDiscoteche from "./cell-discoteche"
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type DiscotecaColumn = {
@@ -12,6 +14,7 @@ export type DiscotecaColumn = {
     city: string,
     provincia: string,
     createdAt: string
+    caparra: boolean,
     isSuperior?: boolean
 }
 
@@ -22,7 +25,9 @@ export const columns: ColumnDef<DiscotecaColumn>[] = [
             return <Button variant={"ghost"} onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
                 Nome Discoteca
                 <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>}
+            </Button>
+        },
+        cell: ({ row }) => <CellDiscoteche data={row.original} />
 
     },
     {
@@ -32,7 +37,12 @@ export const columns: ColumnDef<DiscotecaColumn>[] = [
     {
         accessorKey: "provincia",
         header: "Provincia"
-        
+
+    },
+    {
+        accessorKey: "caparra",
+        header: "Caparra",
+        cell: ({ row }) => <div className="ml-5">{row.original.caparra ? <Check className="h-4 w-4 bg-green-300" /> : <X className="h-4 w-4 bg-red-300" />}</div>
     },
     {
         accessorKey: "createdAt",

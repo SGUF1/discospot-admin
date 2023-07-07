@@ -1,16 +1,12 @@
 "use client"
 import { AlertModal } from '@/components/modals/alert-modal';
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Heading } from '@/components/ui/heading';
-import ImageUpload from '@/components/ui/image-upload';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { Switch } from '@/components/ui/switch';
-import prismadb from '@/lib/prismadb';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Provincia } from '@prisma/client'
+import { TipoInformazione } from '@prisma/client'
 import axios from 'axios';
 import { Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -19,16 +15,16 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import * as z from 'zod';
 
-interface ProvinciaFormProps {
-    initialData: Provincia | null,
+interface TipoInformazioneFormProps {
+    initialData: TipoInformazione | null,
 }
 
 const formSchema = z.object({
-    name: z.string().min(2).max(2),
+    nome: z.string().min(1)
 })
 
-type ProvinciaFormValues = z.infer<typeof formSchema>
-const ProvinciaForm = ({ initialData }: ProvinciaFormProps) => {
+type TipoInformazioneFormValues = z.infer<typeof formSchema>
+const TipoInformazioneForm = ({ initialData }: TipoInformazioneFormProps) => {
 
     const params = useParams();
     const router = useRouter();
@@ -36,28 +32,28 @@ const ProvinciaForm = ({ initialData }: ProvinciaFormProps) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const title = initialData ? "Edit provincia" : "Create provincia";
-    const description = initialData ? "Edit a provincia" : "Create a provincia";
-    const toastMessage = initialData ? "Provincia updated" : "Provincia created"
+    const title = initialData ? "Edit tipo di informazione" : "Create tipo di informazione";
+    const description = initialData ? "Edit a tipo di informazione" : "Create a tipo di informazione";
+    const toastMessage = initialData ? "Tipo updated" : "Tipo created"
     const action = initialData ? "Save changes" : "Create";
 
-    const form = useForm<ProvinciaFormValues>({
+    const form = useForm<TipoInformazioneFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: initialData || {
-            name: "",
+            nome: ""
         }
     })
 
-    const onSubmit = async (data: ProvinciaFormValues) => {
+    const onSubmit = async (data: TipoInformazioneFormValues) => {
         try {
             setLoading(true);
             if (!initialData) {
-                await axios.post(`/api/${params.accountId}/province`, data);
+                await axios.post(`/api/${params.accountId}/altre/tipiinformazione`, data);
             } else {
-                await axios.patch(`/api/${params.accountId}/province/${params.provinciaId}`, data)
+                await axios.patch(`/api/${params.accountId}/altre/tipiinformazione/${params.tipoInformazioneId}`, data)
             }
             router.refresh();
-            router.replace(`/${params.accountId}/province`)
+            router.replace(`/${params.accountId}/altre`)
             toast.success(toastMessage)
         } catch (error) {
             toast.error("Something went wrong")
@@ -69,10 +65,10 @@ const ProvinciaForm = ({ initialData }: ProvinciaFormProps) => {
     const onDelete = async () => {
         try {
             setLoading(true);
-            await axios.delete(`/api/${params.accountId}/province/${params.provinciaId}`)
+            await axios.delete(`/api/${params.accountId}/altre/tipiinformazione/${params.tipoInformazioneId}`)
             router.refresh();
-            router.replace(`/${params.accountId}/province`)
-            toast.success("Provincia deleted");
+            router.replace(`/${params.accountId}/altre`)
+            toast.success("Tipo di informazione deleted");
         } catch (error) {
             toast.error("Qualcosa è andato storto");
         }
@@ -96,6 +92,7 @@ const ProvinciaForm = ({ initialData }: ProvinciaFormProps) => {
     useEffect(() => {
         getAdmins()
     }, [])
+
     return (
         <>
             <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={loading} />
@@ -114,10 +111,10 @@ const ProvinciaForm = ({ initialData }: ProvinciaFormProps) => {
                     <div className='grid grid-cols-4 space-x-5'>
                         <FormField
                             control={form.control}
-                            name="name"
+                            name="nome"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Nome provincia:</FormLabel>
+                                    <FormLabel>Nome tipo di informazione:</FormLabel>
                                     <FormControl>
                                         <Input
                                             disabled={loading}
@@ -140,4 +137,4 @@ const ProvinciaForm = ({ initialData }: ProvinciaFormProps) => {
     )
 }
 
-export default ProvinciaForm
+export default TipoInformazioneForm

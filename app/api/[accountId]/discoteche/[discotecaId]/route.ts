@@ -7,7 +7,16 @@ export async function PATCH(
 ) {
   try {
     const body = await req.json();
-    const { name, indirizzo, provinciaId, cap, imageUrl, civico, city } = body;
+    const {
+      name,
+      indirizzo,
+      provinciaId,
+      cap,
+      imageUrl,
+      civico,
+      city,
+      caparra,
+    } = body;
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
@@ -16,7 +25,9 @@ export async function PATCH(
       return new NextResponse("Indirizzo is required", { status: 400 });
     }
     if (!provinciaId) {
-      return new NextResponse("Provincia is required" + provinciaId, { status: 400 });
+      return new NextResponse("Provincia is required" + provinciaId, {
+        status: 400,
+      });
     }
     if (!cap) {
       return new NextResponse("Cap is required", { status: 400 });
@@ -30,13 +41,16 @@ export async function PATCH(
     if (!city) {
       return new NextResponse("Città is required", { status: 400 });
     }
+    if (!caparra) {
+      return new NextResponse("Caparra is required", { status: 400 });
+    }
 
     if (!params.accountId)
       return new NextResponse("Account Id is required", { status: 400 });
 
     const discoteca = await prismadb.discoteca.update({
       where: {
-        id: params.discotecaId
+        id: params.discotecaId,
       },
       data: {
         name,
@@ -46,6 +60,7 @@ export async function PATCH(
         cap,
         imageUrl,
         civico,
+        caparra,
       },
     });
 
@@ -58,35 +73,36 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: {accountId: string, discotecaId: string } }
+  { params }: { params: { accountId: string; discotecaId: string } }
 ) {
-      try {
+  try {
+    const discoteca = await prismadb.discoteca.delete({
+      where: {
+        id: params.discotecaId,
+      },
+    });
 
-        const discoteca = await prismadb.discoteca.delete({
-            where: {
-                id: params.discotecaId
-            }
-        });
-
-        return NextResponse.json(discoteca);
-      } catch (error) {
-        console.log("[discoteca DELETE]", error);
-        return new NextResponse("Internal Error" + error, { status: 500 });
-      }
+    return NextResponse.json(discoteca);
+  } catch (error) {
+    console.log("[discoteca DELETE]", error);
+    return new NextResponse("Internal Error" + error, { status: 500 });
+  }
 }
 
-export async function GET(req: Request, {params}: {params: {accountId: string, discotecaId: string}}){
-    try {
+export async function GET(
+  req: Request,
+  { params }: { params: { accountId: string; discotecaId: string } }
+) {
+  try {
+    const discoteca = await prismadb.discoteca.findUnique({
+      where: {
+        id: params.discotecaId,
+      },
+    });
 
-      const discoteca = await prismadb.discoteca.findUnique({
-        where: {
-          id: params.discotecaId,
-        },
-      });
-
-      return NextResponse.json(discoteca);
-    } catch (error) {
-      console.log("[discoteca GET]", error);
-      return new NextResponse("Internal Error" + error, { status: 500 });
-    }
+    return NextResponse.json(discoteca);
+  } catch (error) {
+    console.log("[discoteca GET]", error);
+    return new NextResponse("Internal Error" + error, { status: 500 });
+  }
 }

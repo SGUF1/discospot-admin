@@ -31,7 +31,8 @@ const formSchema = z.object({
     provinciaId: z.string().min(2),
     cap: z.string().min(5, { message: "Il cap ha solo 5 numeri" }).max(5, { message: "Il cap ha solo 5 numeri" }),
     civico: z.string().min(1),
-    imageUrl: z.string()
+    imageUrl: z.string().min(1),
+    caparra: z.boolean(),
 })
 
 type DiscotecaFormValues = z.infer<typeof formSchema>
@@ -57,7 +58,8 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
             city: "",
             cap: "",
             imageUrl: "",
-            civico: ""
+            civico: "",
+            caparra: false,
         }
     })
 
@@ -124,7 +126,7 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
             <Separator />
             <Form {...form}>
                 <form className='space-y-8 w-full ' onSubmit={form.handleSubmit(onSubmit)}>
-                    <div className='grid grid-cols-4 space-x-5'>
+                    <div className='grid grid-cols-5 space-x-5'>
                         <FormField
                             control={form.control}
                             name="name"
@@ -254,6 +256,21 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
                                 </FormItem>
                             )}
                         />
+                        <div className='flex justify-center items-center w-[102%]' >
+                            <FormField control={form.control} name='caparra' render={({ field }) => (
+                                <FormItem className='flex flex-row items-center self-start '>
+                                    <div className='space-x-0.5 w-2/3'>
+                                        <FormLabel>Caparra</FormLabel>
+                                        <FormDescription>
+                                            Attivando la caparra tutti i tavoli avranno la caparra
+                                        </FormDescription>
+                                    </div>
+                                    <FormControl>
+                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                    </FormControl>
+                                </FormItem>
+                            )} />
+                        </div>
                     </div>
                     <Button disabled={loading} className='ml-auto' type='submit'>
                         {action}
