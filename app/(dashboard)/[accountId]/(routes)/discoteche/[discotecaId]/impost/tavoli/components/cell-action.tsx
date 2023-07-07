@@ -1,5 +1,5 @@
 import { useParams, useRouter } from "next/navigation";
-import { DiscotecaColumn } from "./columns";
+import { TavoloColumn } from "./columns";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { AlertModal } from "@/components/modals/alert-modal";
@@ -10,7 +10,7 @@ import { Copy } from "lucide-react";
 import axios from "axios";
 
 interface CellActionProps {
-    data: DiscotecaColumn;
+    data: TavoloColumn;
 }
 
 const CellAction = ({ data, }: CellActionProps) => {
@@ -59,12 +59,10 @@ const CellAction = ({ data, }: CellActionProps) => {
                         <Edit className="mr-2 h-4 w-4" />
                         Edit
                     </DropdownMenuItem>
-                    {data.isSuperior && (
-                        <DropdownMenuItem onClick={() => setOpen(true)}>
-                            <Trash className="mr-2 h-4 w-4" />
-                            Delete
-                        </DropdownMenuItem>
-                    )}
+                    <DropdownMenuItem onClick={() => setOpen(true)}>
+                        <Trash className="mr-2 h-4 w-4" />
+                        Delete
+                    </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </>
