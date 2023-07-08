@@ -39,9 +39,7 @@ export async function POST(
     if (!city) {
       return new NextResponse("Città is required", { status: 400 });
     }
-    if (!caparra) {
-      return new NextResponse("Caparra is required", { status: 400 });
-    }
+    
     if (!params.accountId)
       return new NextResponse("Account Id is required", { status: 400 });
 
