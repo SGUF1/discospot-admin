@@ -106,7 +106,7 @@ const PostoForm = ({ initialData, stati }: PostoFormProps) => {
                                     <FormLabel>Posti:</FormLabel>
                                     <FormControl>
                                         <Input
-                                            disabled={loading || initialData && true}
+                                            disabled={loading}
                                             placeholder="numero"
                                             type="number"
                                             {...field}
