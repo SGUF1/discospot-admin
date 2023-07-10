@@ -1,5 +1,5 @@
 import { useParams, useRouter } from "next/navigation";
-import { PianoColumn } from "./columns";
+import { PostiColumn } from "./columns";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { AlertModal } from "@/components/modals/alert-modal";
@@ -10,7 +10,7 @@ import { Copy } from "lucide-react";
 import axios from "axios";
 
 interface CellActionProps {
-    data: PianoColumn;
+    data: PostiColumn;
 }
 
 const CellAction = ({ data, }: CellActionProps) => {
@@ -22,16 +22,16 @@ const CellAction = ({ data, }: CellActionProps) => {
 
     const onCopy = (id: string) => {
         navigator.clipboard.writeText(id)
-        toast.success("Piano Id copied")
+        toast.success("Posto Id copied")
     }
     const onDelete = async () => {
         try {
             setLoading(true);
-            await axios.delete(`/api/${params.accountId}/altre/piani/${data.id}`)
+            await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/tavoli/${params.tavoloId}/posti/${data.id}`)
             router.refresh()
-            toast.success("Piano deleted")
+            toast.success("Posto deleted")
         } catch (error) {
-            toast.error("Elimina tutti i tavoli prima")
+            toast.error("Errore")
 
         } finally {
             setLoading(false)
@@ -51,20 +51,18 @@ const CellAction = ({ data, }: CellActionProps) => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuItem onClick={() => onCopy(data.id)}>
+                    <DropdownMenuItem onClick={() => onCopy(data.id.toString())}>
                         <Copy className="mr-2 h-4 w-4" />
                         Copy
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.replace(`/${params.accountId}/altre/piani/${data.id}`)}>
+                    <DropdownMenuItem onClick={() => router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost/tavoli/${params.tavoloId}/posti/${data.id}`)}>
                         <Edit className="mr-2 h-4 w-4" />
                         Edit
                     </DropdownMenuItem>
-                    {data.superior && (
                         <DropdownMenuItem onClick={() => setOpen(true)}>
                             <Trash className="mr-2 h-4 w-4" />
                             Delete
                         </DropdownMenuItem>
-                    )}
                 </DropdownMenuContent>
             </DropdownMenu>
         </>

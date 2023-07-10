@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import CellAction from "./cell-action"
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
 import { Button } from "@/components/ui/button"
+import CellTavoli from "./cell-tavoli"
 export type TavoloColumn = {
     id: string
     numerotavolo: string
@@ -19,7 +20,7 @@ export const columns: ColumnDef<TavoloColumn>[] = [
     {
         accessorKey: "numerotavolo",
         header: ({ column }) => {
-            return <div className="text-center">
+            return <div className="">
                 <Button variant={"ghost"} onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
                     Numero Tavolo
                     <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -27,7 +28,7 @@ export const columns: ColumnDef<TavoloColumn>[] = [
             </div>
 
         },
-        cell: ({ row }) => (<div className="text-center">{row.original.numerotavolo}</div>)
+        cell: ({ row }) => <CellTavoli data={row.original}/>
 
     },
 

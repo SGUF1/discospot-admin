@@ -6,7 +6,7 @@ import { Heading } from '@/components/ui/heading';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Posizione, TipoInformazione } from '@prisma/client'
+import { Piano, TipoInformazione } from '@prisma/client'
 import axios from 'axios';
 import { Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -16,7 +16,7 @@ import { toast } from 'react-hot-toast';
 import * as z from 'zod';
 
 interface PianoFormProps {
-    initialData: Posizione | null,
+    initialData: Piano | null,
 }
 
 const formSchema = z.object({

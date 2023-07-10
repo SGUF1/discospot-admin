@@ -82,10 +82,19 @@ export async function DELETE(
   }
 ) {
   try {
+    const posti = await prismadb.posto.deleteMany({
+      where: {
+        tavoloId: params.tavoloId
+      }
+    })
     const tavolo = await prismadb.tavolo.delete({
       where: {
         id: params.tavoloId,
       },
+      include: {
+        posti: true
+      }
+
     });
 
     return NextResponse.json(tavolo);

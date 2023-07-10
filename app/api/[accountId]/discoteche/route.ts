@@ -16,6 +16,7 @@ export async function POST(
       civico,
       city,
       caparra,
+      visibile,
     } = body;
 
     if (!name) {
@@ -52,7 +53,8 @@ export async function POST(
         cap,
         imageUrl,
         civico,
-        caparra
+        caparra,
+        visibile
       },
     });
 

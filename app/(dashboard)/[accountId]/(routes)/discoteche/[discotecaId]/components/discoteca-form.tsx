@@ -33,6 +33,7 @@ const formSchema = z.object({
     civico: z.string().min(1),
     imageUrl: z.string().min(1),
     caparra: z.boolean(),
+    visibile: z.boolean(),
 })
 
 type DiscotecaFormValues = z.infer<typeof formSchema>
@@ -60,6 +61,7 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
             imageUrl: "",
             civico: "",
             caparra: false,
+            visibile: false,
         }
     })
 
@@ -256,13 +258,26 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
                                 </FormItem>
                             )}
                         />
-                        <div className='flex justify-center items-center w-[102%]' >
+                        <div className='grid grid-cols-1 grid-row-2 justify-center items-center w-[102%]' >
                             <FormField control={form.control} name='caparra' render={({ field }) => (
                                 <FormItem className='flex flex-row items-center self-start '>
                                     <div className='space-x-0.5 w-2/3'>
                                         <FormLabel>Caparra</FormLabel>
                                         <FormDescription>
                                             Attivando la caparra tutti i tavoli avranno la caparra
+                                        </FormDescription>
+                                    </div>
+                                    <FormControl>
+                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                    </FormControl>
+                                </FormItem>
+                            )} />
+                            <FormField control={form.control} name='visibile' render={({ field }) => (
+                                <FormItem className='flex flex-row items-center self-start '>
+                                    <div className='space-x-0.5 w-2/3'>
+                                        <FormLabel>Visibile?</FormLabel>
+                                        <FormDescription>
+                                            Permette alla discoteca di essere visibile nell'applicazione
                                         </FormDescription>
                                     </div>
                                     <FormControl>

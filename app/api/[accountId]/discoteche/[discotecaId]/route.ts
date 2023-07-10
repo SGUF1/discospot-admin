@@ -16,6 +16,7 @@ export async function PATCH(
       civico,
       city,
       caparra,
+      visibile,
     } = body;
 
     if (!name) {
@@ -58,6 +59,7 @@ export async function PATCH(
         imageUrl,
         civico,
         caparra,
+        visibile
       },
     });
 
