@@ -247,6 +247,7 @@ const EventoForm = ({ initialData, tipologieEvento }: EventoFormProps) => {
                       <Calendar
                         mode="single"
                         selected={field.value}
+                        // @ts-ignore
                         onSelect={field.onChange}
                         initialFocus
                       />
@@ -305,6 +306,7 @@ const EventoForm = ({ initialData, tipologieEvento }: EventoFormProps) => {
                       <Calendar
                         mode="single"
                         selected={field.value}
+                        // @ts-ignore
                         onSelect={field.onChange}
                         initialFocus
                       />
