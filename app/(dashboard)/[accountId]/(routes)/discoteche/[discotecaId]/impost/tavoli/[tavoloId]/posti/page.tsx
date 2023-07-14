@@ -13,7 +13,7 @@ const PianiPage = async ({ params }: { params: { accountId: string; discotecaId:
 			stato: true
 		}
 	});
-	const formattedPosti: PostiColumn[] = posti.map((item: Posto) => ({
+	const formattedPosti: PostiColumn[] = posti.map((item) => ({
 		id: item.id,
 		stato: item.stato.nome,
 		date: format(item.createdAt, 'MMMM do, yyyy')
