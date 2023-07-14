@@ -22,7 +22,7 @@ interface PostoFormProps {
 }
 
 const formSchema = z.object({
-    id: z.string().min(1),
+    numero1: z.string().min(1),
     statoId: z.string().min(1),
 })
 
@@ -43,7 +43,7 @@ const PostoForm = ({ initialData, stati }: PostoFormProps) => {
     const form = useForm<PostoFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: initialData || {
-            id:  "",
+            numero1:  "",
             statoId: "",
         }
     })
@@ -100,7 +100,7 @@ const PostoForm = ({ initialData, stati }: PostoFormProps) => {
                     <div className='grid grid-cols-4 space-x-5'>
                         <FormField
                             control={form.control}
-                            name="id"
+                            name="numero1"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Posti:</FormLabel>

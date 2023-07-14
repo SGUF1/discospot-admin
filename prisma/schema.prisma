@@ -45,6 +45,8 @@ model Discoteca {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   caparra      Boolean        @default(false)
+  visibile     Boolean        @default(true)
+  eventi       Evento[]       @relation("EventoToDiscoteca")
 
   @@index([provinciaId])
 }
@@ -89,6 +91,7 @@ model Tavolo {
   piano        Piano     @relation("TavoloToPiano", fields: [pianoId], references: [id])
   statoId      String
   stato        Stato     @relation("TavoloToStato", fields: [statoId], references: [id])
+  evento       Evento[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
@@ -135,4 +138,34 @@ model TipoInformazione {
   informazioni Informazione[] @relation("InformazioneToTipoInformazione")
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
+}
+
+model Evento {
+  id                String          @id @default(uuid())
+  nome              String
+  imageUrl          String
+  discotecaId       String
+  discoteche        Discoteca       @relation("EventoToDiscoteca", fields: [discotecaId], references: [id])
+  tavoli            Tavolo[]
+  startDate         DateTime
+  endDate           DateTime
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  priority          Int
+  tipologiaEventoId String
+  tipologiaEvento   TipologiaEvento @relation("TipologiaToEvento", fields: [tipologiaEventoId], references: [id])
+  description       String
+  oraInizio String
+  oraFine String
+
+  @@index([tipologiaEventoId])
+  @@index([discotecaId])
+}
+
+model TipologiaEvento {
+  id        String   @id @default(uuid())
+  name      String
+  eventi    Evento[] @relation("TipologiaToEvento")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

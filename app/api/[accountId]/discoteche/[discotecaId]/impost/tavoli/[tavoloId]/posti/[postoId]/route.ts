@@ -12,11 +12,11 @@ export async function PATCH(
   try {
     const body = await req.json();
     const {
-      id,
+      numero1,
       statoId,
     } = body;
 
-    if (!id) {
+    if (!numero1) {
       return new NextResponse("Numero posto is required", { status: 400 });
     }
     if (!statoId) {
@@ -27,10 +27,10 @@ export async function PATCH(
 
     const posto = await prismadb.posto.update({
       where: {
-        id,
+        id: params.postoId,
       },
       data: {
-        id,
+        numero: numero1,
         statoId
       },
     });
@@ -53,7 +53,7 @@ export async function DELETE(
   try {
     const posto = await prismadb.posto.delete({
       where: {
-        id: +params.postoId,
+        id: params.postoId,
       },
     });
 
@@ -69,13 +69,13 @@ export async function GET(
   {
     params,
   }: {
-    params: { accountId: string; discotecaId: string; tavoloId: string, postoId: string };
+    params: { accountId: string; dicotecaId: string; tavoloId: string, postoId: string };
   }
 ) {
   try {
     const posto = await prismadb.posto.findUnique({
       where: {
-        id: +params.postoId,
+        id: params.postoId,
       },
     });
 

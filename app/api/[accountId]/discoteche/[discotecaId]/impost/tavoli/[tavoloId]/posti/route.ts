@@ -1,6 +1,5 @@
 import prismadb from '@/lib/prismadb';
 import { NextResponse } from 'next/server';
-import { number } from 'zod';
 
 export async function POST(
 	req: Request,
@@ -8,9 +7,9 @@ export async function POST(
 ) {
 	try {
 		const body = await req.json();
-		const { id, statoId } = body;
+		const { numero1, statoId } = body;
 
-		if (!id) {
+		if (!numero1) {
 			return new NextResponse('Numero posti is required', { status: 400 });
 		}
 		if (!statoId) {
@@ -20,9 +19,10 @@ export async function POST(
 		}
 
 		var postii = []
-		for (let i = 0; i < id; i++) {
+		for (let i = 0; i < numero1; i++) {
 			const posti = await prismadb.posto.createMany({
 				data: {
+					numero: i,
 					statoId,
 					tavoloId: params.tavoloId
 				}

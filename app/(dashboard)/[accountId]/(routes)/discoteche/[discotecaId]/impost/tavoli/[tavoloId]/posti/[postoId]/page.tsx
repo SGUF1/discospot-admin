@@ -9,8 +9,7 @@ const PianoPage = async ({ params }: { params: { accountId: string; tavoloId: st
 	} else {
 		posto = await prismadb.posto.findFirst({
 			where: {
-				tavoloId: params.tavoloId,
-				id: +params.postoId
+				id: params.postoId
 			}
 		});
 	}
