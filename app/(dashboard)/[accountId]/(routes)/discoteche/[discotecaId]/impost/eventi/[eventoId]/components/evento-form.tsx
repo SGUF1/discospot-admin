@@ -151,7 +151,6 @@ const EventoForm = ({ initialData, tipologieEvento }: EventoFormProps) => {
                     <FormControl>
                       <Input
                         disabled={loading}
-                        type="number"
                         placeholder="priorità"
                         {...field}
                       />

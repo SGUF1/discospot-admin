@@ -62,7 +62,7 @@ export async function PATCH(
 				imageUrl,
 				startDate,
 				endDate,
-				prioriti: +prioriti,
+				prioriti,
 				tipologiaEventoId,
 				description,
 				oraInizio,

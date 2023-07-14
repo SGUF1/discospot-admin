@@ -52,7 +52,7 @@ export async function POST(req: Request, { params }: { params: { accountId: stri
 				imageUrl,
 				startDate,
 				endDate,
-				prioriti: +prioriti,
+				prioriti,
 				tipologiaEventoId,
 				description,
 				discotecaId: params.discotecaId,
