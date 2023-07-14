@@ -31,7 +31,7 @@ const formSchema = z.object({
   nome: z.string().min(1),
   tipologiaEventoId: z.string().min(1),
   description: z.string().min(1),
-  priority: z.string().min(1),
+  prioriti: z.string().min(1),
   imageUrl: z.string().min(1),
   startDate: z.date(),
   oraInizio: z.string(),
@@ -58,7 +58,7 @@ const EventoForm = ({ initialData, tipologieEvento }: EventoFormProps) => {
     defaultValues: initialData || {
       nome: "",
       tipologiaEventoId: "",
-      priority: "",
+      prioriti: "",
       description: "",
       imageUrl: "",
       startDate: new Date(),
@@ -144,7 +144,7 @@ const EventoForm = ({ initialData, tipologieEvento }: EventoFormProps) => {
             />
               <FormField
                 control={form.control}
-                name="priority"
+                name="prioriti"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Priorità evento:</FormLabel>

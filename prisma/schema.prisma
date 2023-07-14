@@ -151,7 +151,7 @@ model Evento {
   endDate           DateTime
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
-  priority          Int
+  prioriti          Int
   tipologiaEventoId String
   tipologiaEvento   TipologiaEvento @relation("TipologiaToEvento", fields: [tipologiaEventoId], references: [id])
   description       String

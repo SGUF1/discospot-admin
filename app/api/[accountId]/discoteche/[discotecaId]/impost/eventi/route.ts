@@ -9,7 +9,7 @@ export async function POST(req: Request, { params }: { params: { accountId: stri
 			imageUrl,
 			startDate,
 			endDate,
-			priority,
+			prioriti,
 			tipologiaEventoId,
 			description,
 			oraInizio,
@@ -33,7 +33,7 @@ export async function POST(req: Request, { params }: { params: { accountId: stri
 		if (!imageUrl) {
 			return new NextResponse('Image URL is required', { status: 400 });
 		}
-		if (!priority) {
+		if (!prioriti) {
 			return new NextResponse('Priorità is required', { status: 400 });
 		}
 		if (!tipologiaEventoId) {
@@ -52,7 +52,7 @@ export async function POST(req: Request, { params }: { params: { accountId: stri
 				imageUrl,
 				startDate,
 				endDate,
-				priority: +priority,
+				prioriti: +prioriti,
 				tipologiaEventoId,
 				description,
 				discotecaId: params.discotecaId,
