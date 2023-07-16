@@ -2,17 +2,18 @@
 import { AlertModal } from '@/components/modals/alert-modal';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Heading } from '@/components/ui/heading';
 import ImageUpload from '@/components/ui/image-upload';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Evento, TipologiaEvento } from '@prisma/client'
+import { Evento, Sala, TipologiaEvento } from '@prisma/client'
 import axios from 'axios';
 import { format } from 'date-fns';
 import { CalendarIcon, Trash } from 'lucide-react';
@@ -24,7 +25,8 @@ import * as z from 'zod';
 
 interface EventoFormProps {
   initialData: Evento | null,
-  tipologieEvento: TipologiaEvento[]
+  tipologieEvento: TipologiaEvento[],
+  sale: Sala[]
 }
 
 const formSchema = z.object({
@@ -34,13 +36,15 @@ const formSchema = z.object({
   prioriti: z.string().min(1),
   imageUrl: z.string().min(1),
   startDate: z.date(),
-  oraInizio: z.string(),
+  oraInizio: z.string().min(1),
   endDate: z.date(),
-  oraFine: z.string(),
+  oraFine: z.string().min(1),
+  eventoSala: z.boolean(),
+  salaId: z.string()
 })
 
 type EventoFormValues = z.infer<typeof formSchema>
-const EventoForm = ({ initialData, tipologieEvento }: EventoFormProps) => {
+const EventoForm = ({ initialData, tipologieEvento, sale }: EventoFormProps) => {
 
   const params = useParams();
   const router = useRouter();
@@ -55,6 +59,7 @@ const EventoForm = ({ initialData, tipologieEvento }: EventoFormProps) => {
 
   const form = useForm<EventoFormValues>({
     resolver: zodResolver(formSchema),
+    // @ts-ignore
     defaultValues: initialData || {
       nome: "",
       tipologiaEventoId: "",
@@ -65,6 +70,8 @@ const EventoForm = ({ initialData, tipologieEvento }: EventoFormProps) => {
       endDate: new Date(),
       oraInizio: "",
       oraFine: "",
+      eventoSala: false,
+      salaId: "",
     }
   })
 
@@ -76,7 +83,7 @@ const EventoForm = ({ initialData, tipologieEvento }: EventoFormProps) => {
 
       data.startDate = (new Date(data.startDate.getFullYear(), data.startDate.getMonth(), data.startDate.getDate(), +hoursInizio, +minutesInizio))
       data.endDate = (new Date(data.endDate.getFullYear(), data.endDate.getMonth(), data.endDate.getDate(), +hoursFine, +minutesFine ))
-      
+      console.log(data.startDate)
       if (!initialData) {
         await axios.post(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/eventi`, data);
       } else {
@@ -108,7 +115,11 @@ const EventoForm = ({ initialData, tipologieEvento }: EventoFormProps) => {
     }
   }
 
+  var arraySale: number[] = []
 
+  const handleCreateElement = () => {
+    arraySale.push(arraySale.length)
+  };
   return (
     <>
       <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={loading} />
@@ -142,23 +153,24 @@ const EventoForm = ({ initialData, tipologieEvento }: EventoFormProps) => {
                 </FormItem>
               )}
             />
-              <FormField
-                control={form.control}
-                name="prioriti"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Priorità evento:</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={loading}
-                        placeholder="priorità"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <FormField
+              control={form.control}
+              name="prioriti"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Priorità evento:</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      type="number"
+                      placeholder="priorità"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="description"
@@ -217,124 +229,179 @@ const EventoForm = ({ initialData, tipologieEvento }: EventoFormProps) => {
               )}
             />
           </div>
-          <div className='flex flex-row space-x-3'>
-            <FormField
-              control={form.control}
-              name="startDate"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Data di inizio dell'evento</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-[240px] pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        // @ts-ignore
-                        onSelect={field.onChange}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="oraInizio"
-              
-              render={({ field }) => (
-                <FormItem className='mt-[-10px]'>
-                  <FormLabel>Inizio ora:</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Inizio ora"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className='flex flex-row space-x-3'>
-            <FormField
-              control={form.control}
-              name="endDate"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Data di fine dell'evento</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-[240px] pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        // @ts-ignore
-                        onSelect={field.onChange}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="oraFine"
+          <div className='flex flex-col space-y-8'>
+            <div className='grid grid-cols-3'>
 
-              render={({ field }) => (
-                <FormItem className='mt-[-10px]'>
-                  <FormLabel>Fine alle:</FormLabel>
+              <div className='flex flex-row space-x-3'>
+                <FormField
+                  control={form.control}
+                  name="startDate"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Data di inizio dell'evento</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-[240px] pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            // @ts-ignore
+                            onSelect={field.onChange}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="oraInizio"
+
+                  render={({ field }) => (
+                    <FormItem className='mt-[-10px]'>
+                      <FormLabel>Inizio ora:</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={loading}
+                          placeholder="Inizio ora"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className='flex flex-row space-x-3'>
+                <FormField
+                  control={form.control}
+                  name="endDate"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Data di fine dell'evento</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-[240px] pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            // @ts-ignore
+                            onSelect={field.onChange}
+                            initialFocus
+                            disabled={(date) => date < form.getValues().startDate}
+
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="oraFine"
+
+                  render={({ field }) => (
+                    <FormItem className='mt-[-10px]'>
+                      <FormLabel>Fine alle:</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={loading}
+                          placeholder="12:10"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+            <div className='grid grid-cols-4 '>
+              <FormField control={form.control} name='eventoSala' render={({ field }) => (
+                <FormItem className='flex flex-row items-center self-start '>
+                  <div className='space-x-0.5 w-2/3'>
+                    <FormLabel>Evento per sala?</FormLabel>
+                    <FormDescription>
+                      Permette di assegnare l'evento alla sala della discoteca
+                    </FormDescription>
+                  </div>
                   <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="12:10"
-                      {...field}
-                    />
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
-              )}
-            />
+              )} />
+              {form.getValues().eventoSala && 
+<FormField
+                control={form.control}
+                name="salaId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sala:</FormLabel>
+                    <Select
+                      // @ts-ignore
+                      onValueChange={field.onChange}
+                      // @ts-ignore
+                      defaultValue={field.value}
+                      disabled={loading}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleziona la sala" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {sale.map((item) => (
+                          <SelectItem value={item.id} key={item.id}>
+                            {item.nome}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+                  }
+            </div>
           </div>
+
+
           <Button disabled={loading} className='ml-auto' type='submit'>
             {action}
           </Button>

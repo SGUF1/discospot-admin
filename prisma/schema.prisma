@@ -89,7 +89,6 @@ model Tavolo {
   imageUrl    String
   statoId     String
   stato       Stato     @relation("TavoloToStato", fields: [statoId], references: [id])
-  evento      Evento[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
@@ -142,8 +141,7 @@ model Evento {
   nome              String
   imageUrl          String
   discotecaId       String
-  discoteche        Discoteca       @relation("EventoToDiscoteca", fields: [discotecaId], references: [id])
-  tavoli            Tavolo[]
+  discoteca        Discoteca       @relation("EventoToDiscoteca", fields: [discotecaId], references: [id])
   startDate         DateTime
   endDate           DateTime
   createdAt         DateTime        @default(now())
@@ -151,12 +149,16 @@ model Evento {
   prioriti          String
   tipologiaEventoId String
   tipologiaEvento   TipologiaEvento @relation("TipologiaToEvento", fields: [tipologiaEventoId], references: [id])
+  eventoSala Boolean
+  salaId String?
+  sala Sala? @relation("SalaToEvento", fields: [salaId], references: [id])
   description       String
   oraInizio         String
   oraFine           String
 
   @@index([tipologiaEventoId])
   @@index([discotecaId])
+  @@index([salaId])
 }
 
 model TipologiaEvento {
@@ -175,6 +177,7 @@ model Sala {
   discotecaId String
   discoteca Discoteca @relation("DiscotecaToSala", fields: [discotecaId], references: [id])
   tavoli Tavolo[] @relation("SalaToTavolo")
+  eventi Evento[] @relation("SalaToEvento")
   pianoId String
   piano Piano @relation("SalaToPiano", fields: [pianoId], references: [id])
   createdAt DateTime @default(now())

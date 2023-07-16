@@ -13,7 +13,9 @@ export async function POST(req: Request, { params }: { params: { accountId: stri
 			tipologiaEventoId,
 			description,
 			oraInizio,
-			oraFine
+			oraFine,
+			eventoSala,
+			salaId
 		} = body;
 
 		if (!description) {
@@ -45,7 +47,7 @@ export async function POST(req: Request, { params }: { params: { accountId: stri
 		if (!oraFine) {
 			return new NextResponse('Ora fine is required', { status: 400 });
 		}
-
+			
 		const evento = await prismadb.evento.create({
 			data: {
 				nome,
@@ -57,7 +59,9 @@ export async function POST(req: Request, { params }: { params: { accountId: stri
 				description,
 				discotecaId: params.discotecaId,
 				oraInizio,
-				oraFine
+				oraFine,
+				eventoSala,
+				salaId
 			}
 		});
 

@@ -3,7 +3,6 @@ import React from 'react'
 import { EventoColumn } from './components/columns'
 import { format } from 'date-fns'
 import TavoliClient from './components/client'
-import { networkInterfaces } from 'os'
 
 const EventiPage = async ({ params }: { params: { discotecaId: string } }) => {
 
@@ -12,7 +11,8 @@ const EventiPage = async ({ params }: { params: { discotecaId: string } }) => {
       discotecaId: params.discotecaId,
     },
     include: {
-      tipologiaEvento: true
+      tipologiaEvento: true,
+      sala: true
     },
   })
   
@@ -20,9 +20,11 @@ const EventiPage = async ({ params }: { params: { discotecaId: string } }) => {
     {
       id: item.id,
       nome: item.nome,
-      startDate: format(item.startDate, "MMMM do, yyyy"),
-      endDate: format(item.endDate, "MMMM do, yyyy"),
-      tipologiaEvento: item.tipologiaEvento.name
+      startDate: format(item.startDate, "Pp"),
+      endDate: format(item.endDate, "Pp"),
+      tipologiaEvento: item.tipologiaEvento.name,
+      eventoSala: item.eventoSala,
+      sala: item.sala?.nome
     }))
 
 
