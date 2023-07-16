@@ -11,7 +11,7 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import prismadb from '@/lib/prismadb';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Accounts, Discoteca, Informazione, Piano, Posizione, Posto, Provincia, Stato, Tavolo, TipoInformazione } from '@prisma/client'
+import { Accounts, Discoteca, Informazione, Piano, Posizione, Posto, Provincia, Sala, Stato, Tavolo, TipoInformazione } from '@prisma/client'
 import axios from 'axios';
 import { Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -20,19 +20,20 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import * as z from 'zod';
 
-interface InformazioneFormProps {
-    initialData: Informazione | null,
-    tipoinformazione: TipoInformazione[]
+interface SalaFormProps {
+    initialData: Sala | null,
+    piani: Piano[]
 }
 
 const formSchema = z.object({
+    nome: z.string().min(1),
     descrizione: z.string().min(1),
-    numeroInformazione: z.string().min(1),
-    tipoInformazioneId: z.string().min(1)
+    imageUrl: z.string().min(1),
+    pianoId: z.string().min(1)
 })
 
-type InformazioneFormValues = z.infer<typeof formSchema>
-const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormProps) => {
+type SalaFormValues = z.infer<typeof formSchema>
+    const SalaForm = ({ initialData, piani }: SalaFormProps) => {
 
     const params = useParams();
     const router = useRouter();
@@ -40,27 +41,28 @@ const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormPro
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const title = initialData ? "Edit informazione" : "Create informazione";
-    const description = initialData ? "Edit a informazione" : "Create a informazione";
+    const title = initialData ? "Edit sala" : "Create sala";
+    const description = initialData ? "Edit a sala" : "Create a sala";
     const toastMessage = initialData ? "Informazione updated" : "Informazione created"
     const action = initialData ? "Save changes" : "Create";
 
-    const form = useForm<InformazioneFormValues>({
+    const form = useForm<SalaFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: initialData || {
+            nome: "",
             descrizione: "",
-            numeroInformazione: "",
-            tipoInformazioneId: ""
+            imageUrl: "",
+            pianoId: ""
         }
     })
 
-    const onSubmit = async (data: InformazioneFormValues) => {
+    const onSubmit = async (data: SalaFormValues) => {
         try {
             setLoading(true);
             if (!initialData) {
-                await axios.post(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/informazioni`, data);
+                await axios.post(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/sale`, data);
             } else {
-                await axios.patch(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/informazioni/${params.informazioneId}`, data)
+                await axios.patch(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/sale/${params.salaId}`, data)
             }
             router.refresh();
             router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
@@ -75,12 +77,12 @@ const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormPro
     const onDelete = async () => {
         try {
             setLoading(true);
-            await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/informazioni/${params.informazioneId}`)
+            await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/sale/${params.salaId}`)
             router.refresh();
             router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
-            toast.success("Informazione deleted");
+            toast.success("Sala deleted");
         } catch (error) {
-            toast.error("Qualcosa è andato storto");
+            toast.error("Elimina tutti i tavoli prima");
         }
         finally {
             setLoading(false)
@@ -105,10 +107,27 @@ const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormPro
                     <div className='grid grid-cols-4 space-x-5'>
                         <FormField
                             control={form.control}
+                            name="nome"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Nome sala:</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            disabled={loading}
+                                            placeholder="..."
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
                             name="descrizione"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Descrizione discoteca:</FormLabel>
+                                    <FormLabel>Descrizione sala:</FormLabel>
                                     <FormControl>
                                         <Textarea
                                             placeholder="Write a description"
@@ -120,18 +139,19 @@ const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormPro
                                 </FormItem>
                             )}
                         />
+
                         <FormField
                             control={form.control}
-                            name="numeroInformazione"
+                            name="imageUrl"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Numero informazione:</FormLabel>
+                                    <FormLabel>Sala image</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            type='number'
+                                        <ImageUpload
+                                            value={field.value ? [field.value] : []}
                                             disabled={loading}
-                                            placeholder="numero informazione"
-                                            {...field}
+                                            onChange={(url) => field.onChange(url)}
+                                            onRemove={() => field.onChange('')}
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -140,22 +160,23 @@ const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormPro
                         />
                         <FormField
                             control={form.control}
-                            name="tipoInformazioneId"
+                            name="pianoId"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Tipo informazione:</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormLabel>Piano sala:</FormLabel>
+                                    <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Seleziona il tipo di informazione" />
+                                                <SelectValue defaultValue={field.value} placeholder="Seleziona il piano" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            {tipoinformazione.map((item) => (
-                                                <SelectItem value={item.id} key={item.id}>{item.nome}</SelectItem>
+                                            {piani.map((piano) => (
+                                                <SelectItem key={piano.id} value={piano.id}>{piano.nome}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -170,4 +191,4 @@ const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormPro
     )
 }
 
-export default InformazioneForm
+export default SalaForm

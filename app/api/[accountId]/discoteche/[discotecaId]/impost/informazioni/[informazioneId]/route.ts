@@ -27,12 +27,11 @@ export async function PATCH(
 
     const informazione = await prismadb.informazione.update({
       where: {
-        id: tipoInformazioneId,
+        id: params.informazioneId,
       },
       data: {
         descrizione,
         numeroInformazione,
-        discotecaId: params.discotecaId,
         tipoInformazioneId,
       },
     });

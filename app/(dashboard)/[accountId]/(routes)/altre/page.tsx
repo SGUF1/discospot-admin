@@ -6,6 +6,7 @@ import PianiPage from './piani/page'
 import TipoInformazioniPage from './tipiinformazione/page'
 import PosizioniPage from './posizioni/page'
 import StatiPage from './stati/page'
+import TipiEvento from './tipievento/page'
 
 const AltreCosePage = async ({ params }: { params: { accountId: string } }) => {
 
@@ -19,6 +20,8 @@ const AltreCosePage = async ({ params }: { params: { accountId: string } }) => {
         <PianiPage params={params}/>
         <Separator />
         <StatiPage params={params}/>
+        <Separator />
+        <TipiEvento params={params}/>
       </div>
     </div>
   )

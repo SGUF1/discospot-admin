@@ -8,7 +8,7 @@ const PianiPage = async ({ params }: { params: { accountId: string } }) => {
     const piani = await prismadb.piano.findMany({
         include: {
             discoteca: true,
-            tavoli: true,
+            sale: true,
         }
     })
 
@@ -21,7 +21,7 @@ const PianiPage = async ({ params }: { params: { accountId: string } }) => {
     const formattedDiscoteche: PianoColumn[] = piani.map((item) => ({
         id: item.id,
         name: item.nome,
-        tavoli: item.tavoli.length,
+        sale: item.sale.length,
         createdAt: format(item.createdAt, "MMMM do, yyyy"),
         superior: admin?.superior,
     }))

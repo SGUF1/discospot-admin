@@ -41,12 +41,12 @@ model Discoteca {
   provincia    Provincia      @relation("ProvinciaToDiscoteca", fields: [provinciaId], references: [id])
   piani        Piano[]        @relation("DiscotecaToPiano")
   informazioni Informazione[] @relation("DiscotecaToInformazione")
-  tavoli       Tavolo[]       @relation("DiscotecaToTavolo")
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   caparra      Boolean        @default(false)
   visibile     Boolean        @default(true)
   eventi       Evento[]       @relation("EventoToDiscoteca")
+  sale         Sala[]         @relation("DiscotecaToSala")
 
   @@index([provinciaId])
 }
@@ -55,7 +55,7 @@ model Piano {
   id        String      @id @default(uuid())
   nome      String
   discoteca Discoteca[] @relation("DiscotecaToPiano")
-  tavoli    Tavolo[]    @relation("TavoloToPiano")
+  sale Sala[]    @relation("SalaToPiano")
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 }
@@ -76,28 +76,25 @@ model Informazione {
 }
 
 model Tavolo {
-  id           String    @id @default(uuid())
-  discotecaId  String
-  discoteca    Discoteca @relation("DiscotecaToTavolo", fields: [discotecaId], references: [id])
+  id          String    @id @default(uuid())
   numeroTavolo String
-  posizioneId  String
-  posizione    Posizione @relation("TavoloToPosizione", fields: [posizioneId], references: [id])
-  posti        Posto[]   @relation("TavoloToPosto")
-  prezzoPosto  String
-  descrizione  String
-  prezzo       String
-  imageUrl     String
-  pianoId      String
-  piano        Piano     @relation("TavoloToPiano", fields: [pianoId], references: [id])
-  statoId      String
-  stato        Stato     @relation("TavoloToStato", fields: [statoId], references: [id])
-  evento       Evento[]
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  posizioneId String
+  posizione   Posizione @relation("TavoloToPosizione", fields: [posizioneId], references: [id])
+  posti       Posto[]   @relation("TavoloToPosto")
+  salaId String
+  sala Sala @relation("SalaToTavolo", fields: [salaId], references: [id])
+  prezzoPosto String
+  descrizione String
+  prezzo      String
+  imageUrl    String
+  statoId     String
+  stato       Stato     @relation("TavoloToStato", fields: [statoId], references: [id])
+  evento      Evento[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  @@index([discotecaId])
   @@index([posizioneId])
-  @@index([pianoId])
+  @@index([salaId])
   @@index([statoId])
 }
 
@@ -155,8 +152,8 @@ model Evento {
   tipologiaEventoId String
   tipologiaEvento   TipologiaEvento @relation("TipologiaToEvento", fields: [tipologiaEventoId], references: [id])
   description       String
-  oraInizio String
-  oraFine String
+  oraInizio         String
+  oraFine           String
 
   @@index([tipologiaEventoId])
   @@index([discotecaId])
@@ -168,4 +165,21 @@ model TipologiaEvento {
   eventi    Evento[] @relation("TipologiaToEvento")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Sala {
+  id         String      @id @default(uuid())
+  nome       String
+  descrizione String
+  imageUrl String
+  discotecaId String
+  discoteca Discoteca @relation("DiscotecaToSala", fields: [discotecaId], references: [id])
+  tavoli Tavolo[] @relation("SalaToTavolo")
+  pianoId String
+  piano Piano @relation("SalaToPiano", fields: [pianoId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([discotecaId])
+  @@index([pianoId])
 }

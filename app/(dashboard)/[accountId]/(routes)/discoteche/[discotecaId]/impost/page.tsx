@@ -1,10 +1,10 @@
 import prismadb from '@/lib/prismadb'
 import React from 'react'
-import TavoliPage from './tavoli/page'
 import { Heading } from '@/components/ui/heading'
 import { Separator } from '@/components/ui/separator'
 import InformazioniPage from './informazioni/page'
 import EventiPage from './eventi/page'
+import SalePage from './sale/page'
 
 const DiscotecaImpostazioniPage = async ({ params }: { params: { accountId: string, discotecaId: string } }) => {
     const discoteca = await prismadb.discoteca.findUnique({
@@ -19,8 +19,7 @@ const DiscotecaImpostazioniPage = async ({ params }: { params: { accountId: stri
                 <Heading title={discoteca?.name!} description='Gesttisci le varie impostazioni della discoteca' />
                 <Separator />
             </div>
-
-            <TavoliPage params={params} />
+            <SalePage params={params}/>
             <Separator />
 
             <InformazioniPage params={params} />

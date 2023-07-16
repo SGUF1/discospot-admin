@@ -6,29 +6,21 @@ import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type PianoColumn = {
-    id: string
-    name: string,
-    sale: number,
-    createdAt: string,
-    superior?: boolean
+export type TipoEventoColumn = {
+    id: string;
+    name: string;
+    numeroEventi: number;
+    createdAt: string;
 }
 
-export const columns: ColumnDef<PianoColumn>[] = [
+export const columns: ColumnDef<TipoEventoColumn>[] = [
     {
         accessorKey: "name",
         header: "Name",
     },
     {
-        accessorKey: "sale",
-        header: ({ column }) => {
-            return (
-                <Button variant={"ghost"} onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                    N. Sale
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        }
+        accessorKey: "numeroEventi",
+        header: "Eventi"
 
     },
     {
