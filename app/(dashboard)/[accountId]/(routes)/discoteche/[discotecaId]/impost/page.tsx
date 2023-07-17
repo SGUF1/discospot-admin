@@ -5,6 +5,7 @@ import { Separator } from '@/components/ui/separator'
 import InformazioniPage from './informazioni/page'
 import EventiPage from './eventi/page'
 import SalePage from './sale/page'
+import MenusPage from './menus/page'
 
 const DiscotecaImpostazioniPage = async ({ params }: { params: { accountId: string, discotecaId: string } }) => {
     const discoteca = await prismadb.discoteca.findUnique({
@@ -25,6 +26,8 @@ const DiscotecaImpostazioniPage = async ({ params }: { params: { accountId: stri
             <InformazioniPage params={params} />
             <Separator />
             <EventiPage params={params}/>
+            <Separator/>
+            <MenusPage params={params}/>
         </div>
     )
 }

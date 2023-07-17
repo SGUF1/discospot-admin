@@ -17,6 +17,7 @@ export async function POST(
       city,
       caparra,
       visibile,
+      priority
     } = body;
 
     if (!name) {
@@ -40,7 +41,9 @@ export async function POST(
     if (!city) {
       return new NextResponse("Città is required", { status: 400 });
     }
-    
+    if(!priority){
+      return new NextResponse("Priority is required", { status: 400 });
+    }
     if (!params.accountId)
       return new NextResponse("Account Id is required", { status: 400 });
 
@@ -54,7 +57,8 @@ export async function POST(
         imageUrl,
         civico,
         caparra,
-        visibile
+        visibile,
+        priority
       },
     });
 

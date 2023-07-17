@@ -20,7 +20,9 @@ export async function PATCH(
 			tipologiaEventoId,
 			description,
 			oraInizio,
-			oraFine
+			oraFine,
+			eventoSala,
+			salaId
 		} = body;
 
 		if (!description) {
@@ -66,7 +68,9 @@ export async function PATCH(
 				tipologiaEventoId,
 				description,
 				oraInizio,
-				oraFine
+				oraFine,
+				eventoSala,
+				salaId
 			}
 		});
 		return NextResponse.json(evento);

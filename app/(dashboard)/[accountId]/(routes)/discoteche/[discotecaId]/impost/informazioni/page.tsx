@@ -6,11 +6,6 @@ import InformazioniClient from './components/client'
 
 const InformazioniPage = async ({ params }: { params: { discotecaId: string } }) => {
 
-  const discoteca = await prismadb.discoteca.findUnique({
-    where: {
-      id: params.discotecaId,
-    },
-  })
 
   const informazioni = await prismadb.informazione.findMany({
     include: {
@@ -32,7 +27,7 @@ const InformazioniPage = async ({ params }: { params: { discotecaId: string } })
   return (
     <div className='flex-col'>
       <div className='flex-1 space-y-4 p-8 pt-6'>
-        <InformazioniClient data={formattedTavoli} discotecaName={discoteca?.name!} />
+        <InformazioniClient data={formattedTavoli}  />
       </div>
     </div>
   )

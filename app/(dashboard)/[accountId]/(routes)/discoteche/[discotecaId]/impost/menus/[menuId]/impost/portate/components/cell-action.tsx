@@ -1,5 +1,5 @@
 import { useParams, useRouter } from "next/navigation";
-import { InformazioneColumn } from "./columns";
+import { PortataColumn } from "./columns";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { AlertModal } from "@/components/modals/alert-modal";
@@ -10,7 +10,7 @@ import { Copy } from "lucide-react";
 import axios from "axios";
 
 interface CellActionProps {
-    data: InformazioneColumn;
+    data: PortataColumn;
 }
 
 const CellAction = ({ data, }: CellActionProps) => {
@@ -22,14 +22,14 @@ const CellAction = ({ data, }: CellActionProps) => {
 
     const onCopy = (id: string) => {
         navigator.clipboard.writeText(id)
-        toast.success("Informazione Id copied")
+        toast.success("Portata Id copied")
     }
     const onDelete = async () => {
         try {
             setLoading(true);
-            await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/informazioni/${data.id}`)
+            await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/menus/${params.menuId}/impost/portate/${data.id}`)
             router.refresh()
-            toast.success("Informazione deleted")
+            toast.success("Portata deleted")
         } catch (error) {
             toast.error("Qualcosa è andato storto")
 
@@ -55,7 +55,7 @@ const CellAction = ({ data, }: CellActionProps) => {
                         <Copy className="mr-2 h-4 w-4" />
                         Copy
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost/informazioni/${data.id}`)}>
+                    <DropdownMenuItem onClick={() => router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost/menus/${params.menuId}/impost/portate/${data.id}`)}>
                         <Edit className="mr-2 h-4 w-4" />
                         Edit
                     </DropdownMenuItem>

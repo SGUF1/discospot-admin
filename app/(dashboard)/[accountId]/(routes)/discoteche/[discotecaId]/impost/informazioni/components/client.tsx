@@ -10,10 +10,9 @@ import { DataTable } from '@/components/ui/data-table'
 
 interface InformazioniClientProps {
   data: InformazioneColumn[],
-  discotecaName: string,
 }
 
-const InformazioniClient = ({ data, discotecaName }: InformazioniClientProps) => {
+const InformazioniClient = ({ data }: InformazioniClientProps) => {
   const router = useRouter();
   const params = useParams();
 

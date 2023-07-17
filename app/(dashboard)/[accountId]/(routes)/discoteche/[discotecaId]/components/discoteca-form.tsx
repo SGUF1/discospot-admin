@@ -34,6 +34,7 @@ const formSchema = z.object({
     imageUrl: z.string().min(1),
     caparra: z.boolean(),
     visibile: z.boolean(),
+    priority: z.coerce.number().min(1)
 })
 
 type DiscotecaFormValues = z.infer<typeof formSchema>
@@ -52,7 +53,9 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
 
     const form = useForm<DiscotecaFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialData || {
+        defaultValues: initialData ? {
+            ...initialData, priority: parseInt(String(initialData?.priority))
+        } : {
             name: "",
             indirizzo: "",
             provinciaId: "",
@@ -62,6 +65,7 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
             civico: "",
             caparra: false,
             visibile: false,
+            priority: 1      
         }
     })
 
@@ -285,6 +289,25 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
                                     </FormControl>
                                 </FormItem>
                             )} />
+                            <FormField
+                                control={form.control}
+                                name="priority"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Priorità:</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                disabled={loading}
+                                                type="number"
+                                                placeholder="0"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
                         </div>
                     </div>
                     <Button disabled={loading} className='ml-auto' type='submit'>

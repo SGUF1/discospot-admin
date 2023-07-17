@@ -43,7 +43,7 @@ type SalaFormValues = z.infer<typeof formSchema>
 
     const title = initialData ? "Edit sala" : "Create sala";
     const description = initialData ? "Edit a sala" : "Create a sala";
-    const toastMessage = initialData ? "Informazione updated" : "Informazione created"
+    const toastMessage = initialData ? "Sala updated" : "Sala created"
     const action = initialData ? "Save changes" : "Create";
 
     const form = useForm<SalaFormValues>({

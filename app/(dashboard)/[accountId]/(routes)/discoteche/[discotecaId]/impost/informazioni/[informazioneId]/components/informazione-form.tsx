@@ -108,7 +108,7 @@ const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormPro
                             name="descrizione"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Descrizione discoteca:</FormLabel>
+                                    <FormLabel>Descrizione informazione:</FormLabel>
                                     <FormControl>
                                         <Textarea
                                             placeholder="Write a description"

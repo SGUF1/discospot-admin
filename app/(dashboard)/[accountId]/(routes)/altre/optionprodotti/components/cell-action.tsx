@@ -1,5 +1,5 @@
 import { useParams, useRouter } from "next/navigation";
-import { InformazioneColumn } from "./columns";
+import { OptionProdottoColumn } from "./columns";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { AlertModal } from "@/components/modals/alert-modal";
@@ -10,7 +10,7 @@ import { Copy } from "lucide-react";
 import axios from "axios";
 
 interface CellActionProps {
-    data: InformazioneColumn;
+    data: OptionProdottoColumn;
 }
 
 const CellAction = ({ data, }: CellActionProps) => {
@@ -22,14 +22,14 @@ const CellAction = ({ data, }: CellActionProps) => {
 
     const onCopy = (id: string) => {
         navigator.clipboard.writeText(id)
-        toast.success("Informazione Id copied")
+        toast.success("Option prodotto Id copied")
     }
     const onDelete = async () => {
         try {
             setLoading(true);
-            await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/informazioni/${data.id}`)
+            await axios.delete(`/api/${params.accountId}/altre/optionprodotti/${data.id}`)
             router.refresh()
-            toast.success("Informazione deleted")
+            toast.success("Option prodotto deleted")
         } catch (error) {
             toast.error("Qualcosa è andato storto")
 
@@ -41,10 +41,10 @@ const CellAction = ({ data, }: CellActionProps) => {
 
     return (
         <>
-            <AlertModal isOpen={open} loading={false} onClose={() => setOpen(false)} onConfirm={onDelete} />
+            <AlertModal isOpen={open} loading={loading} onClose={() => setOpen(false)} onConfirm={onDelete} />
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant={"ghost"} className='h-8 w-8 p-0'>
+                    <Button variant={"ghost"} className='h-8 w-8 p-0' disabled={loading}>
                         <span className="sr-only">Open menu</span>
                         <MoreHorizontal className='h-4 w-4' />
                     </Button>
@@ -55,11 +55,11 @@ const CellAction = ({ data, }: CellActionProps) => {
                         <Copy className="mr-2 h-4 w-4" />
                         Copy
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost/informazioni/${data.id}`)}>
+                    <DropdownMenuItem onClick={() => router.replace(`/${params.accountId}/altre/optionprodotti/${data.id}`)} disabled={loading}>
                         <Edit className="mr-2 h-4 w-4" />
                         Edit
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setOpen(true)}>
+                    <DropdownMenuItem onClick={() => setOpen(true)} disabled={loading}>
                         <Trash className="mr-2 h-4 w-4" />
                         Delete
                     </DropdownMenuItem>
