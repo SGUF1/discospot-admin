@@ -21,7 +21,7 @@ const DiscotechePage = async ({ params }: { params: { accountId: string } }) => 
   <div className='pt-6 px-8'>
      <Heading title={`Dashboard`} description="Visualizza il totale di tutte le discoteche" />
      <Separator />
-     <div className='grid grid-cols-2'>
+     <div className='grid grid-cols-2 mt-5'>
        <Card>
          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
            <CardTitle className="text-sm font-medium">
