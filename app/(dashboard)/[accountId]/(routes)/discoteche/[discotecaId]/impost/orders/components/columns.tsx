@@ -45,7 +45,7 @@ export const columns: ColumnDef<OrdersColumn>[] = [
 	{
 		accessorKey: "isPaid",
 		header: "Pagato",
-		cell: ({ row }) => <div>{row.original.isPaid ? <Check className='h-4 w-4 bg-green-300'/> : <X className="h-4 w-4 bg-red-300" />}</div>
+		cell: ({ row }) => <div>{row.original.isPaid ? <Check className='h-4 w-4 bg-green-500'/> : <X className="h-4 w-4 bg-red-500" />}</div>
 	},
 	{
 		accessorKey: "createdAt",

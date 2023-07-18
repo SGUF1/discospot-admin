@@ -28,7 +28,7 @@ export const columns: ColumnDef<AdminColumn>[] = [
     {
         accessorKey: "superior",
         header: "Superior",
-        cell: ({ row }) => <div className="ml-5">{row.original.superior ? <Check className="h-4 w-4 bg-green-300" /> : <X className="h-4 w-4 bg-red-300" />}</div>
+        cell: ({ row }) => <div className="ml-5">{row.original.superior ? <Check className="h-4 w-4 bg-green-500" /> : <X className="h-4 w-4 bg-red-500" />}</div>
     },
     {
         id: "actions",

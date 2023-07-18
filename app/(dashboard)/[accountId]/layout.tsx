@@ -1,7 +1,7 @@
 import Navbar from "@/components/navbar";
+import { ThemeProvider } from "@/components/theme-provider";
 import prismadb from "@/lib/prismadb";
 import { ModalProvider } from "@/providers/modal-provider";
-import { ToasterProvider } from "@/providers/taost-provider";
 import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
@@ -23,9 +23,11 @@ export default async function DashboardLayout({
 
     return (
         <>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Navbar imageUrl={account ? account?.imageUrl : "https://res.cloudinary.com/dg2hpjtdh/image/upload/v1688595030/cqi5mouupo1g8vs7y6ql.jpg}"}/>
             <ModalProvider/>
             {children}
+            </ThemeProvider>
         </>
     );
 }

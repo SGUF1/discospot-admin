@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, usePathname, useRouter, } from "next/navigation";
 import { Button } from "./ui/button";
 import Image from "next/image";
+import { ThemeToggle } from "./ui/theme-toggle";
 
 interface MainNavProps{
     imageUrl: string | null,
@@ -50,7 +51,7 @@ export function MainNav({imageUrl, className}: MainNavProps ) {
                     {route.label}
                 </Button>
             ))}
-            <div className='absolute right-10 self-end rounded-full w-9 h-9 overflow-hidden flex justify-center items-center'>
+            <div className='absolute right-10 self-end rounded-full w-9 h-9 overflow-hidden flex justify-center items-center '>
                 {imageUrl && 
                     <Image src={imageUrl === fakeImage ? realImage : imageUrl} width={120} height={50} alt='image' className="hover:cursor-pointer" onClick={() => router.replace(`/${params.accountId}/account`)} />
                 }

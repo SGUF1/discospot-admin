@@ -36,7 +36,7 @@ export const columns: ColumnDef<EventoColumn>[] = [
 	{
 		accessorKey: "eventoSala",
 		header: "Sala",
-		cell: ({ row }) => <div>{row.original.eventoSala ? row.original.sala : <X className="h-4 w-4 bg-red-300" />}</div>
+		cell: ({ row }) => <div>{row.original.eventoSala ? row.original.sala : <X className="h-4 w-4 bg-red-500" />}</div>
 	},
 	{
 		id: 'actions',
