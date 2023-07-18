@@ -49,6 +49,7 @@ model Discoteca {
   sale         Sala[]         @relation("DiscotecaToSala")
   priority     Int            @default(1)
   menu         Menu[]
+  orders Order[] @relation("DiscotecaToOrder")
 
   @@index([provinciaId])
 }
@@ -91,6 +92,7 @@ model Tavolo {
   imageUrl     String
   statoId      String
   stato        Stato     @relation("TavoloToStato", fields: [statoId], references: [id])
+  orderItems OrderItem[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
@@ -118,7 +120,7 @@ model Stato {
 
 model Posto {
   id        String   @id @default(uuid())
-  numero    Int
+  numero    Int      
   tavoloId  String
   tavolo    Tavolo   @relation("TavoloToPosto", fields: [tavoloId], references: [id])
   stato     Stato    @relation("PostoToStato", fields: [statoId], references: [id])
@@ -191,46 +193,79 @@ model Sala {
 
 model Menu {
   id          String    @id @default(uuid())
-  nome String
+  nome        String
   discotecaId String
   portate     Portata[] @relation("MenuToPortata")
-  isVisible Boolean
+  isVisible   Boolean
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   discoteca   Discoteca @relation(fields: [discotecaId], references: [id])
+
   @@index([discotecaId])
 }
 
 model Prodotto {
-  id        String   @id @default(uuid())
-  nome      String
-  portataId String
-  portata Portata @relation("PortataToProdotto", fields: [portataId], references: [id])
+  id          String   @id @default(uuid())
+  nome        String
+  portataId   String
+  portata     Portata  @relation("PortataToProdotto", fields: [portataId], references: [id])
   descrizione String
-  prezzo Float
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  prezzo      Float
+  orderItems OrderItem[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@index([portataId])
 }
 
 model Portata {
-  id        String   @id @default(uuid())
-  nome      String
-  menuId    String
-  menu      Menu     @relation("MenuToPortata", fields: [menuId], references: [id])
-  prodotti Prodotto[] @relation("PortataToProdotto")
+  id            String     @id @default(uuid())
+  nome          String
+  menuId        String
+  menu          Menu       @relation("MenuToPortata", fields: [menuId], references: [id])
+  prodotti      Prodotto[] @relation("PortataToProdotto")
   numeroPortata Int
-  lastPortata Boolean
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  lastPortata   Boolean
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 
   @@index([menuId])
 }
 
 model OptionProdotto {
-  id String @id @default(uuid())
-  nome String 
+  id        String   @id @default(uuid())
+  nome      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id String @id @default(uuid())
+  discotecaId String
+  discoteca Discoteca @relation("DiscotecaToOrder", fields: [discotecaId], references: [id])
+  orderItems OrderItem[]
+  isPaid Boolean @default(false)
+  phone String @default("")
+  codice String @default("")
+  numeroPersone Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([discotecaId])
+}
+
+model OrderItem {
+  id String @id @default(uuid())
+  orderId String 
+  order Order @relation(fields: [orderId], references: [id])
+  tavoloId String
+  tavolo Tavolo @relation(fields: [tavoloId], references: [id])
+  prodottoId String
+  prodotto Prodotto @relation(fields: [prodottoId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([orderId])
+  @@index([tavoloId])
+  @@index([prodottoId])
 }

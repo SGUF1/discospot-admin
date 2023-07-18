@@ -10,7 +10,11 @@ const EventoPage = async ({ params }: { params: { discotecaId: string, eventoId:
     },
   })
 
-  const sale = await prismadb.sala.findMany()
+  const sale = await prismadb.sala.findMany({
+    where: {
+      discotecaId: params.discotecaId,
+    }
+  })
 
   const tipologie = await prismadb.tipologiaEvento.findMany()
   return (

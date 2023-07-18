@@ -19,10 +19,15 @@ export async function POST(
 		}
 
 		var postii = []
+		const totalePosti = await prismadb.posto.findMany({
+			where: {
+				tavoloId: params.tavoloId
+			}
+		})
 		for (let i = 0; i < numero1; i++) {
-			const posti = await prismadb.posto.createMany({
+			const posti = await prismadb.posto.create({
 				data: {
-					numero: i,
+					numero: i + totalePosti.length,
 					statoId,
 					tavoloId: params.tavoloId
 				}

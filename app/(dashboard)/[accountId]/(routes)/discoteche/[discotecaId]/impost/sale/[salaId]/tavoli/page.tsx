@@ -18,7 +18,7 @@ const TavoliPage = async ({ params }: { params: { discotecaId: string, salaId: s
   })
   const formattedTavoli: TavoloColumn[] = tavoli.map((item) => ({
     id: item.id,
-    numerotavolo: "2",
+    numerotavolo: item.numeroTavolo,
     posizione: item.posizione.nome,
     posti: item.posti.length.toString(),
     createdAt: format(item.createdAt, "MMMM do, yyyy"),

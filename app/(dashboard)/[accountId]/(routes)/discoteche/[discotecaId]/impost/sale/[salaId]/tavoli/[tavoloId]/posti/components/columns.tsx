@@ -7,13 +7,14 @@ import { Button } from '@/components/ui/button';
 // You can use a Zod schema here if you want.
 export type PostiColumn = {
 	id: string;
+	numeroPosto: number;
 	stato: string;
 	date: string;
 };
 
 export const columns: ColumnDef<PostiColumn>[] = [
 	{
-		accessorKey: 'id',
+		accessorKey: 'numeroPosto',
 		header: 'Numero posto'
 	},
 	{
