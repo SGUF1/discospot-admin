@@ -39,9 +39,7 @@ const OrdersPage = async ({ params }: { params: { discotecaId: string } }) => {
       codice: item.codice,
       numeroPersone: item.numeroPersone
     }))
-  orders.map((item) => (
-    console.log(item.orderItems.map((orderItem) => orderItem.prodotto.nome + " " + orderItem.prodotto.portata.nome).join(","))
-  ))
+  
 
   return (
     <div className='flex-col'>

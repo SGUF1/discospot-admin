@@ -7,6 +7,12 @@ import EventiPage from './eventi/page'
 import SalePage from './sale/page'
 import MenusPage from './menus/page'
 import OrdersPage from './orders/page'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Overview } from '@/components/overview'
+import { getGraphRevenue } from '@/actions/get-graph-revenue'
+import { CreditCard, EuroIcon } from 'lucide-react'
+import { getSalesCount } from '@/actions/get-sales-count'
+import { getTotalDiscotecheRevenue } from '@/actions/get-total-discoteca-revenue'
 
 const DiscotecaImpostazioniPage = async ({ params }: { params: { accountId: string, discotecaId: string } }) => {
     const discoteca = await prismadb.discoteca.findUnique({
@@ -15,22 +21,57 @@ const DiscotecaImpostazioniPage = async ({ params }: { params: { accountId: stri
         }
     })
 
+    const graphRevenue = await getGraphRevenue(params.discotecaId);
+    const salesCount = await getSalesCount(params.discotecaId)
+    const totalRevenue = await getTotalDiscotecheRevenue(params.discotecaId)
     return (
         <div>
             <div className='p-8'>
-                <Heading title={discoteca?.name!} description='Gesttisci le varie impostazioni della discoteca' />
-                <Separator />
+                <div className="flex-1 space-y-4">
+                    <Heading title={`Dashboard ${discoteca?.name}`} description="Overview of your discoteca" />
+                    <Separator />
+                    <div className='grid grid-cols-2'>
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">
+                                    Guadagno totale
+                                </CardTitle>
+                                <EuroIcon className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">{totalRevenue}€</div>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Vendite</CardTitle>
+                                <CreditCard className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">+{salesCount}</div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                    <Card className="col-span-4">
+                        <CardHeader>
+                            <CardTitle>Overview</CardTitle>
+                        </CardHeader>
+                        <CardContent className="pl-2">
+                            <Overview data={graphRevenue} />
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
-            <SalePage params={params}/>
+            <SalePage params={params} />
             <Separator />
 
             <InformazioniPage params={params} />
             <Separator />
-            <EventiPage params={params}/>
-            <Separator/>
-            <MenusPage params={params}/>
-            <Separator/>
-            <OrdersPage params={params}/>
+            <EventiPage params={params} />
+            <Separator />
+            <MenusPage params={params} />
+            <Separator />
+            <OrdersPage params={params} />
         </div>
     )
 }
