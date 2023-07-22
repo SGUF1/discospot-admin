@@ -34,28 +34,29 @@ model Provincia {
 }
 
 model Discoteca {
-  id           String         @id @default(uuid())
-  name         String
-  indirizzo    String
-  civico       String
-  city         String
-  cap          String
-  imageUrl     String
-  provinciaId  String
-  maximumOrderDate Int @default(0)
-  admins       Accounts[]     @relation("AccountToDiscoteca")
-  provincia    Provincia      @relation("ProvinciaToDiscoteca", fields: [provinciaId], references: [id])
-  piani        Piano[]        @relation("DiscotecaToPiano")
-  informazioni Informazione[] @relation("DiscotecaToInformazione")
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  caparra      Boolean        @default(false)
-  visibile     Boolean        @default(true)
-  eventi       Evento[]       @relation("EventoToDiscoteca")
-  sale         Sala[]         @relation("DiscotecaToSala")
-  priority     Int            @default(1)
-  menu         Menu[]
-  orders       Order[]        @relation("DiscotecaToOrder")
+  id               String         @id @default(uuid())
+  name             String
+  indirizzo        String
+  civico           String
+  city             String
+  cap              String
+  imageUrl         String
+  provinciaId      String
+  maximumOrderDate Int            @default(0)
+  admins           Accounts[]     @relation("AccountToDiscoteca")
+  provincia        Provincia      @relation("ProvinciaToDiscoteca", fields: [provinciaId], references: [id])
+  piani            Piano[]        @relation("DiscotecaToPiano")
+  informazioni     Informazione[] @relation("DiscotecaToInformazione")
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  caparra          Boolean        @default(false)
+  visibile         Boolean        @default(true)
+  eventi           Evento[]       @relation("EventoToDiscoteca")
+  sale             Sala[]         @relation("DiscotecaToSala")
+  priority         Int            @default(1)
+  menu             Menu[]
+  orders           Order[]        @relation("DiscotecaToOrder")
+  like             Int            @default(0)
 
   @@index([provinciaId])
 }
@@ -121,7 +122,7 @@ model Stato {
   tavoli    Tavolo[] @relation("TavoloToStato")
   posti     Posto[]  @relation("PostoToStato")
   sale      Sala[]   @relation("StatoToSale")
-  order Order[] @relation("StatoToOrder")
+  order     Order[]  @relation("StatoToOrder")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -259,8 +260,8 @@ model Order {
   phone         String      @default("")
   codice        String      @default("")
   numeroPersone Int         @default(0)
-  orderDate     DateTime 
-  expiredDate   DateTime 
+  orderDate     DateTime
+  expiredDate   DateTime
   statoId       String
   stato         Stato       @relation("StatoToOrder", fields: [statoId], references: [id])
   createdAt     DateTime    @default(now())
