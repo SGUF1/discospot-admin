@@ -88,7 +88,7 @@ const AccountForm = ({ data }: AccountFormProps) => {
                                                 <Input placeholder="Username" {...field} />
                                             </FormControl>
                                             <FormDescription>
-                                                This is your public display name.
+                                                Questo nome sarà disponibile a tutti
                                             </FormDescription>
                                             <FormMessage />
                                         </FormItem>
@@ -104,7 +104,7 @@ const AccountForm = ({ data }: AccountFormProps) => {
                                                 <Input placeholder="Password" {...field} type='password' />
                                             </FormControl>
                                             <FormDescription>
-                                                This is your password
+                                                Questa è la password
                                             </FormDescription>
                                             <FormMessage />
                                         </FormItem>

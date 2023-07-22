@@ -32,10 +32,10 @@ const PianoForm = ({ initialData }: PianoFormProps) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const title = initialData ? "Edit piano" : "Create piano";
-    const description = initialData ? "Edit a piano" : "Create a piano";
-    const toastMessage = initialData ? "Piano updated" : "Piano created"
-    const action = initialData ? "Save changes" : "Create";
+    const title = initialData ? "Modifica il piano" : "Crea un piano";
+    const description = initialData ? "Modifica il piano per gestire le sale" : "Crea un piano per gestire le sale";
+    const toastMessage = initialData ? "Il piano è stato modificato" : "Il piano è stato creato"
+    const action = initialData ? "Salva le modifiche" : "Crea";
 
     const form = useForm<PianoFormValues>({
         resolver: zodResolver(formSchema),
@@ -56,7 +56,7 @@ const PianoForm = ({ initialData }: PianoFormProps) => {
             router.replace(`/${params.accountId}/altre`)
             toast.success(toastMessage)
         } catch (error) {
-            toast.error("Something went wrong")
+            toast.error("Qualcosa è andato storto")
         } finally {
             setLoading(false)
         }
@@ -68,7 +68,7 @@ const PianoForm = ({ initialData }: PianoFormProps) => {
             await axios.delete(`/api/${params.accountId}/altre/piani/${params.pianoId}`)
             router.refresh();
             router.replace(`/${params.accountId}/altre`)
-            toast.success("Piano deleted");
+            toast.success("Il piano è stato eliminato");
         } catch (error) {
             toast.error("Qualcosa è andato storto");
         }

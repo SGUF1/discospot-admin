@@ -19,10 +19,10 @@ const StatoClient = ({ data }: StatoClientProps) => {
   return (
     <>
       <div className='flex items-center justify-between'>
-        <Heading title={data.length > 1 ? `Stato (${data.length})` : `Stati (${data.length})`} description='Manage stati' />
+        <Heading title={data.length > 1 ? `Stato (${data.length})` : `Stati (${data.length})`} description='Gestisci gli stati' />
         <Button onClick={() => router.replace(`/${params.accountId}/altre/stati/new`)} className='bg-blue-600'>
           <Plus className='mr-2 h-4 w-4' />
-          Add New
+          Aggiungi
         </Button>
       </div>
       <Separator />

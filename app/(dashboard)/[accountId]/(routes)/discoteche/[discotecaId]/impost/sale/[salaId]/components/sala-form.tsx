@@ -22,18 +22,20 @@ import * as z from 'zod';
 
 interface SalaFormProps {
     initialData: Sala | null,
-    piani: Piano[]
+    piani: Piano[],
+    stati: Stato[]
 }
 
 const formSchema = z.object({
     nome: z.string().min(1),
     descrizione: z.string().min(1),
     imageUrl: z.string().min(1),
-    pianoId: z.string().min(1)
+    pianoId: z.string().min(1),
+    statoId: z.string().min(1)
 })
 
 type SalaFormValues = z.infer<typeof formSchema>
-    const SalaForm = ({ initialData, piani }: SalaFormProps) => {
+    const SalaForm = ({ initialData, piani, stati }: SalaFormProps) => {
 
     const params = useParams();
     const router = useRouter();
@@ -41,10 +43,10 @@ type SalaFormValues = z.infer<typeof formSchema>
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const title = initialData ? "Edit sala" : "Create sala";
-    const description = initialData ? "Edit a sala" : "Create a sala";
-    const toastMessage = initialData ? "Sala updated" : "Sala created"
-    const action = initialData ? "Save changes" : "Create";
+    const title = initialData ? "Modifica la sala" : "Crea una sala";
+    const description = initialData ? "Modifica la sala che verrà visualizzata nella discoteca" : "Crea una sala che verrà visualizzata nella discoteca";
+    const toastMessage = initialData ? "La sala è stata modificata" : "La sala è stata creata"
+    const action = initialData ? "Salva le modifiche" : "Crea";
 
     const form = useForm<SalaFormValues>({
         resolver: zodResolver(formSchema),
@@ -52,7 +54,8 @@ type SalaFormValues = z.infer<typeof formSchema>
             nome: "",
             descrizione: "",
             imageUrl: "",
-            pianoId: ""
+            pianoId: "",
+            statoId: ""
         }
     })
 
@@ -68,7 +71,7 @@ type SalaFormValues = z.infer<typeof formSchema>
             router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
             toast.success(toastMessage)
         } catch (error) {
-            toast.error("Something went wrong")
+            toast.error("Qualcosa è andato storto")
         } finally {
             setLoading(false)
         }
@@ -80,7 +83,7 @@ type SalaFormValues = z.infer<typeof formSchema>
             await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/sale/${params.salaId}`)
             router.refresh();
             router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
-            toast.success("Sala deleted");
+            toast.success("La sala è stata eliminata");
         } catch (error) {
             toast.error("Elimina tutti i tavoli prima");
         }
@@ -173,6 +176,28 @@ type SalaFormValues = z.infer<typeof formSchema>
                                         <SelectContent>
                                             {piani.map((piano) => (
                                                 <SelectItem key={piano.id} value={piano.id}>{piano.nome}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="statoId"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Stato sala:</FormLabel>
+                                    <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue defaultValue={field.value} placeholder="Seleziona lo stato" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {stati.map((item) => (
+                                                <SelectItem key={item.id} value={item.id}>{item.nome}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>

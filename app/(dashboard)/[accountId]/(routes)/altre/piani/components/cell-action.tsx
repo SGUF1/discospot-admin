@@ -22,16 +22,16 @@ const CellAction = ({ data, }: CellActionProps) => {
 
     const onCopy = (id: string) => {
         navigator.clipboard.writeText(id)
-        toast.success("Piano Id copied")
+        toast.success("Piano Id è stato copiato")
     }
     const onDelete = async () => {
         try {
             setLoading(true);
             await axios.delete(`/api/${params.accountId}/altre/piani/${data.id}`)
             router.refresh()
-            toast.success("Piano deleted")
+            toast.success("Il piano è stato eliminato")
         } catch (error) {
-            toast.error("Elimina tutti i tavoli prima")
+            toast.error("Elimina tutte le sale")
 
         } finally {
             setLoading(false)
@@ -45,24 +45,24 @@ const CellAction = ({ data, }: CellActionProps) => {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant={"ghost"} className='h-8 w-8 p-0'>
-                        <span className="sr-only">Open menu</span>
+                        <span className="sr-only">Apri menu</span>
                         <MoreHorizontal className='h-4 w-4' />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    <DropdownMenuLabel>Azioni</DropdownMenuLabel>
                     <DropdownMenuItem onClick={() => onCopy(data.id)}>
                         <Copy className="mr-2 h-4 w-4" />
-                        Copy
+                        Copia
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => router.replace(`/${params.accountId}/altre/piani/${data.id}`)}>
                         <Edit className="mr-2 h-4 w-4" />
-                        Edit
+                        Modifica
                     </DropdownMenuItem>
                     {data.superior && (
                         <DropdownMenuItem onClick={() => setOpen(true)}>
                             <Trash className="mr-2 h-4 w-4" />
-                            Delete
+                            Elimina
                         </DropdownMenuItem>
                     )}
                 </DropdownMenuContent>

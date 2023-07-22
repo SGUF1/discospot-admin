@@ -23,7 +23,7 @@ const MenuClient = ({ data }: MenuClientProps) => {
         <Heading title={data.length > 1 ? `Menu (${data.length})` : `Menu (${data.length})`} description='Gestisci i menu' />
         <Button onClick={() => router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost/menus/new`)} className='bg-blue-600'>
           <Plus className='mr-2 h-4 w-4' />
-          Add New
+          Aggiungi
         </Button>
       </div>
       <Separator />

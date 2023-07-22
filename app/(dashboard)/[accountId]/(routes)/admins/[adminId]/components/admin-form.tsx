@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Accounts } from '@prisma/client'
+import { Accounts, Discoteca } from '@prisma/client'
 import axios from 'axios';
 import { Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -18,17 +18,19 @@ import { toast } from 'react-hot-toast';
 import * as z from 'zod';
 
 interface AdminPageProps {
-    initialData: Accounts | null
+    initialData: Accounts | null,
+    discoteche: Discoteca[]
 }
 
 const formSchema = z.object({
     username: z.string().min(1),
     password: z.string().min(5),
-    superior: z.boolean()
+    superior: z.boolean(),
+    discotecaId: z.string()
 })
 
 type AdminFormValues = z.infer<typeof formSchema>
-const AdminForm = ({ initialData }: AdminPageProps) => {
+const AdminForm = ({ initialData, discoteche }: AdminPageProps) => {
 
     const params = useParams();
     const router = useRouter();
@@ -36,17 +38,19 @@ const AdminForm = ({ initialData }: AdminPageProps) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const title = initialData ? "Edit admin" : "Create admin";
-    const description = initialData ? "Edit an Admin account" : "Create a admin account";
-    const toastMessage = initialData ? "Admin account updated" : "Admin account created"
-    const action = initialData ? "Save changes" : "Create";
+    const title = initialData ? "Modifica l'admin" : "Crea un admin";
+    const description = initialData ? "" : "";
+    const toastMessage = initialData ? "L'admin è stato modificato" : "L'admin è stato creato"
+    const action = initialData ? "Salva le modifiche" : "Crea";
 
     const form = useForm<AdminFormValues>({
         resolver: zodResolver(formSchema),
+        // @ts-ignore
         defaultValues: initialData || {
             username: "",
             password: "",
-            superior: false
+            superior: false,
+            discotecaId: ""
         }
     })
 
@@ -62,7 +66,7 @@ const AdminForm = ({ initialData }: AdminPageProps) => {
             router.replace(`/${params.accountId}/admins`)
             toast.success(toastMessage)
         } catch (error) {
-            toast.error("Something went wrong")
+            toast.error("Qualcosa è andato storto")
         } finally {
             setLoading(false)
         }
@@ -74,7 +78,7 @@ const AdminForm = ({ initialData }: AdminPageProps) => {
             await axios.delete(`/api/${params.accountId}/admins/${params.adminId}`)
             router.refresh();
             router.replace(`/${params.accountId}`)
-            toast.success("Admin deleted");
+            toast.success("L'admin è stato eliminato");
         } catch (error) {
             toast.error("Qualcosa è andato storto");
         }
@@ -135,7 +139,7 @@ const AdminForm = ({ initialData }: AdminPageProps) => {
                                 </FormItem>
                             )}
                         />
-                        <div className='flex justify-center items-center w-[102%]' >
+                        <div className='flex justify-center items-center ' >
                             <FormField control={form.control} name='superior' render={({ field }) => (
                                 <FormItem className='flex flex-row items-center justify-between '>
                                     <div className='space-x-0.5 w-2/3'>
@@ -150,6 +154,30 @@ const AdminForm = ({ initialData }: AdminPageProps) => {
                                 </FormItem>
                             )} />
                         </div>
+                        {!form.getValues().superior && (
+                            <FormField
+                                control={form.control}
+                                name="discotecaId"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Seleziona la discoteca di appartenenza:</FormLabel>
+                                        <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue defaultValue={field.value} placeholder="Seleziona la discoteca" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {discoteche?.map((item) => (
+                                                    <SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        )}
                     </div>
                     <Button disabled={loading} className='ml-auto' type='submit'>
                         {action}

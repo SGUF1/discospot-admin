@@ -19,10 +19,10 @@ const PianoClient = ({ data }: PianoClientProps) => {
   return (
     <>
       <div className='flex items-center justify-between'>
-        <Heading title={data.length > 1 ? `Piani (${data.length})` : `Piano (${data.length})`} description='Manage piani' />
+        <Heading title={data.length > 1 ? `Piani (${data.length})` : `Piano (${data.length})`} description='Gestisci i piani' />
         <Button onClick={() => router.replace(`/${params.accountId}/altre/piani/new`)} className='bg-blue-600'>
           <Plus className='mr-2 h-4 w-4' />
-          Add New
+          Aggiungi
         </Button>
       </div>
       <Separator />

@@ -20,10 +20,10 @@ const InformazioniClient = ({ data }: InformazioniClientProps) => {
   return (
     <>
       <div className='flex items-center justify-between'>
-        <Heading title={data.length > 1 ? `Informazioni (${data.length})` : `Informazione (${data.length})`} description='Manage informazioni' />
+        <Heading title={data.length > 1 ? `Informazioni (${data.length})` : `Informazione (${data.length})`} description='Gestisci le informazioni' />
         <Button onClick={() => router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost/informazioni/new`)} className='bg-blue-600'>
           <Plus className='mr-2 h-4 w-4' />
-          Add New
+          Aggiungi
         </Button>
       </div>
       <Separator />

@@ -20,10 +20,10 @@ const SaleClient = ({ data }: SaleClientProps) => {
   return (
     <>
       <div className='flex items-center justify-between'>
-        <Heading title={data.length > 1 ? `Sale (${data.length})` : `Sala (${data.length})`} description='Manage sale' />
+        <Heading title={data.length > 1 ? `Sale (${data.length})` : `Sala (${data.length})`} description='Gestisci le sale' />
         <Button onClick={() => router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost/sale/new`)} className='bg-blue-600'>
           <Plus className='mr-2 h-4 w-4' />
-          Add New
+          Aggiungi
         </Button>
       </div>
       <Separator />

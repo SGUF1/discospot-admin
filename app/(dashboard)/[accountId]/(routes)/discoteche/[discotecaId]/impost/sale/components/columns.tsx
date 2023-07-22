@@ -10,6 +10,7 @@ export type SaleColumn = {
     tavoli: number;
     createdAt: string;
     piano: string;
+    stato: string;
 }
 
 export const columns: ColumnDef<SaleColumn>[] = [
@@ -25,6 +26,10 @@ export const columns: ColumnDef<SaleColumn>[] = [
     {
         accessorKey: "piano",
         header: "Piano"
+    },
+    {
+        accessorKey: "stato",
+        header: "Stato sala",
     },
     {
         accessorKey: "createdAt",

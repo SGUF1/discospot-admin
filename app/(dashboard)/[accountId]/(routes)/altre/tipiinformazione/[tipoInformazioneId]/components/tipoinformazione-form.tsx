@@ -32,10 +32,10 @@ const TipoInformazioneForm = ({ initialData }: TipoInformazioneFormProps) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const title = initialData ? "Edit tipo di informazione" : "Create tipo di informazione";
-    const description = initialData ? "Edit a tipo di informazione" : "Create a tipo di informazione";
-    const toastMessage = initialData ? "Tipo updated" : "Tipo created"
-    const action = initialData ? "Save changes" : "Create";
+    const title = initialData ? "Modifica la tipologia di informazione" : "Crea una tipologia d'informazione";
+    const description = initialData ? "Modifica la tipologia d'informazione che sarà opzione delle informazioni" : "Crea una tipologia d'informazione che sarà opzione delle informazioni";
+    const toastMessage = initialData ? "La tipologia di informazione è stata modificata" : "La tipologia di informazione è stata creata"
+    const action = initialData ? "Salva le modifiche" : "Crea";
 
     const form = useForm<TipoInformazioneFormValues>({
         resolver: zodResolver(formSchema),
@@ -56,7 +56,7 @@ const TipoInformazioneForm = ({ initialData }: TipoInformazioneFormProps) => {
             router.replace(`/${params.accountId}/altre`)
             toast.success(toastMessage)
         } catch (error) {
-            toast.error("Something went wrong")
+            toast.error("Qualcosa è andato storto")
         } finally {
             setLoading(false)
         }
@@ -68,7 +68,7 @@ const TipoInformazioneForm = ({ initialData }: TipoInformazioneFormProps) => {
             await axios.delete(`/api/${params.accountId}/altre/tipiinformazione/${params.tipoInformazioneId}`)
             router.refresh();
             router.replace(`/${params.accountId}/altre`)
-            toast.success("Tipo di informazione deleted");
+            toast.success("La tipologia di informazione è stata eliminata");
         } catch (error) {
             toast.error("Qualcosa è andato storto");
         }
@@ -114,7 +114,7 @@ const TipoInformazioneForm = ({ initialData }: TipoInformazioneFormProps) => {
                             name="nome"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Nome tipo di informazione:</FormLabel>
+                                    <FormLabel>Nome della tipologia di informazione:</FormLabel>
                                     <FormControl>
                                         <Input
                                             disabled={loading}

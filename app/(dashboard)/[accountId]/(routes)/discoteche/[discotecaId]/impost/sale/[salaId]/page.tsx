@@ -11,11 +11,11 @@ const SalaPage = async ({ params }: { params: { discotecaId: string, salaId: str
   })
 
   const piani = await prismadb.piano.findMany()
-
+  const stati = await prismadb.stato.findMany()
   return (
     <div className='flex-col'>
       <div className='flex-1 space-y-4 p-8 pt-6'>
-        <SalaForm initialData={sala} piani={piani} />
+        <SalaForm initialData={sala} piani={piani} stati={stati}/>
       </div>
     </div>
   )

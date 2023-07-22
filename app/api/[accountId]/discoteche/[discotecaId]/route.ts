@@ -17,6 +17,8 @@ export async function PATCH(
       city,
       caparra,
       visibile,
+      priority,
+      maximumOrderDate
     } = body;
 
     if (!name) {
@@ -43,6 +45,13 @@ export async function PATCH(
       return new NextResponse("Città is required", { status: 400 });
     }
 
+    if(!priority){
+      return new NextResponse("Priority is required", {status: 400})
+    }
+
+    if(!maximumOrderDate){
+      return new NextResponse("Maximum Order Date is  required", {status: 400})
+    }
     if (!params.accountId)
       return new NextResponse("Account Id is required", { status: 400 });
 
@@ -59,7 +68,9 @@ export async function PATCH(
         imageUrl,
         civico,
         caparra,
-        visibile
+        visibile,
+        priority,
+        maximumOrderDate
       },
     });
 

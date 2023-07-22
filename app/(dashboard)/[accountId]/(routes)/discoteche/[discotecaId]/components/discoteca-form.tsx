@@ -34,7 +34,8 @@ const formSchema = z.object({
     imageUrl: z.string().min(1),
     caparra: z.boolean(),
     visibile: z.boolean(),
-    priority: z.coerce.number().min(1)
+    priority: z.coerce.number().min(1),
+    maximumOrderDate: z.coerce.number()
 })
 
 type DiscotecaFormValues = z.infer<typeof formSchema>
@@ -46,10 +47,10 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const title = initialData ? "Edit discoteca" : "Create discoteca";
-    const description = initialData ? "Edit a discoteca" : "Create a discoteca";
-    const toastMessage = initialData ? "Discoteca updated" : "Discoteca created"
-    const action = initialData ? "Save changes" : "Create";
+    const title = initialData ? "Modifica discoteca" : "Crea discoteca";
+    const description = initialData ? "Modifica a discoteca" : "Crea a discoteca";
+    const toastMessage = initialData ? "Discoteca updated" : "Discoteca Cread"
+    const action = initialData ? "Save changes" : "Crea";
 
     const form = useForm<DiscotecaFormValues>({
         resolver: zodResolver(formSchema),
@@ -65,7 +66,8 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
             civico: "",
             caparra: false,
             visibile: false,
-            priority: 1      
+            priority: 1,
+            maximumOrderDate: 0
         }
     })
 
@@ -93,7 +95,7 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
             await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}`)
             router.refresh();
             router.replace(`/${params.accountId}/discoteche`)
-            toast.success("Admin deleted");
+            toast.success("La discoteca è stata eliminata");
         } catch (error) {
             toast.error("Qualcosa è andato storto");
         }
@@ -307,7 +309,25 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
                                     </FormItem>
                                 )}
                             />
-
+                            <FormField
+                                control={form.control}
+                                name="maximumOrderDate"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Data limite per la prenotazione tavoli:</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                disabled={loading}
+                                                type="number"
+                                                placeholder="0"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormDescription>Dopo aver superato il numero di giorni inserito dopo la prenotazione del tavolo, il tavolo diventerà automaticamente "Non prenotato" se non viene confermato dal cliente</FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                         </div>
                     </div>
                     <Button disabled={loading} className='ml-auto' type='submit'>

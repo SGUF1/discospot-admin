@@ -11,7 +11,7 @@ export async function PATCH(
 ) {
   try {
     const body = await req.json();
-		const { nome, descrizione, imageUrl, pianoId } = body;
+		const { nome, descrizione, imageUrl, pianoId, statoId } = body;
 
 		if (!descrizione) {
 			return new NextResponse('Descrizione is required', { status: 400 });
@@ -27,6 +27,9 @@ export async function PATCH(
 		if (!pianoId) {
 			return new NextResponse('Piano della sala is required', { status: 400 });
 		}
+		if(!statoId){
+			return new NextResponse("Sala Id is required", {status: 400})
+		}
 
     const sala = await prismadb.sala.update({
       where: {
@@ -36,7 +39,8 @@ export async function PATCH(
         descrizione,
         nome,
         imageUrl,
-        pianoId
+        pianoId,
+        statoId
       },
     });
 

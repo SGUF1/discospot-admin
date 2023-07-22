@@ -46,10 +46,10 @@ const TavoloForm = ({ initialData, piani, posizioni, stati,   }: TavoloFormProps
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const title = initialData ? "Edit tavolo" : "Create tavolo";
-    const description = initialData ? "Edit a tavolo" : "Create a tavolo";
-    const toastMessage = initialData ? "Tavolo updated" : "Tavolo created"
-    const action = initialData ? "Save changes" : "Create";
+    const title = initialData ? "Modifica il tavolo" : "Crea un tavolo";
+    const description = initialData ? "Modifica il tavolo che verrà visualizzato nelle sale della discoteca" : "Crea un tavolo che verrà visualizzato nelle sale della discoteca";
+    const toastMessage = initialData ? "Il tavolo è stato modificato" : "Il tavolo è stato creato"
+    const action = initialData ? "Salva le modifiche" : "Crea";
 
     const form = useForm<TavoloFormValues>({
         resolver: zodResolver(formSchema),
@@ -77,7 +77,7 @@ const TavoloForm = ({ initialData, piani, posizioni, stati,   }: TavoloFormProps
             router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost/sale/${params.salaId}/tavoli`)
             toast.success(toastMessage)
         } catch (error) {
-            toast.error("Something went wrong")
+            toast.error("Qualcosa è andato storto")
         } finally {
             setLoading(false)
         }
@@ -89,7 +89,7 @@ const TavoloForm = ({ initialData, piani, posizioni, stati,   }: TavoloFormProps
             await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/sale/${params.salaId}/tavoli/${params.tavoloId}`)
             router.refresh();
             router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
-            toast.success("Tavolo deleted");
+            toast.success("Il tavolo è stato eliminato");
         } catch (error) {
             toast.error("Qualcosa è andato storto");
         }

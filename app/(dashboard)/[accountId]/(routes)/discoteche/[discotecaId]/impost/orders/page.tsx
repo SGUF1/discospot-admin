@@ -20,8 +20,10 @@ const OrdersPage = async ({ params }: { params: { discotecaId: string } }) => {
             }
           },
           tavolo: true
-        }
-      }
+          
+        },
+      },
+      stato: true
     },
   })
 
@@ -37,7 +39,9 @@ const OrdersPage = async ({ params }: { params: { discotecaId: string } }) => {
         return total + Number(orderItem.prodotto.prezzo) / item.numeroPersone
       }, Number(item.orderItems[0].tavolo.prezzo) / item.numeroPersone),
       codice: item.codice,
-      numeroPersone: item.numeroPersone
+      numeroPersone: item.numeroPersone,
+      stato: item.stato.nome,
+      expiredDate: format(item.expiredDate, "MMMM do, yyyy")
     }))
   
 

@@ -20,10 +20,10 @@ const PortataClient = ({ data }: PortataClientProps) => {
   return (
     <>
       <div className='flex items-center justify-between'>
-        <Heading title={data.length > 1 ? `Portate (${data.length})` : `Portata (${data.length})`} description='Manage portate' />
+        <Heading title={data.length > 1 ? `Portate (${data.length})` : `Portata (${data.length})`} description='Gestisci le portate' />
         <Button onClick={() => router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost/menus/${params.menuId}/impost/portate/new`)} className='bg-blue-600'>
           <Plus className='mr-2 h-4 w-4' />
-          Add New
+          Aggiungi
         </Button>
       </div>
       <Separator />

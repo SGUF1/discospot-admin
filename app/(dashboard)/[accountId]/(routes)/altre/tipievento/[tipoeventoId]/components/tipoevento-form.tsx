@@ -32,10 +32,10 @@ const TipoEventoForm = ({ initialData }: TipoEventoFormProps) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const title = initialData ? "Edit tipologia evento" : "Create tipologia evento";
-    const description = initialData ? "Edit a tipologia evento" : "Create a tipologia evento";
-    const toastMessage = initialData ? "Tipologia evento updated" : "Tipologia evento created"
-    const action = initialData ? "Save changes" : "Create";
+    const title = initialData ? "Modfifica la tipologia di evento" : "Crea una tipologia di evento";
+    const description = initialData ? "Modifica la tipologia di evento che sarà visibile tra le opzioni per la creazione dell'evento" : "Crea una tipologia di evento che sarà visibile tra le opzioni per la creazione dell'evento";
+    const toastMessage = initialData ? "La tipologia dell'evento è stata modificata" : "La tipologia dell'evento è stata creata"
+    const action = initialData ? "Salva le modifiche" : "Crea";
 
     const form = useForm<TipoEventoFormValues>({
         resolver: zodResolver(formSchema),
@@ -56,7 +56,7 @@ const TipoEventoForm = ({ initialData }: TipoEventoFormProps) => {
             router.replace(`/${params.accountId}/altre`)
             toast.success(toastMessage)
         } catch (error) {
-            toast.error("Something went wrong")
+            toast.error("Qualcosa è andato storto")
         } finally {
             setLoading(false)
         }
@@ -68,7 +68,7 @@ const TipoEventoForm = ({ initialData }: TipoEventoFormProps) => {
             await axios.delete(`/api/${params.accountId}/altre/tipievento/${params.tipoeventoId}`)
             router.refresh();
             router.replace(`/${params.accountId}/altre`)
-            toast.success("Tipologia evento deleted");
+            toast.success("La tipologia dell'evento è stata eliminata");
         } catch (error) {
             toast.error("Qualcosa è andato storto");
         }

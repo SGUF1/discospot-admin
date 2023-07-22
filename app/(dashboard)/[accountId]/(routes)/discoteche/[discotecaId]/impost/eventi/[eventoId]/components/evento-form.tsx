@@ -52,10 +52,10 @@ const EventoForm = ({ initialData, tipologieEvento, sale }: EventoFormProps) => 
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const title = initialData ? "Edit evento" : "Create evento";
-  const description = initialData ? "Edit a evento" : "Create a evento";
-  const toastMessage = initialData ? "Evento updated" : "Evento created"
-  const action = initialData ? "Save changes" : "Create";
+  const title = initialData ? "Modifica l'evento" : "Crea un evento";
+  const description = initialData ? "Modifica l'evento" : "Crea un evento da far visualizzare tra gli eventi";
+  const toastMessage = initialData ? "L'evento è stato modificato" : "L'evento è stato creato"
+  const action = initialData ? "Salva le modifiche" : "Crea l'evento";
 
   const form = useForm<EventoFormValues>({
     resolver: zodResolver(formSchema),
@@ -105,7 +105,7 @@ const EventoForm = ({ initialData, tipologieEvento, sale }: EventoFormProps) => 
       await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/eventi/${params.eventoId}`)
       router.refresh();
       router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
-      toast.success("Evento deleted");
+      toast.success("L'evento è stato eliminato");
     } catch (error) {
       toast.error("Qualcosa è andato storto");
     }
@@ -115,11 +115,6 @@ const EventoForm = ({ initialData, tipologieEvento, sale }: EventoFormProps) => 
     }
   }
 
-  var arraySale: number[] = []
-
-  const handleCreateElement = () => {
-    arraySale.push(arraySale.length)
-  };
   return (
     <>
       <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={loading} />
@@ -179,7 +174,7 @@ const EventoForm = ({ initialData, tipologieEvento, sale }: EventoFormProps) => 
                   <FormLabel>Descrizione evento:</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Write a description"
+                      placeholder="Scrivi una descrizione"
                       className="resize-none"
                       {...field}
                       disabled={loading}

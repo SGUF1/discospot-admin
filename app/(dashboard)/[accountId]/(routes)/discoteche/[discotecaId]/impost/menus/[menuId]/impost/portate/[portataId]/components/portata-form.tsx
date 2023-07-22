@@ -46,10 +46,10 @@ const PortataForm = ({ initialData, optionProdotti }: PortataFormProps) => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const title = initialData ? 'Edit portata' : 'Create portata';
-    const description = initialData ? 'Edit a portata' : 'Create a portata';
-    const toastMessage = initialData ? 'Portata updated' : 'Portata created';
-    const action = initialData ? 'Save changes' : 'Create';
+    const title = initialData ? 'Modifica la portata' : 'Crea una portata';
+    const description = initialData ? 'Modifica la portata che verrà visualizzata tra le portate' : 'Crea una portata che verrà visualizzata tra le portate';
+    const toastMessage = initialData ? 'La portata è stata modificata' : 'La portata è stata creata';
+    const action = initialData ? 'Salva le modifiche' : 'Crea la portata';
 
     const form = useForm<PortataFormValues>({
         resolver: zodResolver(formSchema),
@@ -87,7 +87,7 @@ const PortataForm = ({ initialData, optionProdotti }: PortataFormProps) => {
             );
             toast.success(toastMessage);
         } catch (error) {
-            toast.error('Something went wrong');
+            toast.error('Qualcosa è andata storto');
         } finally {
             setLoading(false);
         }
@@ -103,7 +103,7 @@ const PortataForm = ({ initialData, optionProdotti }: PortataFormProps) => {
             router.replace(
                 `/${params.accountId}/discoteche/${params.discotecaId}/impost/menus/${params.menuId}/impost`
             );
-            toast.success('Portata deleted');
+            toast.success('La portata è stata eliminata');
         } catch (error) {
             toast.error('Qualcosa è andato storto');
         } finally {

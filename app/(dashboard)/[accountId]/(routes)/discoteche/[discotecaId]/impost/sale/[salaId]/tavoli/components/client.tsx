@@ -20,10 +20,10 @@ const TavoliClient = ({ data }: TavoliClientProps) => {
   return (
     <>
       <div className='flex items-center justify-between'>
-        <Heading title={data.length > 1 ? `Tavoli (${data.length})` : `Tavolo (${data.length})`} description='Manage tavoli' />
+        <Heading title={data.length > 1 ? `Tavoli (${data.length})` : `Tavolo (${data.length})`} description='Gestisci i tavoli' />
         <Button onClick={() => router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost/sale/${params.salaId}/tavoli/new`)} className='bg-blue-600'>
           <Plus className='mr-2 h-4 w-4' />
-          Add New
+          Aggiungi
         </Button>
       </div>
       <Separator />

@@ -13,12 +13,20 @@ import { getTotalRevenue } from '@/actions/get-total-revenue'
 import { getTotalSalesCount } from '@/actions/get-total-sales-count'
 
 const DiscotechePage = async ({ params }: { params: { accountId: string } }) => {
-
+  const account = await prismadb.accounts.findUnique({
+    where: {
+      id: params.accountId
+    },
+  })
+  
   const graphRevenue = await getTotalGraphRevenue()
   const totalRevenue = await getTotalRevenue();
   const salesCount = await getTotalSalesCount();
+  
  return(
-  <div className='pt-6 px-8'>
+  <div>
+  {account?.superior ? (
+   <div className='pt-6 px-8' >
      <Heading title={`Dashboard`} description="Visualizza il totale di tutte le discoteche" />
      <Separator />
      <div className='grid grid-cols-2 mt-5'>
@@ -44,14 +52,16 @@ const DiscotechePage = async ({ params }: { params: { accountId: string } }) => 
        </Card>
      </div>
 
-   <Card className="col-span-4 mt-5">
-     <CardHeader>
-       <CardTitle>Overview</CardTitle>
-     </CardHeader>
-     <CardContent className="pl-2">
-       <Overview data={graphRevenue} />
-     </CardContent>
-   </Card>
+     <Card className="col-span-4 mt-5">
+       <CardHeader>
+         <CardTitle>Overview</CardTitle>
+       </CardHeader>
+       <CardContent className="pl-2">
+         <Overview data={graphRevenue} />
+       </CardContent>
+     </Card>
+   </div >)
+  : <div className='flex absolute flex-row justify-center items-center'><h1 className='text-5xl mt-32'>QUESTA AREA E' ACCESSIBILE SOLAMENTE DAI SUPERIORI</h1></div>}
   </div>
  )
 }

@@ -36,10 +36,10 @@ const ProvinciaForm = ({ initialData }: ProvinciaFormProps) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const title = initialData ? "Edit provincia" : "Create provincia";
-    const description = initialData ? "Edit a provincia" : "Create a provincia";
-    const toastMessage = initialData ? "Provincia updated" : "Provincia created"
-    const action = initialData ? "Save changes" : "Create";
+    const title = initialData ? "Modifica la provincia" : "Crea una provincia";
+    const description = initialData ? "Modifica la provincia per gestire le discoteche" : "Crea una provincia per gestire le discoteche";
+    const toastMessage = initialData ? "La provinca è stata modificata" : "La provincia è stata creata"
+    const action = initialData ? "Salva le modifiche" : "Crea";
 
     const form = useForm<ProvinciaFormValues>({
         resolver: zodResolver(formSchema),
@@ -60,7 +60,7 @@ const ProvinciaForm = ({ initialData }: ProvinciaFormProps) => {
             router.replace(`/${params.accountId}/province`)
             toast.success(toastMessage)
         } catch (error) {
-            toast.error("Something went wrong")
+            toast.error("Qualcosa è andato storto")
         } finally {
             setLoading(false)
         }
@@ -72,7 +72,7 @@ const ProvinciaForm = ({ initialData }: ProvinciaFormProps) => {
             await axios.delete(`/api/${params.accountId}/province/${params.provinciaId}`)
             router.refresh();
             router.replace(`/${params.accountId}/province`)
-            toast.success("Provincia deleted");
+            toast.success("La provincia è stata eliminata");
         } catch (error) {
             toast.error("Qualcosa è andato storto");
         }

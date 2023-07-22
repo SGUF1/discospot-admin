@@ -20,10 +20,10 @@ const PosizioneClient = ({ data }: PosizioneClientProps) => {
   return (
     <>
       <div className='flex items-center justify-between'>
-        <Heading title={data.length > 1 ? `Posizioni (${data.length})` : `Posizione (${data.length})`} description='Manage posizioni' />
+        <Heading title={data.length > 1 ? `Posizioni (${data.length})` : `Posizione (${data.length})`} description='Gestisci le posizioni' />
         <Button onClick={() => router.replace(`/${params.accountId}/altre/posizioni/new`)} className='bg-blue-600'>
           <Plus className='mr-2 h-4 w-4' />
-          Add New
+          Aggiungi
         </Button>
       </div>
       <Separator />

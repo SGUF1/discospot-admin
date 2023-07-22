@@ -19,10 +19,10 @@ const PostiClient = ({ data }: PostiClientProps) => {
   return (
     <>
       <div className='flex items-center justify-between'>
-        <Heading title={data.length > 1 ? `Posti (${data.length})` : `Posto (${data.length})`} description='Manage posti' />
+        <Heading title={data.length > 1 ? `Posti (${data.length})` : `Posto (${data.length})`} description='Gestisci i posti' />
         <Button onClick={() => router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost/sale/${params.salaId}/tavoli/${params.tavoloId}/posti/new`)} className='bg-blue-600'>
           <Plus className='mr-2 h-4 w-4' />
-          Add New
+          Aggiungi
         </Button>
       </div>
       <Separator />

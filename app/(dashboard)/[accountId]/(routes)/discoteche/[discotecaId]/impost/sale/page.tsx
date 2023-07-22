@@ -12,7 +12,8 @@ const SalePage = async ({ params }: { params: { discotecaId: string } }) => {
     },
     include: {
       tavoli: true,
-      piano: true
+      piano: true,
+      stato: true
     }
   })
   const formattedSale: SaleColumn[] = sale.map((item) => ({
@@ -20,7 +21,8 @@ const SalePage = async ({ params }: { params: { discotecaId: string } }) => {
     nome: item.nome,
     createdAt: format(item.createdAt, "MMMM do, yyyy"),
     tavoli: item.tavoli.length,
-    piano: item.piano.nome
+    piano: item.piano.nome,
+    stato: item.stato.nome 
   }))
 
 

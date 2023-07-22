@@ -20,10 +20,10 @@ const TipoInformazioneClient = ({ data }: TipoInformazioneClientProps) => {
   return (
     <>
       <div className='flex items-center justify-between'>
-        <Heading title={data.length > 1 ? `Tipi di informazione (${data.length})` : `Tipo di informazione (${data.length})`} description='Manage informations type' />
+        <Heading title={data.length > 1 ? `Tipologie di informazioni (${data.length})` : `Tipologia di informazione (${data.length})`} description='Gestisci le tipologie di informazioni' />
         <Button onClick={() => router.replace(`/${params.accountId}/altre/tipiinformazione/new`)} className='bg-blue-600'>
           <Plus className='mr-2 h-4 w-4' />
-          Add New
+          Aggiungi
         </Button>
       </div>
       <Separator />

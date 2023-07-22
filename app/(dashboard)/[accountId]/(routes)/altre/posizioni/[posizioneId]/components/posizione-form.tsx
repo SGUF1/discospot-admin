@@ -32,10 +32,10 @@ const PosizioneForm = ({ initialData }: PosizioneFormProps) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const title = initialData ? "Edit posizione" : "Create posizione";
-    const description = initialData ? "Edit a posizione" : "Create a posizione";
-    const toastMessage = initialData ? "Posizione updated" : "Posizione created"
-    const action = initialData ? "Save changes" : "Create";
+    const title = initialData ? "Modifica la posizione" : "Crea una posizione";
+    const description = initialData ? "Modifica la posizione che sarà un'opzione dei tavoli" : "Crea una posizione che sarà un'opzione dei tavoli";
+    const toastMessage = initialData ? "La posizione è stata modificata" : "La posizione è stata creata"
+    const action = initialData ? "Salva le modifiche" : "Crea";
 
     const form = useForm<PosizioneFormValues>({
         resolver: zodResolver(formSchema),
@@ -56,7 +56,7 @@ const PosizioneForm = ({ initialData }: PosizioneFormProps) => {
             router.replace(`/${params.accountId}/altre`)
             toast.success(toastMessage)
         } catch (error) {
-            toast.error("Something went wrong")
+            toast.error("Qualcosa è andato storto")
         } finally {
             setLoading(false)
         }
@@ -68,7 +68,7 @@ const PosizioneForm = ({ initialData }: PosizioneFormProps) => {
             await axios.delete(`/api/${params.accountId}/altre/posizioni/${params.posizioneId}`)
             router.refresh();
             router.replace(`/${params.accountId}/altre`)
-            toast.success("Posizione deleted");
+            toast.success("La posizione è stata eliminata");
         } catch (error) {
             toast.error("Qualcosa è andato storto");
         }

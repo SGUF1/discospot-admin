@@ -32,10 +32,10 @@ const StatoForm = ({ initialData }: StatoFormProps) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const title = initialData ? "Edit stato" : "Create stato";
-    const description = initialData ? "Edit a stato" : "Create a stato";
-    const toastMessage = initialData ? "Posizione updated" : "Posizione created"
-    const action = initialData ? "Save changes" : "Create";
+    const title = initialData ? "Modifica lo stato" : "Crea uno stato";
+    const description = initialData ? "Modifica lo stato per gestire meglio i tavoli, i posti, le sale, gli ordini" : "Crea uno stato per gestire meglio i tavoli, i posti, le sale, gli ordini";
+    const toastMessage = initialData ? "Lo stato è stato modificato" : "Lo stato è stato creato"
+    const action = initialData ? "Salva le modifiche" : "Crea";
 
     const form = useForm<StatoFormValues>({
         resolver: zodResolver(formSchema),
@@ -56,7 +56,7 @@ const StatoForm = ({ initialData }: StatoFormProps) => {
             router.replace(`/${params.accountId}/altre`)
             toast.success(toastMessage)
         } catch (error) {
-            toast.error("Something went wrong")
+            toast.error("Qualcosa è andato storto")
         } finally {
             setLoading(false)
         }
@@ -68,7 +68,7 @@ const StatoForm = ({ initialData }: StatoFormProps) => {
             await axios.delete(`/api/${params.accountId}/altre/stati/${params.statoId}`)
             router.refresh();
             router.replace(`/${params.accountId}/altre`)
-            toast.success("Stato deleted");
+            toast.success("Lo stato è stato eliminato");
         } catch (error) {
             toast.error("Qualcosa è andato storto");
         }

@@ -20,10 +20,10 @@ const EventiClient = ({ data }: EventiClientProps) => {
   return (
     <>
       <div className='flex items-center justify-between'>
-        <Heading title={data.length > 1 ? `Eventi (${data.length})` : `Evento (${data.length})`} description='Manage eventi' />
+        <Heading title={data.length > 1 ? `Eventi (${data.length})` : `Evento (${data.length})`} description='Gestigli gli eventi' />
         <Button onClick={() => router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost/eventi/new`)} className='bg-blue-600'>
           <Plus className='mr-2 h-4 w-4' />
-          Add New
+          Aggiungi
         </Button>
       </div>
       <Separator />

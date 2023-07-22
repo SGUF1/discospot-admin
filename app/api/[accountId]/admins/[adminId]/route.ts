@@ -7,27 +7,45 @@ export async function PATCH(
 ) {
   try {
     const body = await req.json();
-    const { username, password, superior } = body;
+const { username, password, superior, discotecaId } = body;
 
-    if (!username) {
-      return new NextResponse("Username is required", { status: 400 });
-    }
-    if (!password) {
-      return new NextResponse("Password is required", { status: 400 });
-    }
+if (!username) {
+  return new NextResponse("Username is required", { status: 400 });
+}
+if (!password) {
+  return new NextResponse("Password is required", { status: 400 });
+}
 
-    const admin = await prismadb.accounts.update({
-      where: {
-        id: params.adminId,
-      },
-      data: {
-        username,
-        password,
-        superior,
-      },
-    });
-    return NextResponse.json(admin);
-  } catch (error) {
+if (!params.accountId)
+  return new NextResponse("Account Id is required", { status: 400 });
+
+  if (!discotecaId || superior) {
+  const admin = await prismadb.accounts.update({
+    where: {
+      id: params.adminId
+    },
+    data: {
+      username,
+      password,
+      superior,
+          discotecaId: null
+    },
+  });
+  return NextResponse.json(admin);
+} else {
+  const admin = await prismadb.accounts.update({
+    where:{
+      id: params.adminId
+    },
+    data: {
+      username,
+      password,
+      superior,
+      discotecaId,
+    },
+  });
+  return NextResponse.json(admin);
+}  } catch (error) {
     console.log("[ADMIN PATCH]", error);
     return new NextResponse("Internal Error" + error, { status: 500 });
   }

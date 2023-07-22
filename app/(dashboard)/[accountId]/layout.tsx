@@ -16,7 +16,7 @@ export default async function DashboardLayout({
         where: { id: params.accountId },
     });
 
-
+    
     if (!account) {
         redirect("/");
     }

@@ -20,10 +20,10 @@ const ProvinceClient = ({ data }: ProvinceClientProps) => {
   return (
     <>
       <div className='flex items-center justify-between'>
-        <Heading title={data.length > 1 ? `Province (${data.length})` : `Provincia (${data.length})`} description='Manage province' />
+        <Heading title={data.length > 1 ? `Province (${data.length})` : `Provincia (${data.length})`} description='Gestisci le province' />
         <Button onClick={() => router.replace(`/${params.accountId}/province/new`)} className='bg-blue-600'>
           <Plus className='mr-2 h-4 w-4' />
-          Add New
+          Aggiungi
         </Button>
       </div>
       <Separator />

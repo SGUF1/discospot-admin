@@ -17,7 +17,8 @@ export async function POST(
       city,
       caparra,
       visibile,
-      priority
+      priority,
+      maximumOrderDate,
     } = body;
 
     if (!name) {
@@ -27,7 +28,9 @@ export async function POST(
       return new NextResponse("Indirizzo is required", { status: 400 });
     }
     if (!provinciaId) {
-      return new NextResponse("Provincia is required", { status: 400 });
+      return new NextResponse("Provincia is required" + provinciaId, {
+        status: 400,
+      });
     }
     if (!cap) {
       return new NextResponse("Cap is required", { status: 400 });
@@ -41,8 +44,15 @@ export async function POST(
     if (!city) {
       return new NextResponse("Città is required", { status: 400 });
     }
-    if(!priority){
+
+    if (!priority) {
       return new NextResponse("Priority is required", { status: 400 });
+    }
+
+    if (!maximumOrderDate) {
+      return new NextResponse("Maximum Order Date is  required", {
+        status: 400,
+      });
     }
     if (!params.accountId)
       return new NextResponse("Account Id is required", { status: 400 });
@@ -58,7 +68,8 @@ export async function POST(
         civico,
         caparra,
         visibile,
-        priority
+        priority,
+        maximumOrderDate
       },
     });
 

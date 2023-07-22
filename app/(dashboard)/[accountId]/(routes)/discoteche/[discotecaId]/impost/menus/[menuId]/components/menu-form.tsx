@@ -36,10 +36,10 @@ const MenuForm = ({ initialData }: MenuFormProps) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const title = initialData ? "Edit menu" : "Create menu";
-    const description = initialData ? "Edit a menu" : "Create a menu";
-    const toastMessage = initialData ? "Menu updated" : "Menu created"
-    const action = initialData ? "Save changes" : "Create";
+    const title = initialData ? "Modifica il menu" : "Crea il menu"
+    const description = initialData ? "Modifica il menu per gestire le varie portate" : "Crea il menu per gestire le varie portate";
+    const toastMessage = initialData ? "Il menu è stato modificato" : "Il menu è stato creato"
+    const action = initialData ? "Salva le modifiche" : "Crea il menu";
 
     const form = useForm<MenuFormValues>({
         resolver: zodResolver(formSchema),
@@ -61,7 +61,7 @@ const MenuForm = ({ initialData }: MenuFormProps) => {
             router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
             toast.success(toastMessage)
         } catch (error) {
-            toast.error("Something went wrong")
+            toast.error("Qualcosa è andato storto")
         } finally {
             setLoading(false)
         }
@@ -73,7 +73,7 @@ const MenuForm = ({ initialData }: MenuFormProps) => {
             await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/menus/${params.menuId}`)
             router.refresh();
             router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
-            toast.success("Menu deleted");
+            toast.success("Il menu è stato eliminato");
         } catch (error) {
             toast.error("Qualcosa è andato storto");
         }

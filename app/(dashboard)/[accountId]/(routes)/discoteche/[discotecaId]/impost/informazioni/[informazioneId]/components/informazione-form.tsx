@@ -40,10 +40,10 @@ const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormPro
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const title = initialData ? "Edit informazione" : "Create informazione";
-    const description = initialData ? "Edit a informazione" : "Create a informazione";
-    const toastMessage = initialData ? "Informazione updated" : "Informazione created"
-    const action = initialData ? "Save changes" : "Create";
+    const title = initialData ? "Modifica l'informazione" : "Crea l'informazione";
+    const description = initialData ? "Modifica l'informazione" : "Crea l'informazione da far vedere nella visualizzazione della discoteca";
+    const toastMessage = initialData ? "L'informazione è stata modificata" : "L'informazione è stata creata"
+    const action = initialData ? "Salva le modifiche" : "Crea l'informazione";
 
     const form = useForm<InformazioneFormValues>({
         resolver: zodResolver(formSchema),
@@ -66,7 +66,7 @@ const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormPro
             router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
             toast.success(toastMessage)
         } catch (error) {
-            toast.error("Something went wrong")
+            toast.error("Qualcosa è andato storto")
         } finally {
             setLoading(false)
         }
@@ -78,7 +78,7 @@ const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormPro
             await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/informazioni/${params.informazioneId}`)
             router.refresh();
             router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
-            toast.success("Informazione deleted");
+            toast.success("L'informazione è stata eliminata");
         } catch (error) {
             toast.error("Qualcosa è andato storto");
         }
@@ -111,7 +111,7 @@ const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormPro
                                     <FormLabel>Descrizione informazione:</FormLabel>
                                     <FormControl>
                                         <Textarea
-                                            placeholder="Write a description"
+                                            placeholder="Scrivi una descrizione"
                                             className="resize-none"
                                             {...field}
                                         />

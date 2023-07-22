@@ -16,6 +16,7 @@ export type DiscotecaColumn = {
     createdAt: string
     caparra: boolean,
     visible: boolean,
+    maximumOrderDate: number,
     isSuperior?: boolean
 }
 
@@ -39,6 +40,10 @@ export const columns: ColumnDef<DiscotecaColumn>[] = [
         accessorKey: "provincia",
         header: "Provincia"
 
+    },
+    {
+        accessorKey: "maximumOrderDate",
+        header: "Limite giorni ordine"
     },
     {
         accessorKey: "caparra",

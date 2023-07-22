@@ -34,11 +34,11 @@ const OptionProdottoForm = ({ initialData }: OptionProdottoFormProps) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const title = initialData ? "Edit option prodotto" : "Create option prodotto";
-    const description = initialData ? "Edit a option prodotto" : "Create a option prodotto";
-    const toastMessage = initialData ? "Option prodotto updated" : "Option prodotto created"
-    const action = initialData ? "Save changes" : "Create";
-
+    const title = initialData ? "Modifica la bibita" : "Crea una bibita";
+    const description = initialData ? "Modifica la bibita che verrà visualizzata fra le opzioni delle portate" : "Crea una bibita che verrà visualizzata fra le opzioni delle portate";
+    const toastMessage = initialData ? "La bibita è stata modificata" : "La bibita è stata creata"
+    const action = initialData ? "Salva le modifiche" : "Crea";
+    
     const form = useForm<OptionProdottoFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: initialData ||  {
@@ -58,7 +58,7 @@ const OptionProdottoForm = ({ initialData }: OptionProdottoFormProps) => {
             router.replace(`/${params.accountId}/altre`)
             toast.success(toastMessage)
         } catch (error) {
-            toast.error("Something went wrong")
+            toast.error("Qualcosa è andato storto")
         } finally {
             setLoading(false)
         }
@@ -70,7 +70,7 @@ const OptionProdottoForm = ({ initialData }: OptionProdottoFormProps) => {
             await axios.delete(`/api/${params.accountId}/altre/optionprodotti/${params.optionprodottoId}`)
             router.refresh();
             router.replace(`/${params.accountId}/altre`)
-            toast.success("Option Prodotto deleted");
+            toast.success("Bibita è stata eliminata");
         } catch (error) {
             toast.error("Qualcosa è andato storto");
         }
@@ -100,7 +100,7 @@ const OptionProdottoForm = ({ initialData }: OptionProdottoFormProps) => {
                             name="nome"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Nome prodotto:</FormLabel>
+                                    <FormLabel>Nome bibita:</FormLabel>
                                     <FormControl>
                                         <Input
                                             disabled={loading}
