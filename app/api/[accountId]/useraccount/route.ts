@@ -1,41 +1,32 @@
-import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
+import prismadb from "@/lib/prismadb";
 
-export async function POST(
-  req: Request,
-  { params }: { params: { accountId: string } }
-) {
-  try {
-    const body = await req.json();
-    const { userId } = body;
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
 
-    if (!userId) {
-      return new NextResponse("Username is required", { status: 400 });
-    }
-   
-    if (!params.accountId)
-      return new NextResponse("Account ID is required", { status: 400 });
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
 
-    const userAccounts = await prismadb.userAccount.findUnique({
-        where: {
+export async function POST(req: Request) {
+  const { userId } = await req.json();
+
+  const userAccounts = await prismadb.userAccount.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if(userAccounts)
+    return new NextResponse("Account already exists", {status: 400})
+
+    const userAccount = await prismadb.userAccount.create({
+        data: {
             id: userId
         }
     })
     
-    if(!userAccounts)
-    {
-        const userAccount = await prismadb.userAccount.create({
-            data: {
-                id: userId
-            }
-        })    
-        return NextResponse.json(userAccount);
-    }
-        
-    return new NextResponse("Account già esistente", { status: 402 });
-
-  } catch (error) {
-    console.log("[ADMIN-SETTING POST]", error);
-    return new NextResponse("Internal Error", { status: 500 });
-  }
 }
