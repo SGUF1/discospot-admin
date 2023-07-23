@@ -57,6 +57,7 @@ model Discoteca {
   menu             Menu[]
   orders           Order[]        @relation("DiscotecaToOrder")
   like             Int            @default(0)
+  userAccounts UserAccount[]
 
   @@index([provinciaId])
 }
@@ -289,4 +290,5 @@ model OrderItem {
 
 model UserAccount {
   id String @id
+  discoteche Discoteca[]
 }
