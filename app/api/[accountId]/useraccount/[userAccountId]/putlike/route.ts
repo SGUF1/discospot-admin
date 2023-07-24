@@ -27,6 +27,9 @@ export async function POST(req: Request) {
     where: {
       id: discotecaId,
     },
+    include: {
+      userAccounts: true,
+    },
   });
 
   if (!discoteca) {
@@ -34,28 +37,53 @@ export async function POST(req: Request) {
   }
 
   // Aggiorna il conteggio "like" della discoteca
-  const discotecaLike = await prismadb.discoteca.update({
-    where: {
-      id: discotecaId,
-    },
-    data: {
-      like: discoteca.like + 1,
-    },
-  });
+  if (!discoteca.userAccounts.find((item) => item.id === userId)) {
+    const discotecaLike = await prismadb.discoteca.update({
+      where: {
+        id: discotecaId,
+      },
+      data: {
+        like: discoteca.like + 1,
+      },
+    });
 
-  // Associa la discoteca all'account dell'utente
-  const userAccount = await prismadb.userAccount.update({
-    where: {
-      id: userId,
-    },
-    data: {
-      discoteche: {
-        connect: {
-          id: discotecaId,
+    // Associa la discoteca all'account dell'utente
+    const userAccount = await prismadb.userAccount.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        discoteche: {
+          connect: {
+            id: discotecaId,
+          },
         },
       },
-    },
+    });
+  }else{
+    const discotecaLike = await prismadb.discoteca.update({
+      where: {
+        id: discotecaId,
+      },
+      data: {
+        like: discoteca.like - 1,
+      },
+    });
+    const userAccount = await prismadb.userAccount.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        discoteche: {
+          disconnect: {
+            id: discotecaId,
+          },
+        },
+      },
+    });
+  }
+  return NextResponse.json({
+    headers: corsHeaders,
   });
-
-  return new NextResponse("Discoteca added successfully", { status: 200 });
+  //   return new NextResponse("Discoteca added successfully", { status: 200 });
 }
