@@ -86,6 +86,9 @@ export async function GET(
 ) {
   try {
     const discoteche = await prismadb.discoteca.findMany({
+      where: {
+        visibile: true
+      },
       include: {
         userAccounts: true,
         provincia: true
