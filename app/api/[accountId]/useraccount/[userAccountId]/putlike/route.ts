@@ -12,7 +12,8 @@ export async function OPTIONS() {
 }
 
 export async function POST(req: Request) {
-  const { userId, discotecaId } = await req.json();
+  try{
+    const { userId, discotecaId } = await req.json();
 
   if (!userId) {
     return new NextResponse("userId is required", { status: 400 });
@@ -85,5 +86,8 @@ export async function POST(req: Request) {
   return NextResponse.json({
     headers: corsHeaders,
   });
+  }catch(error){
+
+  }
   //   return new NextResponse("Discoteca added successfully", { status: 200 });
 }

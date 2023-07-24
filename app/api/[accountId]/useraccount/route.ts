@@ -12,21 +12,32 @@ export async function OPTIONS() {
 }
 
 export async function POST(req: Request) {
-  const { userId } = await req.json();
+ try{
+   const { userId } = await req.json();
 
-  const userAccounts = await prismadb.userAccount.findUnique({
-    where: {
-      id: userId,
-    },
-  });
+   const userAccounts = await prismadb.userAccount.findUnique({
+     where: {
+       id: userId,
+     },
+   });
 
-  if(userAccounts)
-    return new NextResponse("Account already exists", {status: 400})
+   if (userAccounts)
+     return new NextResponse("Account already exists", { status: 400 });
 
-    const userAccount = await prismadb.userAccount.create({
-        data: {
-            id: userId
-        }
-    })
+   const userAccount = await prismadb.userAccount.create({
+     data: {
+       id: userId,
+     },
+   });
+ }catch(error){}
     
+}
+
+export async function GET(req: Request){
+  try{
+    const userAccounts = await prismadb.userAccount.findMany()
+  return NextResponse.json(userAccounts)
+  }catch(error){
+
+  }
 }
