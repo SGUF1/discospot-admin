@@ -35,7 +35,12 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request){
   try{
-    const userAccounts = await prismadb.userAccount.findMany()
+    const userAccounts = await prismadb.userAccount.findMany({
+      include: {
+        discoteche: true
+      }
+    }
+    )
   return NextResponse.json(userAccounts)
   }catch(error){
 

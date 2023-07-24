@@ -108,6 +108,10 @@ export async function GET(
       where: {
         id: params.discotecaId,
       },
+      include: {
+        userAccounts: true,
+        provincia: true
+      }
     });
 
     return NextResponse.json(discoteca);

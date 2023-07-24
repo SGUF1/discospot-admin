@@ -9,6 +9,9 @@ export async function GET(
     const userAccount = await prismadb.userAccount.findUnique({
         where: {
             id: params.userAccountId
+        },
+        include: {
+            discoteche: true
         }
     }
     );

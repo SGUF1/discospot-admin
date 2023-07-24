@@ -85,7 +85,12 @@ export async function GET(
   { params }: { params: { accountId: string } }
 ) {
   try {
-    const discoteche = await prismadb.discoteca.findMany({});
+    const discoteche = await prismadb.discoteca.findMany({
+      include: {
+        userAccounts: true,
+        provincia: true
+      }
+    });
 
     return NextResponse.json(discoteche);
   } catch (error) {
