@@ -8,6 +8,13 @@ const EventoPage = async ({ params }: { params: { discotecaId: string, eventoId:
     where: {
       id: params.eventoId,
     },
+    include: {
+      informazioni: {
+        orderBy: {
+          numeroInformazione: 'asc'
+        }
+      }
+    }
   })
 
   const sale = await prismadb.sala.findMany({

@@ -13,7 +13,7 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Evento, Sala, TipoInformazione, TipologiaEvento } from '@prisma/client'
+import { Evento, Informazione, Sala, TipoInformazione, TipologiaEvento } from '@prisma/client'
 import axios from 'axios';
 import { format } from 'date-fns';
 import { CalendarIcon, Trash } from 'lucide-react';
@@ -24,7 +24,9 @@ import { toast } from 'react-hot-toast';
 import * as z from 'zod';
 
 interface EventoFormProps {
-  initialData: Evento | null,
+  initialData: Evento & {
+    informazioni: Informazione[]
+  } | null,
   tipologieEvento: TipologiaEvento[],
   tipoInformazione: TipoInformazione[]
   sale: Sala[]
@@ -65,19 +67,24 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: Ev
   const form = useForm<EventoFormValues>({
     resolver: zodResolver(formSchema),
     // @ts-ignore
-    defaultValues: initialData || {
-      nome: "",
-      tipologiaEventoId: "",
-      informations: [],
-      prioriti: "",
-      imageUrl: "",
-      startDate: new Date(),
-      endDate: new Date(),
-      oraInizio: "",
-      oraFine: "",
-      eventoSala: false,
-      salaId: "",
-    }
+    defaultValues: initialData
+      ? {
+        ...initialData,
+        informations: initialData?.informazioni
+      }
+      : {
+        nome: "",
+        tipologiaEventoId: "",
+        informations: [],
+        prioriti: "",
+        imageUrl: "",
+        startDate: new Date(),
+        endDate: new Date(),
+        oraInizio: "",
+        oraFine: "",
+        eventoSala: false,
+        salaId: "",
+      }
   })
 
   const onSubmit = async (data: EventoFormValues) => {
@@ -85,8 +92,8 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: Ev
       setLoading(true);
       const [hoursInizio, minutesInizio] = data.oraInizio.split(':')
       const [hoursFine, minutesFine] = data.oraFine.split(':')
-      data.startDate = (new Date(data.startDate.getFullYear(), data.startDate.getMonth(), data.startDate.getDate(), +hoursInizio + 2, +minutesInizio))
-      data.endDate = (new Date(data.endDate.getFullYear(), data.endDate.getMonth(), data.endDate.getDate(), +hoursFine + 2, +minutesFine ))
+      data.startDate = (new Date(data.startDate.getFullYear(), data.startDate.getMonth(), data.startDate.getDate(), +hoursInizio, +minutesInizio))
+      data.endDate = (new Date(data.endDate.getFullYear(), data.endDate.getMonth(), data.endDate.getDate(), +hoursFine, +minutesFine))
       console.log(data.startDate)
       if (!initialData) {
         await axios.post(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/eventi`, data);
@@ -170,7 +177,7 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: Ev
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="tipologiaEventoId"
@@ -349,37 +356,37 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: Ev
                   </FormControl>
                 </FormItem>
               )} />
-              {form.getValues().eventoSala && 
-<FormField
-                control={form.control}
-                name="salaId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Sala:</FormLabel>
-                    <Select
-                      // @ts-ignore
-                      onValueChange={field.onChange}
-                      // @ts-ignore
-                      defaultValue={field.value}
-                      disabled={loading}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Seleziona la sala" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {sale.map((item) => (
-                          <SelectItem value={item.id} key={item.id}>
-                            {item.nome}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-                  }
+              {form.getValues().eventoSala &&
+                <FormField
+                  control={form.control}
+                  name="salaId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Sala:</FormLabel>
+                      <Select
+                        // @ts-ignore
+                        onValueChange={field.onChange}
+                        // @ts-ignore
+                        defaultValue={field.value}
+                        disabled={loading}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Seleziona la sala" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {sale.map((item) => (
+                            <SelectItem value={item.id} key={item.id}>
+                              {item.nome}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+              }
             </div>
             <FormField
               control={form.control}
@@ -459,7 +466,7 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: Ev
                   <Button
                     disabled={loading}
                     size="sm"
-                    onClick={() => field.onChange([...field.value, { descrizione: '', numeroInformazione: 1, tipoInformazioneId: ""}])}
+                    onClick={() => field.onChange([...field.value, { descrizione: '', numeroInformazione: 1, tipoInformazioneId: "" }])}
                   >
                     Aggiungi
                   </Button>
