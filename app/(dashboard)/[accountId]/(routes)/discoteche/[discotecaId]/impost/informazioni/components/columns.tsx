@@ -8,7 +8,7 @@ export type InformazioneColumn = {
     descrizione: string,
     tipo: string,
     createdAt: string,
-    numeroInformazione: string
+    numeroInformazione: number
 }
 
 export const columns: ColumnDef<InformazioneColumn>[] = [
