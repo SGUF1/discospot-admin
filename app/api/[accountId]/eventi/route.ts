@@ -8,7 +8,6 @@ export async function GET(
   try {
     const evento = await prismadb.evento.findMany({
       orderBy: {
-        prioriti: "desc",
         startDate: "asc",
       },
       include: {
