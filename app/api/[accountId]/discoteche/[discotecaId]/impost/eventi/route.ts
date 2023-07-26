@@ -11,15 +11,15 @@ export async function POST(req: Request, { params }: { params: { accountId: stri
 			endDate,
 			prioriti,
 			tipologiaEventoId,
-			description,
+			informations,
 			oraInizio,
 			oraFine,
 			eventoSala,
 			salaId
 		} = body;
 
-		if (!description) {
-			return new NextResponse('Descrizione is required', { status: 400 });
+		if (!informations) {
+			return new NextResponse('informazioni is required', { status: 400 });
 		}
 		if (!nome) {
 			return new NextResponse("Nome dell'evento is required", {
@@ -49,21 +49,29 @@ export async function POST(req: Request, { params }: { params: { accountId: stri
 		}
 			
 		const evento = await prismadb.evento.create({
-			data: {
-				nome,
-				imageUrl,
-				startDate,
-				endDate,
-				prioriti,
-				tipologiaEventoId,
-				description,
-				discotecaId: params.discotecaId,
-				oraInizio,
-				oraFine,
-				eventoSala,
-				salaId
-			}
-		});
+      data: {
+        nome,
+        imageUrl,
+        startDate,
+        endDate,
+        prioriti,
+        tipologiaEventoId,
+        discotecaId: params.discotecaId,
+        oraInizio,
+        oraFine,
+        eventoSala,
+        salaId,
+        informazioni: {
+          createMany: {
+            data: informations.map((item: any) => ({
+              descrizione: item.descrizione,
+              numeroInformazione: item.numeroInformazione,
+              tipoInformazioneId: item.tipoInformazioneId,
+            })),
+          },
+        },
+      },
+    });
 
 		return NextResponse.json(evento);
 	} catch (error) {
@@ -81,7 +89,8 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
 			include: {
 				discoteca: true,
 				sala: true,
-				tipologiaEvento: true
+				tipologiaEvento: true,
+				informazioni: true,
 			}
 		});
 

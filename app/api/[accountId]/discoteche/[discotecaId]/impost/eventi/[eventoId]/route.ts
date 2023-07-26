@@ -18,15 +18,15 @@ export async function PATCH(
 			endDate,
 			prioriti,
 			tipologiaEventoId,
-			description,
+			informations,
 			oraInizio,
 			oraFine,
 			eventoSala,
 			salaId
 		} = body;
 
-		if (!description) {
-			return new NextResponse('Descrizione is required', { status: 400 });
+		if (!informations) {
+			return new NextResponse('Informazioni is required', { status: 400 });
 		}
 		if (!nome) {
 			return new NextResponse("Nome dell'evento is required", {
@@ -57,22 +57,31 @@ export async function PATCH(
 
 		const evento = await prismadb.evento.update({
       where: {
-        id: params.eventoId
+        id: params.eventoId,
       },
-			data: {
-				nome,
-				imageUrl,
-				startDate,
-				endDate,
-				prioriti,
-				tipologiaEventoId,
-				description,
-				oraInizio,
-				oraFine,
-				eventoSala,
-				salaId
-			}
-		});
+      data: {
+        nome,
+        imageUrl,
+        startDate,
+        endDate,
+        prioriti,
+        tipologiaEventoId,
+        oraInizio,
+        oraFine,
+        eventoSala,
+        salaId,
+        informazioni: {
+          deleteMany: {},
+          createMany: {
+            data: informations.map((item: any) => ({
+              descrizione: item.descrizione,
+              numeroInformazione: item.numeroInformazione,
+              tipoInformazioneId: item.tipoInformazioneId,
+            })),
+          },
+        },
+      },
+    });
 		return NextResponse.json(evento);
 
   } catch (error) {

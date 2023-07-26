@@ -111,7 +111,6 @@ const PortataForm = ({ initialData, optionProdotti }: PortataFormProps) => {
             setOpen(false);
         }
     };
-    console.log(form.getValues().products)
     return (
         <>
             <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={loading} />

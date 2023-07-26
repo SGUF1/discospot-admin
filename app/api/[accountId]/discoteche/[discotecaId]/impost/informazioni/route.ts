@@ -24,7 +24,7 @@ export async function POST(
     const informazione = await prismadb.informazione.create({
       data: {
         descrizione,
-        numeroInformazione,
+        numeroInformazione, 
         discotecaId: params.discotecaId,
         tipoInformazioneId
       },

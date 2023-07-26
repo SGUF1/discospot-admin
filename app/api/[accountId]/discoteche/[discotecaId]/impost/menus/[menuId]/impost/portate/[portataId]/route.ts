@@ -39,7 +39,7 @@ export async function PATCH(
 						data: products.map((product: any) => ({
 							descrizione: product.descrizione,
 							prezzo: product.prezzo,
-							nome: product.nome
+							nome: product.nome,
 						}))
 					}
 				}

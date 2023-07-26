@@ -16,11 +16,13 @@ const EventoPage = async ({ params }: { params: { discotecaId: string, eventoId:
     }
   })
 
+  const tipoInformazioni = await prismadb.tipoInformazione.findMany()
+
   const tipologie = await prismadb.tipologiaEvento.findMany()
   return (
     <div className='flex-col'>
       <div className='flex-1 space-y-4 p-8 pt-6'>
-        <EventoForm initialData={evento} tipologieEvento={tipologie} sale={sale!}/>
+        <EventoForm initialData={evento} tipologieEvento={tipologie} sale={sale!} tipoInformazione={tipoInformazioni}/>
       </div>
     </div>
   )

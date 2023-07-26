@@ -27,7 +27,7 @@ interface InformazioneFormProps {
 
 const formSchema = z.object({
     descrizione: z.string().min(1),
-    numeroInformazione: z.string().min(1),
+    numeroInformazione: z.coerce.number().min(1),
     tipoInformazioneId: z.string().min(1)
 })
 
@@ -49,7 +49,7 @@ const InformazioneForm = ({ initialData, tipoinformazione }: InformazioneFormPro
         resolver: zodResolver(formSchema),
         defaultValues: initialData || {
             descrizione: "",
-            numeroInformazione: "",
+            numeroInformazione: 0,
             tipoInformazioneId: ""
         }
     })

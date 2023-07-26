@@ -57,7 +57,7 @@ model Discoteca {
   menu             Menu[]
   orders           Order[]        @relation("DiscotecaToOrder")
   like             Int            @default(0)
-  userAccounts UserAccount[]
+  userAccounts     UserAccount[]
 
   @@index([provinciaId])
 }
@@ -74,15 +74,18 @@ model Piano {
 model Informazione {
   id                 String           @id @default(uuid())
   descrizione        String
-  numeroInformazione String
-  discotecaId        String
+  numeroInformazione Int
+  discotecaId        String?
   tipoInformazioneId String
   tipoInformazione   TipoInformazione @relation("InformazioneToTipoInformazione", fields: [tipoInformazioneId], references: [id])
-  discoteca          Discoteca        @relation("DiscotecaToInformazione", fields: [discotecaId], references: [id])
+  discoteca          Discoteca?        @relation("DiscotecaToInformazione", fields: [discotecaId], references: [id])
+  eventoId           String?
+  evento             Evento?          @relation("EventoToInformazione", fields: [eventoId], references: [id])
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
 
   @@index([discotecaId])
+  @@index([eventoId])
   @@index([tipoInformazioneId])
 }
 
@@ -166,7 +169,7 @@ model Evento {
   eventoSala        Boolean
   salaId            String?
   sala              Sala?           @relation("SalaToEvento", fields: [salaId], references: [id])
-  description       String
+  informazioni      Informazione[]    @relation("EventoToInformazione")
   oraInizio         String
   oraFine           String
 
@@ -289,6 +292,6 @@ model OrderItem {
 }
 
 model UserAccount {
-  id String @id
+  id         String      @id
   discoteche Discoteca[]
 }

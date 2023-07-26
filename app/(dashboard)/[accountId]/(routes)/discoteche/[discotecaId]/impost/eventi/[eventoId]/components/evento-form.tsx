@@ -13,7 +13,7 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Evento, Sala, TipologiaEvento } from '@prisma/client'
+import { Evento, Sala, TipoInformazione, TipologiaEvento } from '@prisma/client'
 import axios from 'axios';
 import { format } from 'date-fns';
 import { CalendarIcon, Trash } from 'lucide-react';
@@ -26,13 +26,18 @@ import * as z from 'zod';
 interface EventoFormProps {
   initialData: Evento | null,
   tipologieEvento: TipologiaEvento[],
+  tipoInformazione: TipoInformazione[]
   sale: Sala[]
 }
 
 const formSchema = z.object({
   nome: z.string().min(1),
   tipologiaEventoId: z.string().min(1),
-  description: z.string().min(1),
+  informations: z.object({
+    descrizione: z.string().min(1),
+    numeroInformazione: z.coerce.number().min(1),
+    tipoInformazioneId: z.string().min(1)
+  }).array(),
   prioriti: z.string().min(1),
   imageUrl: z.string().min(1),
   startDate: z.date(),
@@ -44,7 +49,7 @@ const formSchema = z.object({
 })
 
 type EventoFormValues = z.infer<typeof formSchema>
-const EventoForm = ({ initialData, tipologieEvento, sale }: EventoFormProps) => {
+const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: EventoFormProps) => {
 
   const params = useParams();
   const router = useRouter();
@@ -63,8 +68,8 @@ const EventoForm = ({ initialData, tipologieEvento, sale }: EventoFormProps) => 
     defaultValues: initialData || {
       nome: "",
       tipologiaEventoId: "",
+      informations: [],
       prioriti: "",
-      description: "",
       imageUrl: "",
       startDate: new Date(),
       endDate: new Date(),
@@ -165,24 +170,7 @@ const EventoForm = ({ initialData, tipologieEvento, sale }: EventoFormProps) => 
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Descrizione evento:</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Scrivi una descrizione"
-                      className="resize-none"
-                      {...field}
-                      disabled={loading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            
             <FormField
               control={form.control}
               name="tipologiaEventoId"
@@ -393,6 +381,92 @@ const EventoForm = ({ initialData, tipologieEvento, sale }: EventoFormProps) => 
               />
                   }
             </div>
+            <FormField
+              control={form.control}
+              name="informations"
+              render={({ field }) => (
+                <FormItem className="mt-5">
+                  <FormLabel>Aggiungi descrizione:</FormLabel>
+                  {field.value?.map((informazione, index) => (
+                    <div className="flex  w-[900px] space-x-2 space-y-2 items-start" key={index}>
+                      <div className="flex flex-col mt-2 w-[400px] space-y-4">
+                        <FormLabel>Descrizione:</FormLabel>
+                        <Textarea
+                          disabled={loading}
+                          value={informazione.descrizione}
+                          onChange={(e) =>
+                            field.onChange(
+                              field.value.map((p, i) =>
+                                i === index ? { ...p, descrizione: e.target.value } : p
+                              )
+                            )
+                          }
+                          placeholder="Scrivi l'informazione"
+                        />
+                      </div>
+                      <div className="flex flex-col mt-3 w-[400px] space-y-4">
+                        <FormLabel>Numero informazione:</FormLabel>
+                        <Input
+                          disabled={loading}
+                          type="number"
+                          value={informazione.numeroInformazione}
+                          onChange={(e) =>
+                            field.onChange(
+                              field.value.map((p, i) =>
+                                i === index ? { ...p, numeroInformazione: parseInt(e.target.value) } : p
+                              )
+                            )
+                          }
+                          placeholder="informazione 1, 2..."
+                        />
+                      </div>
+                      <div>
+                        <FormLabel>Tipo descrizione</FormLabel>
+                        <Select
+                          disabled={loading}
+                          onValueChange={(value) =>
+                            field.onChange(
+                              field.value.map((p, i) => (i === index ? { ...p, tipoInformazioneId: value } : p))
+                            )
+                          }
+                          value={informazione.tipoInformazioneId}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue defaultValue={informazione.tipoInformazioneId} placeholder="Seleziona la tipologia di informazione" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {tipoInformazione.map((item) => (
+                              <SelectItem key={item.id} value={item.id}>
+                                {item.nome}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <Button
+                        disabled={loading}
+                        variant="destructive"
+                        size="sm"
+                        type="button"
+                        onClick={() => field.onChange(field.value.filter((_, i) => i !== index))}
+                      >
+                        <Trash className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    disabled={loading}
+                    size="sm"
+                    onClick={() => field.onChange([...field.value, { descrizione: '', numeroInformazione: 1, tipoInformazioneId: ""}])}
+                  >
+                    Aggiungi
+                  </Button>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
 
 
