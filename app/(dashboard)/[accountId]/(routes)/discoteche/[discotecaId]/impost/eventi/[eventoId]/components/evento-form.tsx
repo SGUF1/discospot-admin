@@ -80,9 +80,8 @@ const EventoForm = ({ initialData, tipologieEvento, sale }: EventoFormProps) => 
       setLoading(true);
       const [hoursInizio, minutesInizio] = data.oraInizio.split(':')
       const [hoursFine, minutesFine] = data.oraFine.split(':')
-
-      data.startDate = (new Date(data.startDate.getFullYear(), data.startDate.getMonth(), data.startDate.getDate(), +hoursInizio, +minutesInizio))
-      data.endDate = (new Date(data.endDate.getFullYear(), data.endDate.getMonth(), data.endDate.getDate(), +hoursFine, +minutesFine ))
+      data.startDate = (new Date(data.startDate.getFullYear(), data.startDate.getMonth(), data.startDate.getDate(), +hoursInizio + 2, +minutesInizio))
+      data.endDate = (new Date(data.endDate.getFullYear(), data.endDate.getMonth(), data.endDate.getDate(), +hoursFine + 2, +minutesFine ))
       console.log(data.startDate)
       if (!initialData) {
         await axios.post(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/eventi`, data);
@@ -225,7 +224,7 @@ const EventoForm = ({ initialData, tipologieEvento, sale }: EventoFormProps) => 
             />
           </div>
           <div className='flex flex-col space-y-8'>
-            <div className='grid grid-cols-3'>
+            <div className='space-y-5'>
 
               <div className='flex flex-row space-x-3'>
                 <FormField

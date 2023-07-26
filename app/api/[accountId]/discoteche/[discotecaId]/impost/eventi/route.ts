@@ -74,7 +74,16 @@ export async function POST(req: Request, { params }: { params: { accountId: stri
 
 export async function GET(req: Request, { params }: { params: { accountId: string; discotecaId: string } }) {
 	try {
-		const evento = await prismadb.evento.findMany({});
+		const evento = await prismadb.evento.findMany({
+			orderBy: {
+				startDate: 'asc'
+			},
+			include: {
+				discoteca: true,
+				sala: true,
+				tipologiaEvento: true
+			}
+		});
 
 		return NextResponse.json(evento);
 	} catch (error) {
