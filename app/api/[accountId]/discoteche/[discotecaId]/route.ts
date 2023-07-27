@@ -18,7 +18,7 @@ export async function PATCH(
       caparra,
       visibile,
       priority,
-      maximumOrderDate
+      maximumOrderDate,
     } = body;
 
     if (!name) {
@@ -45,12 +45,14 @@ export async function PATCH(
       return new NextResponse("Città is required", { status: 400 });
     }
 
-    if(!priority){
-      return new NextResponse("Priority is required", {status: 400})
+    if (!priority) {
+      return new NextResponse("Priority is required", { status: 400 });
     }
 
-    if(!maximumOrderDate){
-      return new NextResponse("Maximum Order Date is  required", {status: 400})
+    if (!maximumOrderDate) {
+      return new NextResponse("Maximum Order Date is  required", {
+        status: 400,
+      });
     }
     if (!params.accountId)
       return new NextResponse("Account Id is required", { status: 400 });
@@ -70,7 +72,7 @@ export async function PATCH(
         caparra,
         visibile,
         priority,
-        maximumOrderDate
+        maximumOrderDate,
       },
     });
 
@@ -110,8 +112,43 @@ export async function GET(
       },
       include: {
         userAccounts: true,
-        provincia: true
-      }
+        provincia: true,
+        sale: {
+          include: {
+            piano: true,
+            tavoli: {
+              include:{
+                posizione: true,
+                posti: true
+              }
+            }
+          }
+        },
+        informazioni: {
+          orderBy: {
+            numeroInformazione: "asc",
+          },
+        },
+        menu: {
+          include: {
+            portate: {
+              include: {
+                prodotti: true,
+              },
+            },
+          },
+        },
+        eventi: {
+          include: {
+            informazioni: true
+          }
+        },
+        piani: {
+          include: {
+            sale: true
+          }
+        }
+      },
     });
 
     return NextResponse.json(discoteca);
