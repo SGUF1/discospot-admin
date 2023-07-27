@@ -48,12 +48,7 @@ export async function PATCH(
     if (!priority) {
       return new NextResponse("Priority is required", { status: 400 });
     }
-
-    if (!maximumOrderDate) {
-      return new NextResponse("Maximum Order Date is  required", {
-        status: 400,
-      });
-    }
+  
     if (!params.accountId)
       return new NextResponse("Account Id is required", { status: 400 });
 
@@ -117,12 +112,12 @@ export async function GET(
           include: {
             piano: true,
             tavoli: {
-              include:{
+              include: {
                 posizione: true,
-                posti: true
-              }
-            }
-          }
+                posti: true,
+              },
+            },
+          },
         },
         informazioni: {
           orderBy: {
@@ -140,14 +135,15 @@ export async function GET(
         },
         eventi: {
           include: {
-            informazioni: true
-          }
+            informazioni: true,
+            tipologiaEvento: true,
+          },
         },
         piani: {
           include: {
-            sale: true
-          }
-        }
+            sale: true,
+          },
+        },
       },
     });
 

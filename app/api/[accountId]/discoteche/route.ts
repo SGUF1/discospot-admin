@@ -49,11 +49,7 @@ export async function POST(
       return new NextResponse("Priority is required", { status: 400 });
     }
 
-    if (!maximumOrderDate) {
-      return new NextResponse("Maximum Order Date is  required", {
-        status: 400,
-      });
-    }
+    
     if (!params.accountId)
       return new NextResponse("Account Id is required", { status: 400 });
 

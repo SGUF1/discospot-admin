@@ -1,18 +1,23 @@
 "use client"
 import { AlertModal } from '@/components/modals/alert-modal';
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Heading } from '@/components/ui/heading';
 import ImageUpload from '@/components/ui/image-upload';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import prismadb from '@/lib/prismadb';
+import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Accounts, Discoteca, Informazione, Piano, Posizione, Posto, Provincia, Sala, Stato, Tavolo, TipoInformazione } from '@prisma/client'
+import { Accounts, Data, Discoteca, Informazione, Piano, Posizione, Posto, Provincia, Sala, Stato, Tavolo, TipoInformazione } from '@prisma/client'
 import axios from 'axios';
+import { format } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
 import { Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
@@ -21,7 +26,9 @@ import { toast } from 'react-hot-toast';
 import * as z from 'zod';
 
 interface SalaFormProps {
-    initialData: Sala | null,
+    initialData: Sala & {
+        date: Data[]
+    }| null,
     piani: Piano[],
     stati: Stato[]
 }
@@ -31,11 +38,14 @@ const formSchema = z.object({
     descrizione: z.string().min(1),
     imageUrl: z.string().min(1),
     pianoId: z.string().min(1),
-    statoId: z.string().min(1)
+    statoId: z.string().min(1),
+    date: z.object({
+        data: z.date()
+    }).array()
 })
 
 type SalaFormValues = z.infer<typeof formSchema>
-    const SalaForm = ({ initialData, piani, stati }: SalaFormProps) => {
+const SalaForm = ({ initialData, piani, stati }: SalaFormProps) => {
 
     const params = useParams();
     const router = useRouter();
@@ -50,12 +60,15 @@ type SalaFormValues = z.infer<typeof formSchema>
 
     const form = useForm<SalaFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialData || {
+        defaultValues: initialData ? {
+            ...initialData, date: initialData?.date
+        } :{
             nome: "",
             descrizione: "",
             imageUrl: "",
             pianoId: "",
-            statoId: ""
+            statoId: "",
+            date: []
         }
     })
 
@@ -183,6 +196,9 @@ type SalaFormValues = z.infer<typeof formSchema>
                                 </FormItem>
                             )}
                         />
+                        
+                    </div>
+                   <div className='w-[30%]'>
                         <FormField
                             control={form.control}
                             name="statoId"
@@ -201,6 +217,68 @@ type SalaFormValues = z.infer<typeof formSchema>
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                   </div>
+                    <div className='w-[30%]'>
+                        <FormField
+                            control={form.control}
+                            name="date"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormLabel>Date di fine dell'evento</FormLabel>
+                                    <div className="space-y-4">
+                                        {field.value.map((date, index) => (
+                                            <div key={index} className="flex items-center">
+                                                <Popover>
+                                                    <PopoverTrigger asChild>
+                                                        <Input
+                                                            type="date"
+                                                            value={format(date.data, "yyyy-MM-dd")}
+                                                            onChange={(e) => {
+                                                                const newDates = [...field.value];
+                                                                newDates[index] = { data: new Date(e.target.value) };
+                                                                field.onChange(newDates);
+                                                            }}
+                                                        />
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="w-auto p-0" align="start">
+                                                        <Calendar
+                                                            mode="single"
+                                                            selected={date.data}
+                                                            onSelect={(selectedDate) => {
+                                                                const newDates = [...field.value];
+                                                                newDates[index] = { data: selectedDate! };
+                                                                field.onChange(newDates);
+                                                            }}
+                                                            initialFocus
+                                                        />
+                                                    </PopoverContent>
+                                                </Popover>
+                                                <Button
+                                                    variant="destructive"
+                                                    size="sm"
+                                                    onClick={() => {
+                                                        const newDates = [...field.value];
+                                                        newDates.splice(index, 1);
+                                                        field.onChange(newDates);
+                                                    }}
+                                                >
+                                                    <Trash className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <Button
+                                        disabled={loading}
+                                        size="sm"
+                                        type='button'
+                                        onClick={() => field.onChange([...field.value, { data: new Date() }])}
+                                    >
+                                        Aggiungi
+                                    </Button>
                                     <FormMessage />
                                 </FormItem>
                             )}

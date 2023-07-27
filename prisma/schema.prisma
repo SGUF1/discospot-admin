@@ -78,7 +78,7 @@ model Informazione {
   discotecaId        String?
   tipoInformazioneId String
   tipoInformazione   TipoInformazione @relation("InformazioneToTipoInformazione", fields: [tipoInformazioneId], references: [id])
-  discoteca          Discoteca?        @relation("DiscotecaToInformazione", fields: [discotecaId], references: [id])
+  discoteca          Discoteca?       @relation("DiscotecaToInformazione", fields: [discotecaId], references: [id])
   eventoId           String?
   evento             Evento?          @relation("EventoToInformazione", fields: [eventoId], references: [id])
   createdAt          DateTime         @default(now())
@@ -169,7 +169,7 @@ model Evento {
   eventoSala        Boolean
   salaId            String?
   sala              Sala?           @relation("SalaToEvento", fields: [salaId], references: [id])
-  informazioni      Informazione[]    @relation("EventoToInformazione")
+  informazioni      Informazione[]  @relation("EventoToInformazione")
   oraInizio         String
   oraFine           String
 
@@ -187,24 +187,37 @@ model TipologiaEvento {
 }
 
 model Sala {
-  id          String    @id @default(uuid())
+  id          String     @id @default(uuid())
   nome        String
   descrizione String
   imageUrl    String
   discotecaId String
-  discoteca   Discoteca @relation("DiscotecaToSala", fields: [discotecaId], references: [id])
-  tavoli      Tavolo[]  @relation("SalaToTavolo")
-  eventi      Evento[]  @relation("SalaToEvento")
+  discoteca   Discoteca  @relation("DiscotecaToSala", fields: [discotecaId], references: [id])
+  tavoli      Tavolo[]   @relation("SalaToTavolo")
+  eventi      Evento[]   @relation("SalaToEvento")
   statoId     String
-  stato       Stato     @relation("StatoToSale", fields: [statoId], references: [id])
+  stato       Stato      @relation("StatoToSale", fields: [statoId], references: [id])
   pianoId     String
-  piano       Piano     @relation("SalaToPiano", fields: [pianoId], references: [id])
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
+  date Data[] @relation("SalaToDate")
+  piano       Piano      @relation("SalaToPiano", fields: [pianoId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
   @@index([discotecaId])
   @@index([pianoId])
   @@index([statoId])
+}
+
+model Data {
+  id String @id @default(uuid())
+  data DateTime
+  salaId String
+  sala Sala @relation("SalaToDate", fields: [salaId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([salaId])
+  
 }
 
 model Menu {

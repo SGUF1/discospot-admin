@@ -11,7 +11,7 @@ export async function PATCH(
 ) {
   try {
     const body = await req.json();
-		const { nome, descrizione, imageUrl, pianoId, statoId } = body;
+		const { nome, descrizione, imageUrl, pianoId, statoId, date } = body;
 
 		if (!descrizione) {
 			return new NextResponse('Descrizione is required', { status: 400 });
@@ -40,7 +40,15 @@ export async function PATCH(
         nome,
         imageUrl,
         pianoId,
-        statoId
+        statoId,
+        date: {
+          deleteMany: {},
+          createMany: {
+            data: date.map((item: any) => ({
+              data: item.data,
+            })),
+          },
+        },
       },
     });
 
