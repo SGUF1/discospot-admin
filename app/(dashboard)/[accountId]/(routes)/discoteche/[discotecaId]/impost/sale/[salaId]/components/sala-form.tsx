@@ -66,6 +66,7 @@ const SalaForm = ({ initialData, piani, stati, tipoInformazione }: SalaFormProps
 
     const form = useForm<SalaFormValues>({
         resolver: zodResolver(formSchema),
+        // @ts-ignore        
         defaultValues: initialData ? {
             ...initialData, date: initialData?.date, informations: initialData?.informazioni
         } : {
