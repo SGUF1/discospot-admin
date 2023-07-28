@@ -36,6 +36,7 @@ export async function POST(req: Request, { params }: { params: { accountId: stri
           createMany: {
             data: date.map((item: any) => ({
               data: item.data,
+			  discotecaId: params.discotecaId
             })),
           },
         },

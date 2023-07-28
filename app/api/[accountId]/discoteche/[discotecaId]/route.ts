@@ -111,10 +111,12 @@ export async function GET(
         sale: {
           include: {
             piano: true,
+            date: true,
             tavoli: {
               include: {
                 posizione: true,
                 posti: true,
+                
               },
             },
           },
@@ -144,6 +146,7 @@ export async function GET(
             sale: true,
           },
         },
+        date: true
       },
     });
 
