@@ -102,7 +102,7 @@ model Tavolo {
   salaId       String
   sala         Sala        @relation("SalaToTavolo", fields: [salaId], references: [id])
   prezzoPosto  String
-  descrizione  String @db.Text
+  descrizione  String      @db.Text
   prezzo       String
   imageUrl     String
   statoId      String
@@ -214,9 +214,12 @@ model Sala {
 
 model Data {
   id          String    @id @default(uuid())
-  data        DateTime
-  salaId      String
-  sala        Sala      @relation("SalaToDate", fields: [salaId], references: [id])
+  data        DateTime?
+  salaId      String?
+  sala        Sala?      @relation("SalaToDate", fields: [salaId], references: [id])
+  giorni      Json?
+  dateRange   Json?
+  type String?
   discotecaId String
   discoteca   Discoteca @relation("DiscotecaToDate", fields: [discotecaId], references: [id])
   createdAt   DateTime  @default(now())

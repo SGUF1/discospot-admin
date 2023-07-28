@@ -112,7 +112,11 @@ export async function GET(
           include: {
             piano: true,
             date: true,
-            informazioni: true,
+            informazioni: {
+              orderBy: {
+                numeroInformazione: 'asc'
+              }
+            },
             tavoli: {
               include: {
                 posizione: true,

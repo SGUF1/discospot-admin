@@ -13,6 +13,7 @@ import { getGraphRevenue } from '@/actions/get-graph-revenue'
 import { CreditCard, EuroIcon } from 'lucide-react'
 import { getSalesCount } from '@/actions/get-sales-count'
 import { getTotalDiscotecheRevenue } from '@/actions/get-total-discoteca-revenue'
+import DatePage from './date/page'
 
 const DiscotecaImpostazioniPage = async ({ params }: { params: { accountId: string, discotecaId: string } }) => {
     const discoteca = await prismadb.discoteca.findUnique({
@@ -72,6 +73,8 @@ const DiscotecaImpostazioniPage = async ({ params }: { params: { accountId: stri
             <MenusPage params={params} />
             <Separator />
             <OrdersPage params={params} />
+            <Separator />
+            <DatePage params={params}/>
         </div>
     )
 }
