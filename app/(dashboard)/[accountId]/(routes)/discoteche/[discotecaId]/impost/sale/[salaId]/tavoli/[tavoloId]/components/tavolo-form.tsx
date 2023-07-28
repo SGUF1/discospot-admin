@@ -121,12 +121,11 @@ const TavoloForm = ({ initialData, piani, posizioni, stati,   }: TavoloFormProps
                                 name="numeroTavolo"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Numero Tavolo:</FormLabel>
+                                        <FormLabel>Nome Tavolo:</FormLabel>
                                         <FormControl>
                                             <Input
                                                 disabled={loading}
-                                                type='number'
-                                                placeholder="numero tavolo"
+                                                placeholder="Nome tavolo"
                                                 {...field}
                                             />
                                         </FormControl>
