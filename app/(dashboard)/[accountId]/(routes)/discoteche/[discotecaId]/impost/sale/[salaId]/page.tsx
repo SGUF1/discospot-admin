@@ -11,6 +11,7 @@ const SalaPage = async ({ params }: { params: { discotecaId: string, salaId: str
       id: params.salaId,
     },
     include: {
+      informazioni: true,
       date: {
         where: {
           data: {
@@ -23,13 +24,14 @@ const SalaPage = async ({ params }: { params: { discotecaId: string, salaId: str
     },
   });
 
+  const tipoInformazioni = await prismadb.tipoInformazione.findMany()
 
   const piani = await prismadb.piano.findMany()
   const stati = await prismadb.stato.findMany()
   return (
     <div className='flex-col'>
       <div className='flex-1 space-y-4 p-8 pt-6'>
-        <SalaForm initialData={sala} piani={piani} stati={stati}/>
+        <SalaForm initialData={sala} piani={piani} stati={stati} tipoInformazione={tipoInformazioni}/>
       </div>
     </div>
   )

@@ -27,25 +27,31 @@ import * as z from 'zod';
 
 interface SalaFormProps {
     initialData: Sala & {
-        date: Data[]
-    }| null,
+        date: Data[],
+        informazioni: Informazione[]
+    } | null,
     piani: Piano[],
-    stati: Stato[]
+    stati: Stato[],
+    tipoInformazione: TipoInformazione[]
 }
 
 const formSchema = z.object({
     nome: z.string().min(1),
-    descrizione: z.string().min(1),
     imageUrl: z.string().min(1),
     pianoId: z.string().min(1),
     statoId: z.string().min(1),
     date: z.object({
         data: z.date()
-    }).array()
+    }).array(),
+    informations: z.object({
+        descrizione: z.string().min(1),
+        numeroInformazione: z.coerce.number().min(1),
+        tipoInformazioneId: z.string().min(1)
+    }).array(),
 })
 
 type SalaFormValues = z.infer<typeof formSchema>
-const SalaForm = ({ initialData, piani, stati }: SalaFormProps) => {
+const SalaForm = ({ initialData, piani, stati, tipoInformazione }: SalaFormProps) => {
 
     const params = useParams();
     const router = useRouter();
@@ -61,14 +67,15 @@ const SalaForm = ({ initialData, piani, stati }: SalaFormProps) => {
     const form = useForm<SalaFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: initialData ? {
-            ...initialData, date: initialData?.date
-        } :{
+            ...initialData, date: initialData?.date, informations: initialData?.informazioni
+        } : {
             nome: "",
-            descrizione: "",
             imageUrl: "",
             pianoId: "",
             statoId: "",
-            date: []
+            date: [],
+            informations: [],
+
         }
     })
 
@@ -138,24 +145,7 @@ const SalaForm = ({ initialData, piani, stati }: SalaFormProps) => {
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={form.control}
-                            name="descrizione"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Descrizione sala:</FormLabel>
-                                    <FormControl>
-                                        <Textarea
-                                            placeholder="Write a description"
-                                            className="resize-none"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
+                       
                         <FormField
                             control={form.control}
                             name="imageUrl"
@@ -196,9 +186,9 @@ const SalaForm = ({ initialData, piani, stati }: SalaFormProps) => {
                                 </FormItem>
                             )}
                         />
-                        
+
                     </div>
-                   <div className='w-[30%]'>
+                    <div className='w-[30%]'>
                         <FormField
                             control={form.control}
                             name="statoId"
@@ -221,7 +211,93 @@ const SalaForm = ({ initialData, piani, stati }: SalaFormProps) => {
                                 </FormItem>
                             )}
                         />
-                   </div>
+                    </div>
+                    <FormField
+                        control={form.control}
+                        name="informations"
+                        render={({ field }) => (
+                            <FormItem className="mt-5">
+                                <FormLabel>Aggiungi descrizione:</FormLabel>
+                                {field.value?.map((informazione, index) => (
+                                    <div className="flex  w-[900px] space-x-2 space-y-2 items-start" key={index}>
+                                        <div className="flex flex-col mt-2 w-[400px] space-y-4">
+                                            <FormLabel>Descrizione:</FormLabel>
+                                            <Textarea
+                                                disabled={loading}
+                                                value={informazione.descrizione}
+                                                onChange={(e) =>
+                                                    field.onChange(
+                                                        field.value.map((p, i) =>
+                                                            i === index ? { ...p, descrizione: e.target.value } : p
+                                                        )
+                                                    )
+                                                }
+                                                placeholder="Scrivi l'informazione"
+                                            />
+                                        </div>
+                                        <div className="flex flex-col mt-3 w-[400px] space-y-4">
+                                            <FormLabel>Numero informazione:</FormLabel>
+                                            <Input
+                                                disabled={loading}
+                                                type="number"
+                                                value={informazione.numeroInformazione}
+                                                onChange={(e) =>
+                                                    field.onChange(
+                                                        field.value.map((p, i) =>
+                                                            i === index ? { ...p, numeroInformazione: parseInt(e.target.value) } : p
+                                                        )
+                                                    )
+                                                }
+                                                placeholder="informazione 1, 2..."
+                                            />
+                                        </div>
+                                        <div>
+                                            <FormLabel>Tipo descrizione</FormLabel>
+                                            <Select
+                                                disabled={loading}
+                                                onValueChange={(value) =>
+                                                    field.onChange(
+                                                        field.value.map((p, i) => (i === index ? { ...p, tipoInformazioneId: value } : p))
+                                                    )
+                                                }
+                                                value={informazione.tipoInformazioneId}
+                                            >
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue defaultValue={informazione.tipoInformazioneId} placeholder="Seleziona la tipologia di informazione" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {tipoInformazione.map((item) => (
+                                                        <SelectItem key={item.id} value={item.id}>
+                                                            {item.nome}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <Button
+                                            disabled={loading}
+                                            variant="destructive"
+                                            size="sm"
+                                            type="button"
+                                            onClick={() => field.onChange(field.value.filter((_, i) => i !== index))}
+                                        >
+                                            <Trash className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                ))}
+                                <Button
+                                    disabled={loading}
+                                    size="sm"
+                                    onClick={() => field.onChange([...field.value, { descrizione: '', numeroInformazione: 1, tipoInformazioneId: "" }])}
+                                >
+                                    Aggiungi
+                                </Button>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                     <div className='w-[30%]'>
                         <FormField
                             control={form.control}
@@ -283,6 +359,7 @@ const SalaForm = ({ initialData, piani, stati }: SalaFormProps) => {
                                 </FormItem>
                             )}
                         />
+                        
                     </div>
                     <Button disabled={loading} className='ml-auto' type='submit'>
                         {action}

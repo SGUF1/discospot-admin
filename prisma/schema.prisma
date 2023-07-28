@@ -82,11 +82,14 @@ model Informazione {
   discoteca          Discoteca?       @relation("DiscotecaToInformazione", fields: [discotecaId], references: [id])
   eventoId           String?
   evento             Evento?          @relation("EventoToInformazione", fields: [eventoId], references: [id])
+  salaId             String?
+  sala               Sala?            @relation("SalaToInformazione", fields: [salaId], references: [id])
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
 
   @@index([discotecaId])
   @@index([eventoId])
+  @@index([salaId])
   @@index([tipoInformazioneId])
 }
 
@@ -188,21 +191,21 @@ model TipologiaEvento {
 }
 
 model Sala {
-  id          String    @id @default(uuid())
-  nome        String
-  descrizione String
-  imageUrl    String
-  discotecaId String
-  discoteca   Discoteca @relation("DiscotecaToSala", fields: [discotecaId], references: [id])
-  tavoli      Tavolo[]  @relation("SalaToTavolo")
-  eventi      Evento[]  @relation("SalaToEvento")
-  statoId     String
-  stato       Stato     @relation("StatoToSale", fields: [statoId], references: [id])
-  pianoId     String
-  date        Data[]    @relation("SalaToDate")
-  piano       Piano     @relation("SalaToPiano", fields: [pianoId], references: [id])
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id           String         @id @default(uuid())
+  nome         String
+  imageUrl     String
+  discotecaId  String
+  discoteca    Discoteca      @relation("DiscotecaToSala", fields: [discotecaId], references: [id])
+  tavoli       Tavolo[]       @relation("SalaToTavolo")
+  eventi       Evento[]       @relation("SalaToEvento")
+  statoId      String
+  stato        Stato          @relation("StatoToSale", fields: [statoId], references: [id])
+  pianoId      String
+  date         Data[]         @relation("SalaToDate")
+  piano        Piano          @relation("SalaToPiano", fields: [pianoId], references: [id])
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  informazioni Informazione[] @relation("SalaToInformazione")
 
   @@index([discotecaId])
   @@index([pianoId])

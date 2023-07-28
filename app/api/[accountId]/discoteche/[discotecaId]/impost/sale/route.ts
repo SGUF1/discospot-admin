@@ -4,9 +4,9 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request, { params }: { params: { accountId: string; discotecaId: string } }) {
 	try {
 		const body = await req.json();
-		const { nome, descrizione, imageUrl, pianoId, statoId, date } = body;
+		const { nome, informations, imageUrl, pianoId, statoId, date } = body;
 
-		if (!descrizione) {
+		if (!informations) {
 			return new NextResponse('Descrizione is required', { status: 400 });
 		}
 		if (!nome) {
@@ -26,7 +26,6 @@ export async function POST(req: Request, { params }: { params: { accountId: stri
 
 		const sala = await prismadb.sala.create({
       data: {
-        descrizione,
         nome,
         imageUrl,
         discotecaId: params.discotecaId,
@@ -36,7 +35,16 @@ export async function POST(req: Request, { params }: { params: { accountId: stri
           createMany: {
             data: date.map((item: any) => ({
               data: item.data,
-			  discotecaId: params.discotecaId
+              discotecaId: params.discotecaId,
+            })),
+          },
+        },
+        informazioni: {
+          createMany: {
+            data: informations.map((item: any) => ({
+              descrizione: item.descrizione,
+              numeroInformazione: item.numeroInformazione,
+              tipoInformazioneId: item.tipoInformazioneId,
             })),
           },
         },

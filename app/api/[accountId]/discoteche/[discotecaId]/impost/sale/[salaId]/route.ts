@@ -11,10 +11,9 @@ export async function PATCH(
 ) {
   try {
     const body = await req.json();
-    const { nome, descrizione, imageUrl, pianoId, statoId, date } = body;
-
-    if (!descrizione) {
-      return new NextResponse("Descrizione is required", { status: 400 });
+    const { nome, informations, imageUrl, pianoId, statoId, date } = body;
+    if (!informations) {
+      return new NextResponse("informations is required", { status: 400 });
     }
     if (!nome) {
       return new NextResponse("Nome della sala is required", {
@@ -38,7 +37,6 @@ export async function PATCH(
         id: params.salaId,
       },
       data: {
-        descrizione,
         nome,
         imageUrl,
         pianoId,
@@ -49,6 +47,16 @@ export async function PATCH(
             data: date.map((item: any) => ({
               data: item.data,
               discotecaId: params.discotecaId,
+            })),
+          },
+        },
+        informazioni: {
+          deleteMany: {},
+          createMany: {
+            data: informations.map((item: any) => ({
+              descrizione: item.descrizione,
+              numeroInformazione: item.numeroInformazione,
+              tipoInformazioneId: item.tipoInformazioneId,
             })),
           },
         },

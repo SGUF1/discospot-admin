@@ -112,6 +112,7 @@ export async function GET(
           include: {
             piano: true,
             date: true,
+            informazioni: true,
             tavoli: {
               include: {
                 posizione: true,
