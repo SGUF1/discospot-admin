@@ -12,9 +12,9 @@ export async function POST(
       posizioneId,
       descrizione,
       prezzo,
-      prezzoPosto,
       statoId,
       imageUrl,
+      numeroMinimo,
     } = body;
 
     if (!descrizione) {
@@ -27,9 +27,6 @@ export async function POST(
     }
     if (!prezzo) {
       return new NextResponse("Prezzo is required", { status: 400 });
-    }
-    if (!prezzoPosto) {
-      return new NextResponse("Prezzo a posto is required", { status: 400 });
     }
     if (!statoId) {
       return new NextResponse("Stato ID is required", { status: 400 });
@@ -46,7 +43,7 @@ export async function POST(
         descrizione,
         numeroTavolo,
         prezzo,
-        prezzoPosto,
+        numeroMinimo,
         statoId,
         imageUrl,
         salaId: params.salaId,

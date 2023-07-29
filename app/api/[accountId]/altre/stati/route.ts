@@ -7,11 +7,14 @@ export async function POST(
 ) {
   try {
     const body = await req.json();
-    const { nome } = body;
+    const { nome, colore } = body;
 
     if (!nome) {
       return new NextResponse("Nome is required", { status: 400 });
     }
+        if (!colore) {
+          return new NextResponse("Colore is required", { status: 400 });
+        }
 
     if (!params.accountId)
       return new NextResponse("Account ID is required", { status: 400 });
@@ -19,6 +22,7 @@ export async function POST(
     const stato = await prismadb.stato.create({
       data: {
         nome,
+        colore
       },
     });
 

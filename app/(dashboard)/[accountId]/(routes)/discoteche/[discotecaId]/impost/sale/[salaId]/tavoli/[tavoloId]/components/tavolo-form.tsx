@@ -32,7 +32,7 @@ const formSchema = z.object({
     posizioneId: z.string().min(1),
     descrizione: z.string().min(1),
     prezzo: z.string().min(1),
-    prezzoPosto: z.string().min(1),
+    numeroMinimo: z.coerce.number().min(1),
     statoId: z.string().min(1),
     imageUrl: z.string().min(1),
 })
@@ -53,12 +53,13 @@ const TavoloForm = ({ initialData, piani, posizioni, stati,   }: TavoloFormProps
 
     const form = useForm<TavoloFormValues>({
         resolver: zodResolver(formSchema),
+        // @ts-ignore
         defaultValues: initialData || {
             numeroTavolo: "",
             posizioneId: "",
             descrizione: "",
             prezzo: "",
-            prezzoPosto: "",
+            numeroMinimo: 0,
             statoId: "",
             imageUrl: "",
         }
@@ -220,15 +221,15 @@ const TavoloForm = ({ initialData, piani, posizioni, stati,   }: TavoloFormProps
                             />
                             <FormField
                                 control={form.control}
-                                name="prezzoPosto"
+                                name="numeroMinimo"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Prezzo per posto:</FormLabel>
+                                        <FormLabel>Numero minimo persone:</FormLabel>
                                         <FormControl>
                                             <Input
                                                 type='number'
                                                 disabled={loading}
-                                                placeholder="prezzo posto"
+                                                placeholder="1..."
                                                 {...field}
                                             />
                                         </FormControl>
@@ -237,8 +238,6 @@ const TavoloForm = ({ initialData, piani, posizioni, stati,   }: TavoloFormProps
                                 )}
                             />
                         </div>
-
-
                         <FormField
                             control={form.control}
                             name="imageUrl"

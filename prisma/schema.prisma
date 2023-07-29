@@ -101,10 +101,10 @@ model Tavolo {
   posti        Posto[]     @relation("TavoloToPosto")
   salaId       String
   sala         Sala        @relation("SalaToTavolo", fields: [salaId], references: [id])
-  prezzoPosto  String
   descrizione  String      @db.Text
   prezzo       String
   imageUrl     String
+  numeroMinimo Int?
   statoId      String
   stato        Stato       @relation("TavoloToStato", fields: [statoId], references: [id])
   orderItems   OrderItem[]
@@ -131,6 +131,7 @@ model Stato {
   posti     Posto[]  @relation("PostoToStato")
   sale      Sala[]   @relation("StatoToSale")
   order     Order[]  @relation("StatoToOrder")
+  colore    String   @default("#fff")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -216,10 +217,10 @@ model Data {
   id          String    @id @default(uuid())
   data        DateTime?
   salaId      String?
-  sala        Sala?      @relation("SalaToDate", fields: [salaId], references: [id])
+  sala        Sala?     @relation("SalaToDate", fields: [salaId], references: [id])
   giorni      Json?
   dateRange   Json?
-  type String?
+  type        String?
   discotecaId String
   discoteca   Discoteca @relation("DiscotecaToDate", fields: [discotecaId], references: [id])
   createdAt   DateTime  @default(now())

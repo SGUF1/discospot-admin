@@ -23,6 +23,7 @@ const StatiPage = async ({ params }: { params: { accountId: string } }) => {
         name: item.nome,
         posti: item.posti.length,
         tavoli: item.tavoli.length,
+        colore: item.colore,
         createdAt: format(item.createdAt, "MMMM do, yyyy"),
         superior: admin?.superior,
     }))

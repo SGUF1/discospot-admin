@@ -11,6 +11,7 @@ export type StatoColumn = {
     name: string,
     posti: number,
     tavoli: number,
+    colore: string,
     createdAt: string,
     superior?: boolean
 }
@@ -43,6 +44,13 @@ export const columns: ColumnDef<StatoColumn>[] = [
             )
         }
 
+    },
+    {
+        accessorKey: "colore",
+        header: "Colore",
+        cell: ({ row }) => <div className="flex  items-center">
+            <div className="h-5 w-5 border rounded-full" style={{ background: `${row.original.colore}` }} />
+        </div>
     },
     {
         accessorKey: "createdAt",

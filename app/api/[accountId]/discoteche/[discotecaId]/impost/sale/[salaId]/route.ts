@@ -62,7 +62,18 @@ export async function PATCH(
         },
       },
     });
-
+      const piano = await prismadb.piano.update({
+        where: {
+          id: pianoId,
+        },
+        data: {
+          discoteca: {
+            connect: {
+              id: params.discotecaId,
+            },
+          },
+        },
+      });
     return NextResponse.json(sala);
   } catch (error) {
     console.log("[SALA PATCH]", error);

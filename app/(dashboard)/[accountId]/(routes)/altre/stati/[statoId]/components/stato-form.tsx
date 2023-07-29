@@ -20,7 +20,8 @@ interface StatoFormProps {
 }
 
 const formSchema = z.object({
-    nome: z.string().min(1)
+    nome: z.string().min(1),
+    colore: z.string().min(1),
 })
 
 type StatoFormValues = z.infer<typeof formSchema>
@@ -40,7 +41,8 @@ const StatoForm = ({ initialData }: StatoFormProps) => {
     const form = useForm<StatoFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: initialData || {
-            nome: ""
+            nome: "",
+            colore: "#fff"
         }
     })
 
@@ -126,6 +128,28 @@ const StatoForm = ({ initialData }: StatoFormProps) => {
                                 </FormItem>
                             )}
                         />
+                        <div>
+                            <FormField
+                                control={form.control}
+                                name="colore"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Colore dello stato:</FormLabel>
+                                       <div className='flex space-x-2 items-center'>
+                                            <div className='h-6 w-6 rounded-full border' style={{background: `${form.getValues().colore}`}}/>
+                                            <FormControl>
+                                                <Input
+                                                    disabled={loading}
+                                                    placeholder="#fff..."
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                       </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
                     </div>
                     <Button disabled={loading} className='ml-auto' type='submit'>
                         {action}

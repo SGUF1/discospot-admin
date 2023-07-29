@@ -116,12 +116,14 @@ export async function GET(
               orderBy: {
                 numeroInformazione: 'asc'
               }
+              
             },
+            stato: true,
             tavoli: {
               include: {
                 posizione: true,
                 posti: true,
-                
+                stato: true,
               },
             },
           },
@@ -146,11 +148,7 @@ export async function GET(
             tipologiaEvento: true,
           },
         },
-        piani: {
-          include: {
-            sale: true,
-          },
-        },
+        piani: true,
         date: true
       },
     });

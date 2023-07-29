@@ -7,18 +7,21 @@ export async function PATCH(
 ) {
   try {
     const body = await req.json();
-    const { nome } = body;
+    const { nome, colore } = body;
 
     if (!nome) {
       return new NextResponse("Nome is required", { status: 400 });
     }
-
+    if (!colore) {
+      return new NextResponse("Colore is required", { status: 400 });
+    }
     const stato = await prismadb.stato.update({
       where: {
         id: params.statoId,
       },
       data: {
         nome,
+        colore,
       },
     });
     return NextResponse.json(stato);
