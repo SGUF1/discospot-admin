@@ -248,8 +248,10 @@ model Prodotto {
   nome        String
   portataId   String
   portata     Portata     @relation("PortataToProdotto", fields: [portataId], references: [id])
-  descrizione String
+  descrizione String @db.Text
   prezzo      Float
+  limite Int
+  imageUrl String
   orderItems  OrderItem[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
@@ -263,6 +265,9 @@ model Portata {
   menuId        String
   menu          Menu       @relation("MenuToPortata", fields: [menuId], references: [id])
   prodotti      Prodotto[] @relation("PortataToProdotto")
+  numeroBibiteDiverse Int?
+  singolaSelezione Boolean @default(false)
+  numeroBibiteTotale Int?
   numeroPortata Int
   lastPortata   Boolean
   createdAt     DateTime   @default(now())

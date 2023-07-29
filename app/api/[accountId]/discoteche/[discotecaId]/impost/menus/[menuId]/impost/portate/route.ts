@@ -6,7 +6,7 @@ import prismadb from '@/lib/prismadb';
 export async function POST(req: Request, { params }: { params: { accountId: string; menuId: string } }) {
   try {
     const body = await req.json();
-    const { nome, numeroPortata, lastPortata, products } = body;
+    const { nome, numeroPortata, lastPortata, products, singolaSelezione, numeroBibiteDiverse, numeroBibiteTotale } = body;
 
     if (!nome) {
       return new NextResponse('Nome is required', { status: 400 });
@@ -26,11 +26,16 @@ export async function POST(req: Request, { params }: { params: { accountId: stri
         nome,
         lastPortata,
         numeroPortata,
+        singolaSelezione,
+        numeroBibiteDiverse,
+        numeroBibiteTotale,
         prodotti: {
           createMany: {
             data: products.map((product: any) => ({
               descrizione: product.descrizione,
               prezzo: product.prezzo,
+              limite: product.limite,
+              imageUrl: product.imageUrl, 
               nome: product.nome,
             })),
           },

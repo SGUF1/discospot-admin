@@ -134,8 +134,14 @@ export async function GET(
           },
         },
         menu: {
+          where:{
+            isVisible: true
+          },
           include: {
             portate: {
+              orderBy: {
+                numeroPortata: 'asc'
+              },
               include: {
                 prodotti: true,
               },

@@ -83,8 +83,12 @@ export async function GET(
   try {
     const discoteche = await prismadb.discoteca.findMany({
       where: {
-        visibile: true
+        visibile: true,
       },
+      orderBy: {
+        priority: 'desc'
+      }
+      ,
       include: {
         userAccounts: true,
         provincia: true
