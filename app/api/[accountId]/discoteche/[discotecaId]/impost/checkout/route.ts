@@ -98,7 +98,7 @@ export async function POST(
     },
   }));
 
-    order = await prismadb.order.create({
+   const order = await prismadb.order.create({
       data: {
         discotecaId: params.discotecaId,
         isPaid: false,
