@@ -113,7 +113,7 @@ export async function POST(
         discotecaId: params.discotecaId,
         isPaid: false,
         proprietario: codiceTavolo ? false : true,
-        orderDate: data,
+        orderDate: (new Date(data).getTime()).toString(),
         numeroPersone,
         tavoloId: tavolo?.id,
         statoId: "f1f62db0-b6ec-473e-b8f5-d6276b500731",
