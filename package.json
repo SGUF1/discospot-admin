@@ -39,6 +39,7 @@
     "class-variance-authority": "^0.6.1",
     "clsx": "^1.2.1",
     "date-fns": "^2.30.0",
+    "date-fns-tz": "^2.0.0",
     "dayjs": "^1.11.9",
     "lucide-react": "^0.258.0",
     "moment": "^2.29.4",
