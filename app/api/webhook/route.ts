@@ -32,7 +32,7 @@ export async function POST(req: Request) {
         isPaid: true,
         stato: {
           connect: {
-            id: "23ebdf17-5b36-4945-b149-058e9194ece1"
+            id: "471ce627-12af-44fc-bbcb-95f83c1827cf"
           }
         },
         phone: session?.customer_details?.phone || "",
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
         data: {
           data: order.orderDate,
           tavoloId: tavoloId,
-          statoId: "23ebdf17-5b36-4945-b149-058e9194ece1"
+          statoId: "9a3d047f-350d-4fb5-9dfa-45f5869f705f"
         }
       })
     }

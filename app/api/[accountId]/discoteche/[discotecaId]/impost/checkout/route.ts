@@ -116,7 +116,7 @@ export async function POST(
         orderDate: (new Date(data).getTime()).toString(),
         numeroPersone,
         tavoloId: tavolo?.id,
-        statoId: "f1f62db0-b6ec-473e-b8f5-d6276b500731",
+        statoId: "8d356af8-dc09-42f1-86da-90c64c20638b",
         orderItems: {
           create: orderItemsData,
         },
