@@ -3,7 +3,7 @@ import React from 'react'
 import { EventoColumn } from './components/columns'
 import { format } from 'date-fns'
 import TavoliClient from './components/client'
-
+import moment from 'moment'
 const EventiPage = async ({ params }: { params: { discotecaId: string } }) => {
 
   const eventi = await prismadb.evento.findMany({
@@ -20,8 +20,8 @@ const EventiPage = async ({ params }: { params: { discotecaId: string } }) => {
     {
       id: item.id,
       nome: item.nome,
-      startDate: format(item.startDate, "Pp"),
-      endDate: format(item.endDate, "Pp"),
+      startDate: format(moment.utc(item.startDate).local().toDate(), "Pp"),
+      endDate: format(moment.utc(item.endDate).local().toDate(), "Pp"), 
       tipologiaEvento: item.tipologiaEvento.name,
       eventoSala: item.eventoSala,
       sala: item.sala?.nome
