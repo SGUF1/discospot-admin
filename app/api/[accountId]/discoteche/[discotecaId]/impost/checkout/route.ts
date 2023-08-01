@@ -97,17 +97,7 @@ export async function POST(
       },
     },
   }));
-  const date = await prismadb.data.findMany({
-    where: {
-      data: new Date(data).toISOString(),
-      AND: {
-        tavoloId: tavolo.id
-      }
-    }
-  })
 
-  let order: Order;
-  if (!date) {
     order = await prismadb.order.create({
       data: {
         discotecaId: params.discotecaId,
@@ -123,12 +113,7 @@ export async function POST(
         codice: codiceTavolo ?? "",
       },
     });
-  }else{
-    return NextResponse.json({ url: `${process.env.FRONTEND_STORE_URL}/${params.discotecaId}?prenotato=1` },
-      {
-        headers: corsHeaders,
-      })
-  }
+  
 
 
   const session = await stripe.checkout.sessions.create({
