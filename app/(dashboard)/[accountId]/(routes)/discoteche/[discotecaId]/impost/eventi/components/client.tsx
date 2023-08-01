@@ -16,7 +16,6 @@ const EventiClient = ({ data }: EventiClientProps) => {
   const router = useRouter();
   const params = useParams();
 
-  console.log(data.map((item) => item.startDate))
   return (
     <>
       <div className='flex items-center justify-between'>
