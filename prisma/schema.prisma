@@ -94,22 +94,24 @@ model Informazione {
 }
 
 model Tavolo {
-  id           String      @id @default(uuid())
-  numeroTavolo String
-  posizioneId  String
-  posizione    Posizione   @relation("TavoloToPosizione", fields: [posizioneId], references: [id])
-  posti        Posto[]     @relation("TavoloToPosto")
-  salaId       String
-  sala         Sala        @relation("SalaToTavolo", fields: [salaId], references: [id])
-  descrizione  String      @db.Text
-  prezzo       String
-  imageUrl     String
-  numeroMinimo Int?
-  statoId      String
-  stato        Stato       @relation("TavoloToStato", fields: [statoId], references: [id])
-  orderItems   OrderItem[]
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  id               String            @id @default(uuid())
+  numeroTavolo     String
+  posizioneId      String
+  posizione        Posizione         @relation("TavoloToPosizione", fields: [posizioneId], references: [id])
+  posti            Posto[]           @relation("TavoloToPosto")
+  salaId           String
+  sala             Sala              @relation("SalaToTavolo", fields: [salaId], references: [id])
+  descrizione      String            @db.Text
+  prezzo           String
+  imageUrl         String
+  numeroMinimo     Int?
+  calendarioTavolo CalendarioTavolo? @relation()
+  order            Order[]           @relation("OrderToTavolo")
+  statoId          String
+  stato            Stato             @relation("TavoloToStato", fields: [statoId], references: [id])
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  date             Data[]            @relation("TavoloToData")
 
   @@index([posizioneId])
   @@index([salaId])
@@ -134,6 +136,7 @@ model Stato {
   colore    String   @default("#fff")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  date      Data[]   @relation("StatoToData")
 }
 
 model Posto {
@@ -156,6 +159,18 @@ model TipoInformazione {
   informazioni Informazione[] @relation("InformazioneToTipoInformazione")
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
+}
+
+model CalendarioTavolo {
+  id        String   @id @default(uuid())
+  data      Data[]
+  tavoloId  String   @unique
+  tavolo    Tavolo   @relation(fields: [tavoloId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  statoId   String?
+
+  @@index([tavoloId])
 }
 
 model Evento {
@@ -214,20 +229,29 @@ model Sala {
 }
 
 model Data {
-  id          String    @id @default(uuid())
-  data        DateTime?
-  salaId      String?
-  sala        Sala?     @relation("SalaToDate", fields: [salaId], references: [id])
-  giorni      Json?
-  dateRange   Json?
-  type        String?
-  discotecaId String
-  discoteca   Discoteca @relation("DiscotecaToDate", fields: [discotecaId], references: [id])
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id                 String            @id @default(uuid())
+  data               DateTime?
+  salaId             String?
+  sala               Sala?             @relation("SalaToDate", fields: [salaId], references: [id])
+  statoId            String?
+  stato              Stato?            @relation("StatoToData", fields: [statoId], references: [id])
+  giorni             Json?
+  dateRange          Json?
+  type               String?
+  tavoloId           String?
+  tavolo             Tavolo?           @relation("TavoloToData", fields: [tavoloId], references: [id])
+  discotecaId        String?
+  discoteca          Discoteca?        @relation("DiscotecaToDate", fields: [discotecaId], references: [id])
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  calendarioTavolo   CalendarioTavolo? @relation(fields: [calendarioTavoloId], references: [id])
+  calendarioTavoloId String?
 
   @@index([salaId])
   @@index([discotecaId])
+  @@index([calendarioTavoloId])
+  @@index([statoId])
+  @@index([tavoloId])
 }
 
 model Menu {
@@ -248,10 +272,10 @@ model Prodotto {
   nome        String
   portataId   String
   portata     Portata     @relation("PortataToProdotto", fields: [portataId], references: [id])
-  descrizione String @db.Text
+  descrizione String      @db.Text
   prezzo      Float
-  limite Int
-  imageUrl String
+  limite      Int
+  imageUrl    String
   orderItems  OrderItem[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
@@ -260,18 +284,19 @@ model Prodotto {
 }
 
 model Portata {
-  id            String     @id @default(uuid())
-  nome          String
-  menuId        String
-  menu          Menu       @relation("MenuToPortata", fields: [menuId], references: [id])
-  prodotti      Prodotto[] @relation("PortataToProdotto")
+  id                  String      @id @default(uuid())
+  nome                String
+  menuId              String
+  menu                Menu        @relation("MenuToPortata", fields: [menuId], references: [id])
+  prodotti            Prodotto[]  @relation("PortataToProdotto")
   numeroBibiteDiverse Int?
-  singolaSelezione Boolean @default(false)
-  numeroBibiteTotale Int?
-  numeroPortata Int
-  lastPortata   Boolean
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  singolaSelezione    Boolean     @default(false)
+  numeroBibiteTotale  Int?
+  numeroPortata       Int
+  lastPortata         Boolean
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+  OrderItem           OrderItem[]
 
   @@index([menuId])
 }
@@ -287,13 +312,16 @@ model Order {
   id            String      @id @default(uuid())
   discotecaId   String
   discoteca     Discoteca   @relation("DiscotecaToOrder", fields: [discotecaId], references: [id])
+  tavoloId      String
+  tavolo        Tavolo      @relation("OrderToTavolo", fields: [tavoloId], references: [id])
   orderItems    OrderItem[]
   isPaid        Boolean     @default(false)
   phone         String      @default("")
   codice        String      @default("")
   numeroPersone Int         @default(0)
+  proprietario  Boolean     @default(false)
   orderDate     DateTime
-  expiredDate   DateTime
+  expiredDate   DateTime?
   statoId       String
   stato         Stato       @relation("StatoToOrder", fields: [statoId], references: [id])
   createdAt     DateTime    @default(now())
@@ -301,21 +329,23 @@ model Order {
 
   @@index([discotecaId])
   @@index([statoId])
+  @@index([tavoloId])
 }
 
 model OrderItem {
   id         String   @id @default(uuid())
   orderId    String
   order      Order    @relation(fields: [orderId], references: [id])
-  tavoloId   String
-  tavolo     Tavolo   @relation(fields: [tavoloId], references: [id])
+  portataId  String
+  portata    Portata  @relation(fields: [portataId], references: [id])
   prodottoId String
   prodotto   Prodotto @relation(fields: [prodottoId], references: [id])
+  quantity   Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+  @@index([portataId])
   @@index([orderId])
-  @@index([tavoloId])
   @@index([prodottoId])
 }
 

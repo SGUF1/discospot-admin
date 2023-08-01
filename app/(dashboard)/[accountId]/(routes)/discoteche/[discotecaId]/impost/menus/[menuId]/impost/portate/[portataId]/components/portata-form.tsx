@@ -332,7 +332,7 @@ const PortataForm = ({ initialData, optionProdotti }: PortataFormProps) => {
                                         </div>
                                         <div>
                                             <FormItem>
-                                                <FormLabel>Discoteca image</FormLabel>
+                                                <FormLabel>Bibita image</FormLabel>
                                                 <FormControl>
                                                     <ImageUpload
                                                         value={prodotto.imageUrl ? [prodotto.imageUrl] : []}

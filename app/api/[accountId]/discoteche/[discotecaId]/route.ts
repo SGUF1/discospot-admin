@@ -48,7 +48,7 @@ export async function PATCH(
     if (!priority) {
       return new NextResponse("Priority is required", { status: 400 });
     }
-  
+
     if (!params.accountId)
       return new NextResponse("Account Id is required", { status: 400 });
 
@@ -116,7 +116,7 @@ export async function GET(
               orderBy: {
                 numeroInformazione: 'asc'
               }
-              
+
             },
             stato: true,
             tavoli: {
@@ -124,6 +124,11 @@ export async function GET(
                 posizione: true,
                 posti: true,
                 stato: true,
+                calendarioTavolo: {
+                  include: {
+                    data: true
+                  }
+                }
               },
             },
           },
@@ -134,7 +139,7 @@ export async function GET(
           },
         },
         menu: {
-          where:{
+          where: {
             isVisible: true
           },
           include: {

@@ -13,10 +13,11 @@ export type OrdersColumn = {
 	tavolo: string;
 	prodotti: string[]
 	createdAt: string;
+	orderData: string;
 	codice: string,
 	numeroPersone: number;
 	stato: string,
-	expiredDate: string
+	expiredDate?: string
 };
 
 export const columns: ColumnDef<OrdersColumn>[] = [
@@ -45,6 +46,10 @@ export const columns: ColumnDef<OrdersColumn>[] = [
 		header: "Numero persone"
 	},
 	{
+		accessorKey: "orderData",
+		header: "Ordine per il:"
+	},
+	{
 		accessorKey: "expiredDate",
 		header: "Limite giorno"
 	},
@@ -59,6 +64,6 @@ export const columns: ColumnDef<OrdersColumn>[] = [
 	},
 	{
 		accessorKey: "createdAt",
-		header: "Date"
+		header: "Ordine fatto il:"
 	}
 ];

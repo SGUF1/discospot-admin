@@ -16,17 +16,37 @@ export default async function DashboardLayout({
         where: { id: params.accountId },
     });
 
-    
+
     if (!account) {
         redirect("/");
     }
-
+    // const orders = await prismadb.order.findMany({
+    //     include: {
+    //         tavolo: true
+    //     }
+    // })
+    // orders.map(async (item) => {
+    //     if (item.orderDate >= new Date()) {
+    //         await prismadb.tavolo.update({
+    //             where: {
+    //                 id: item.tavoloId
+    //             },
+    //             data: {
+    //                 stato: {
+    //                     connect: {
+    //                         id: "97a3ade6-3613-4a3b-a26d-5d6cce62b03b"
+    //                     }
+    //                 }
+    //             }
+    //         })
+    //     }
+    // })
     return (
         <>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <Navbar imageUrl={account ? account?.imageUrl : "https://res.cloudinary.com/dg2hpjtdh/image/upload/v1688595030/cqi5mouupo1g8vs7y6ql.jpg}"}/>
-            <ModalProvider/>
-            {children}
+                <Navbar imageUrl={account ? account?.imageUrl : "https://res.cloudinary.com/dg2hpjtdh/image/upload/v1688595030/cqi5mouupo1g8vs7y6ql.jpg}"} />
+                <ModalProvider />
+                {children}
             </ThemeProvider>
         </>
     );

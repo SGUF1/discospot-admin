@@ -10,16 +10,16 @@ export const getTotalDiscotecheRevenue = async (discotecaId: string) => {
       orderItems: {
         include: {
           prodotto: true,
-          tavolo: true,
         }
-      }
+      },
+          tavolo: true,
     }
   });
 
   const totalRevenue:number = paidOrders.reduce((total, order) => {
     const orderTotal = order.orderItems.reduce((orderSum, item) => {
       return orderSum + item.prodotto.prezzo;
-    }, Number(order.orderItems[0].tavolo.prezzo));
+    }, Number(order.tavolo.prezzo));
     return total + orderTotal;
   }, 0);
 

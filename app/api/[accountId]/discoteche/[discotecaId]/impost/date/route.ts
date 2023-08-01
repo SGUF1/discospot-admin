@@ -49,9 +49,10 @@ export async function GET(
 ) {
   try {
     const date = await prismadb.data.findMany({
-      where: {
-        discotecaId: params.discotecaId,
-      },
+      include: {
+        tavolo: true,
+        stato: true,
+      }
     });
 
     return NextResponse.json(date);

@@ -10,6 +10,9 @@ const OrdersPage = async ({ params }: { params: { discotecaId: string } }) => {
     where: {
       discotecaId: params.discotecaId,
     },
+    orderBy: {
+      createdAt: 'desc'
+    },
     include: {
       discoteca: true,
       orderItems: {
@@ -19,11 +22,10 @@ const OrdersPage = async ({ params }: { params: { discotecaId: string } }) => {
               portata: true,
             }
           },
-          tavolo: true
-          
         },
       },
-      stato: true
+      stato: true,
+      tavolo: true
     },
   })
 
@@ -33,18 +35,24 @@ const OrdersPage = async ({ params }: { params: { discotecaId: string } }) => {
       createdAt: format(item.createdAt, "Pp"),
       isPaid: item.isPaid,
       phone: item.phone,
-      prodotti: item.orderItems.map((orderItem) => orderItem.prodotto.portata.numeroPortata + ") " + orderItem.prodotto.nome ),
-      tavolo: item.orderItems[0].tavolo.numeroTavolo,
+      // prodotti: item.orderItems.map((orderItem) => orderItem.prodotto.portata.numeroPortata + ") " + orderItem.prodotto.nome ),
+      // tavolo: item.orderItems[0]?.tavolo.numeroTavolo,
+      // totalPrice: item.orderItems.reduce((total, orderItem) => {
+      //   return total + Number(orderItem.prodotto.prezzo) / item.numeroPersone
+      // }, Number(item.orderItems[0]?.tavolo.prezzo) / item.numeroPersone),
+      prodotti: item.orderItems.map((order) => order.prodotto.portata.nome + ") " + order.prodotto.nome + " x" + order.quantity),
+      tavolo: item.tavolo.numeroTavolo,
+      orderData: format(item.orderDate, "MMMM do, yyyy"),
       totalPrice: item.orderItems.reduce((total, orderItem) => {
-        return total + Number(orderItem.prodotto.prezzo) / item.numeroPersone
-      }, Number(item.orderItems[0].tavolo.prezzo) / item.numeroPersone),
+        return total + (orderItem.prodotto.prezzo * orderItem.quantity) / item.numeroPersone
+      }, Number(Number(item.tavolo.prezzo) / item.numeroPersone)) ,
       codice: item.codice,
       numeroPersone: item.numeroPersone,
       stato: item.stato.nome,
-      expiredDate: format(item.expiredDate, "MMMM do, yyyy")
+      expiredDate: item?.expiredDate ? format(item?.expiredDate!, "MMMM do, yyyy") : ""
     }))
-  
 
+    
   return (
     <div className='flex-col'>
       <div className='flex-1 space-y-4 p-8 pt-6'>
