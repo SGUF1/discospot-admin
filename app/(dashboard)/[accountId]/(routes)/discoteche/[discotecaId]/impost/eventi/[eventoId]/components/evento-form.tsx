@@ -1,4 +1,5 @@
 "use client"
+import getGlobalHours from '@/actions/getGlobalHours';
 import { AlertModal } from '@/components/modals/alert-modal';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -92,8 +93,8 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: Ev
       setLoading(true);
       const [hoursInizio, minutesInizio] = data.oraInizio.split(':')
       const [hoursFine, minutesFine] = data.oraFine.split(':')
-      data.startDate = (new Date(data.startDate.getFullYear(), data.startDate.getMonth(), data.startDate.getDate(), +hoursInizio, +minutesInizio))
-      data.endDate = (new Date(data.endDate.getFullYear(), data.endDate.getMonth(), data.endDate.getDate(), +hoursFine, +minutesFine))
+      data.startDate = (new Date(data.startDate.getFullYear(), data.startDate.getMonth(), data.startDate.getDate(), +hoursInizio + getGlobalHours, +minutesInizio))
+      data.endDate = (new Date(data.endDate.getFullYear(), data.endDate.getMonth(), data.endDate.getDate(), +hoursFine + getGlobalHours, +minutesFine))
       console.log(data.startDate)
       if (!initialData) {
         await axios.post(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/eventi`, data);

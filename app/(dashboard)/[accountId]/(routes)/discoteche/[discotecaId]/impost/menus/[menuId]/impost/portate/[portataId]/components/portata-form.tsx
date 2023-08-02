@@ -75,7 +75,6 @@ const PortataForm = ({ initialData, optionProdotti }: PortataFormProps) => {
                 products: [],
             },
     });
-    console.log(initialData?.prodotti)
     const onSubmit = async (data: PortataFormValues) => {
         try {
             setLoading(true);
@@ -196,7 +195,7 @@ const PortataForm = ({ initialData, optionProdotti }: PortataFormProps) => {
                                     <div className="space-x-0.5 w-2/3">
                                         <FormLabel>Selezione multipla?</FormLabel>
                                         <FormDescription>
-                                            Attivando questa opzione, l'utente potrà scegliere più bibite della portata
+                                            Attivando questa opzione, l'utente potrà scegliere un numero limitato di bibite della portata,
                                         </FormDescription>
                                     </div>
                                     <FormControl>
@@ -256,8 +255,8 @@ const PortataForm = ({ initialData, optionProdotti }: PortataFormProps) => {
                             <FormItem className="mt-5">
                                 <FormLabel>Aggiungi prodotto:</FormLabel>
                                 {field.value?.map((prodotto, index) => (
-                                    <div className="flex  w-[900px] space-x-2 space-y-2 items-start" key={index}>
-                                        <div className="flex flex-col mt-2 w-[400px] space-y-4">
+                                    <div className="flex  w-[1500px] space-x-2 space-y-2 items-start" key={index}>
+                                        <div className="flex flex-col mt-2 w-[200px] space-y-4">
                                             <FormLabel>Nome prodotto</FormLabel>
                                             <Select
                                                 disabled={loading}
@@ -282,7 +281,7 @@ const PortataForm = ({ initialData, optionProdotti }: PortataFormProps) => {
                                                 </SelectContent>
                                             </Select>
                                         </div>
-                                        <div className="flex flex-col mt-3 w-[400px] space-y-4">
+                                        <div className="flex flex-col mt-3 w-[200px] space-y-4">
                                             <FormLabel>Prezzo prodotto:</FormLabel>
                                             <Input
                                                 disabled={loading}
@@ -299,7 +298,7 @@ const PortataForm = ({ initialData, optionProdotti }: PortataFormProps) => {
                                             />
                                         </div>
 
-                                        <div className="flex flex-col mt-3 w-[400px] space-y-4">
+                                        <div className="flex flex-col mt-3 w-[400px]  space-y-4">
                                             <FormLabel>Descrizione:</FormLabel>
                                             <Textarea
                                                 disabled={loading}
@@ -314,7 +313,7 @@ const PortataForm = ({ initialData, optionProdotti }: PortataFormProps) => {
                                                 placeholder="Descrizione prodotto"
                                             />
                                         </div>
-                                        <div className="flex flex-col mt-3 w-[400px] space-y-4">
+                                        <div className="flex flex-col mt-3 w-[200px] space-y-4">
                                             <FormLabel>Limite prodotto:</FormLabel>
                                             <Input
                                                 disabled={loading}

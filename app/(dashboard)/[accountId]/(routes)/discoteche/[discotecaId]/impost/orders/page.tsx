@@ -43,9 +43,9 @@ const OrdersPage = async ({ params }: { params: { discotecaId: string } }) => {
       prodotti: item.orderItems.map((order) => order.prodotto.portata.nome + ") " + order.prodotto.nome + " x" + order.quantity),
       tavolo: item.tavolo.numeroTavolo,
       orderData: format(item.orderDate, "MMMM do, yyyy"),
-      totalPrice: item.orderItems.reduce((total, orderItem) => {
+      totalPrice: Number(item.orderItems.reduce((total, orderItem) => {
         return total + (orderItem.prodotto.prezzo * orderItem.quantity) / item.numeroPersone
-      }, Number(Number(item.tavolo.prezzo) / item.numeroPersone)) ,
+      }, Number(Number(item.tavolo.prezzo) / item.numeroPersone)).toFixed(2)),
       codice: item.codice,
       numeroPersone: item.numeroPersone,
       stato: item.stato.nome,

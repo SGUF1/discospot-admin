@@ -4,11 +4,13 @@
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
-  provider = "mysql"
-  url = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
+
 model Accounts {
   id          String     @id @default(uuid())
   username    String
@@ -17,7 +19,7 @@ model Accounts {
   superior    Boolean    @default(false)
   discotecaId String?
   discoteca   Discoteca? @relation("AccountToDiscoteca", fields: [discotecaId], references: [id])
-  createdAt   DateTime   @default(now())  @db.DateTime(3)
+  createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
   @@index([discotecaId])
@@ -120,8 +122,8 @@ model Posizione {
   id        String   @id @default(uuid())
   nome      String
   tavoli    Tavolo[] @relation("TavoloToPosizione")
-  createdAt DateTime @default(now())  @db.DateTime(3)
-  updatedAt DateTime @updatedAt  @db.DateTime(3)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Stato {
@@ -132,8 +134,8 @@ model Stato {
   sale      Sala[]   @relation("StatoToSale")
   order     Order[]  @relation("StatoToOrder")
   colore    String   @default("#fff")
-  createdAt DateTime @default(now())  @db.DateTime(3)
-  updatedAt DateTime @updatedAt  @db.DateTime(3)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   date      Data[]   @relation("StatoToData")
 }
 
@@ -143,8 +145,8 @@ model Posto {
   tavoloId  String
   tavolo    Tavolo   @relation("TavoloToPosto", fields: [tavoloId], references: [id])
   stato     Stato    @relation("PostoToStato", fields: [statoId], references: [id])
-  createdAt DateTime @default(now())  @db.DateTime(3)
-  updatedAt DateTime @updatedAt  @db.DateTime(3)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   statoId   String
 
   @@index([tavoloId])
@@ -155,8 +157,8 @@ model TipoInformazione {
   id           String         @id @default(uuid())
   nome         String
   informazioni Informazione[] @relation("InformazioneToTipoInformazione")
-  createdAt    DateTime       @default(now())  @db.DateTime(3)
-  updatedAt    DateTime       @updatedAt  @db.DateTime(3)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
 }
 
 model CalendarioTavolo {
@@ -164,8 +166,8 @@ model CalendarioTavolo {
   data      Data[]
   tavoloId  String   @unique
   tavolo    Tavolo   @relation(fields: [tavoloId], references: [id])
-  createdAt DateTime @default(now())  @db.DateTime(3)
-  updatedAt DateTime @updatedAt  @db.DateTime(3)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   statoId   String?
 
   @@index([tavoloId])
@@ -177,8 +179,8 @@ model Evento {
   imageUrl          String
   discotecaId       String
   discoteca         Discoteca       @relation("EventoToDiscoteca", fields: [discotecaId], references: [id])
-  startDate         DateTime   @db.DateTime(3)
-  endDate           DateTime   @db.DateTime(3)
+  startDate         DateTime
+  endDate           DateTime
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   prioriti          String
@@ -307,23 +309,25 @@ model OptionProdotto {
 }
 
 model Order {
-  id            String      @id @default(uuid())
-  discotecaId   String
-  discoteca     Discoteca   @relation("DiscotecaToOrder", fields: [discotecaId], references: [id])
-  tavoloId      String
-  tavolo        Tavolo      @relation("OrderToTavolo", fields: [tavoloId], references: [id])
-  orderItems    OrderItem[]
-  isPaid        Boolean     @default(false)
-  phone         String      @default("")
-  codice        String      @default("")
-  numeroPersone Int         @default(0)
-  proprietario  Boolean     @default(false)
-  orderDate     DateTime
-  expiredDate   DateTime?
-  statoId       String
-  stato         Stato       @relation("StatoToOrder", fields: [statoId], references: [id])
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id                  String        @id @default(uuid())
+  discotecaId         String
+  discoteca           Discoteca     @relation("DiscotecaToOrder", fields: [discotecaId], references: [id])
+  tavoloId            String
+  tavolo              Tavolo        @relation("OrderToTavolo", fields: [tavoloId], references: [id])
+  orderItems          OrderItem[]
+  numeroPersonePagato Int           @default(0)
+  isPaid              Boolean       @default(false)
+  phone               String        @default("")
+  codice              String?       @unique
+  numeroPersone       Int           @default(0)
+  proprietario        Boolean       @default(false)
+  orderDate           DateTime
+  expiredDate         DateTime?
+  statoId             String
+  stato               Stato         @relation("StatoToOrder", fields: [statoId], references: [id])
+  userAccounts        UserAccount[]
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
 
   @@index([discotecaId])
   @@index([statoId])
@@ -350,4 +354,5 @@ model OrderItem {
 model UserAccount {
   id         String      @id
   discoteche Discoteca[]
+  orders     Order[]
 }

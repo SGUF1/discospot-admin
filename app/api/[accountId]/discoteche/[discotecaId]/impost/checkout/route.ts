@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import prismadb from "@/lib/prismadb";
 import { Order, Prodotto } from "@prisma/client";
+import getGlobalHours from "@/actions/getGlobalHours";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -24,97 +25,108 @@ export async function POST(
   req: Request,
   { params }: { params: { discotecaId: string } }
 ) {
-  const { tavolo, prodotti, data, numeroPersone, codiceTavolo } =
+  const { tavolo, prodotti, data, numeroPersone, codiceTavolo, userAccountId } =
     await req.json();
 
-  if (!tavolo || !prodotti || !data || !numeroPersone) {
-    return new NextResponse(
-      "Tavolo, Prodotti, Date, and Numero Persone are required",
-      { status: 400 }
-    );
-  }
-  const prod: ProdottoConQuantity[] = prodotti;
-
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
+  const prod: ProdottoConQuantity[] = prodotti;
+  const date = new Date(data)
+  const dataGiusta = new Date(date.getFullYear(), date.getMonth(), date.getDate(), getGlobalHours, 0)
+  var order: Order | null;
 
-  line_items.push({
-    quantity: 1,
-    price_data: {
-      currency: "EUR",
-      product_data: {
-        name: tavolo.numeroTavolo,
-      },
-      unit_amount_decimal: (
-        (Number(tavolo.prezzo) / Number(numeroPersone)) *
-        100
-      ).toPrecision(2),
-    },
-  });
-
-  prod.forEach((product) => {
+  if (tavolo && prodotti && data && numeroPersone) {
     line_items.push({
-      quantity: product.quantita,
+      quantity: 1,
       price_data: {
         currency: "EUR",
         product_data: {
-          name: product.prodotto.nome,
+          name: tavolo.numeroTavolo,
         },
         unit_amount_decimal: (
-          (product.prodotto.prezzo / numeroPersone) *
+          (Number(tavolo.prezzo) / Number(numeroPersone)) *
           100
         ).toFixed(2),
       },
     });
-  });
-  var totale = prod.reduce((total, orderItem) => {
-    return (
-      total + (orderItem.prodotto.prezzo * orderItem.quantita) / numeroPersone
-    );
-  }, Number(Number(tavolo.prezzo) / numeroPersone));
 
-  totale = (totale * 4.5) / 100;
-  line_items.push({
-    quantity: 1,
-    price_data: {
-      currency: "EUR",
-      product_data: {
-        name: "Commissioni DiscoXSpot",
-      },
-      unit_amount_decimal: (totale * 100).toPrecision(2),
-    },
-  });
+    prod.forEach((product) => {
+      const unitAmount = Math.floor(product.prodotto.prezzo / numeroPersone * 100);
 
-  const orderItemsData = prod.map((product) => ({
-    prodotto: {
-      connect: {
-        id: product.prodotto?.id,
-      },
-    },
-    quantity: product.quantita,
-    portata: {
-      connect: {
-        id: product.prodotto.portataId,
-      },
-    },
-  }));
+      line_items.push({
+        quantity: product.quantita,
+        price_data: {
+          currency: "EUR",
+          product_data: {
+            name: product.prodotto.nome,
+          },
+          unit_amount_decimal: unitAmount.toFixed(2),
+        },
+      });
+    });
+    var totale = prod.reduce((total, orderItem) => {
+      return (
+        total + (orderItem.prodotto.prezzo * orderItem.quantita) / numeroPersone
+      );
+    }, Number(Number(tavolo.prezzo) / numeroPersone));
 
-   const order = await prismadb.order.create({
+    totale = (totale * 4.5) / 100;
+    line_items.push({
+      quantity: 1,
+      price_data: {
+        currency: "EUR",
+        product_data: {
+          name: "Commissioni DiscoXSpot",
+        },
+        unit_amount_decimal: Math.floor(totale * 100).toFixed(2),
+      },
+    });
+
+    const orderItemsData = prod.map((product) => ({
+      prodotto: {
+        connect: {
+          id: product.prodotto?.id,
+        },
+      },
+      quantity: product.quantita,
+      portata: {
+        connect: {
+          id: product.prodotto.portataId,
+        },
+      },
+    }));
+
+    const dataAttuale = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours() + getGlobalHours, new Date().getMinutes())
+    order = await prismadb.order.create({
       data: {
         discotecaId: params.discotecaId,
         isPaid: false,
         proprietario: codiceTavolo ? false : true,
-        orderDate: (new Date(data).getTime()).toString(),
+        createdAt: dataAttuale.toISOString(),
+        orderDate: new Date(dataGiusta).toISOString(),
         numeroPersone,
         tavoloId: tavolo?.id,
         statoId: "8d356af8-dc09-42f1-86da-90c64c20638b",
         orderItems: {
           create: orderItemsData,
         },
-        codice: codiceTavolo ?? "",
       },
     });
-  
+  }
 
+  if (codiceTavolo) {
+    order = await prismadb.order.findUnique({
+      where: {
+        codice: codiceTavolo
+      },
+      include: {
+        orderItems: true,
+        tavolo: true
+      }
+    })
+  }
+  if (!order!) {
+    return new NextResponse("Errore nel trovare l'ordine", { status: 400 })
+  }
 
   const session = await stripe.checkout.sessions.create({
     line_items,
@@ -125,7 +137,9 @@ export async function POST(
     success_url: `${process.env.FRONTEND_STORE_URL}/${params.discotecaId}?success=1`,
     cancel_url: `${process.env.FRONTEND_STORE_URL}/${params.discotecaId}?canceled=1`,
     metadata: {
-      orderId: order.id,
+      orderId: order!.id,
+      userAccountId,
+      codiceTavolo,
     },
   });
 
