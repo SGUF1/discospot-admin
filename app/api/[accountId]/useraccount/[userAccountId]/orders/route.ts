@@ -10,6 +10,9 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
                     every: {
                         id: params.userAccountId
                     }
+                },
+                codice: {
+                    not: "",
                 }
             },
             include: {
@@ -19,7 +22,6 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
 
             }
         });
-
         return NextResponse.json(orders);
     } catch (error) {
         console.log("[ORDERS GET]", error);

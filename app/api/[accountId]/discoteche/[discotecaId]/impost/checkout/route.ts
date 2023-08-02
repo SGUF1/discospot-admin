@@ -31,7 +31,6 @@ export async function POST(
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
   const prod: ProdottoConQuantity[] = prodotti;
   const date = new Date(data)
-  const dataGiusta = new Date(date.getFullYear(), date.getMonth(), date.getDate(), getGlobalHours, 0)
   var order: Order | null;
 
   if (tavolo && prodotti && data && numeroPersone) {
@@ -102,7 +101,7 @@ export async function POST(
         isPaid: false,
         proprietario: codiceTavolo ? false : true,
         createdAt: dataAttuale.toISOString(),
-        orderDate: new Date(dataGiusta).toISOString(),
+        orderDate: data,
         numeroPersone,
         tavoloId: tavolo?.id,
         statoId: "8d356af8-dc09-42f1-86da-90c64c20638b",
