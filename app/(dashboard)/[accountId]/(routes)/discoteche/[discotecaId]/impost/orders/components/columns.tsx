@@ -18,6 +18,7 @@ export type OrdersColumn = {
 	numeroPersone: number;
 	stato: string,
 	expiredDate?: string
+	numeroPersonePagato: number
 };
 
 export const columns: ColumnDef<OrdersColumn>[] = [
@@ -54,8 +55,8 @@ export const columns: ColumnDef<OrdersColumn>[] = [
 		header: "Limite giorno"
 	},
 	{
-		accessorKey: "stato",
-		header: "Stato"
+		accessorKey: "numeroPersonePagato",
+		header: "Pagato in:"
 	},
 	{
 		accessorKey: "isPaid",

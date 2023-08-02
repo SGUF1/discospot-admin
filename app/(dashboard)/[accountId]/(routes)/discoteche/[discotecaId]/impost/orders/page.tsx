@@ -49,6 +49,7 @@ const OrdersPage = async ({ params }: { params: { discotecaId: string } }) => {
       codice: item.codice ?? "",
       numeroPersone: item.numeroPersone,
       stato: item.stato.nome,
+      numeroPersonePagato: item.numeroPersonePagato,
       expiredDate: item?.expiredDate ? format(item?.expiredDate!, "MMMM do, yyyy") : ""
     }))
 

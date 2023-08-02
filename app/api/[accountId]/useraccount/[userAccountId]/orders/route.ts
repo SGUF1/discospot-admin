@@ -15,8 +15,15 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
                     not: "",
                 }
             },
+            orderBy:{
+                orderDate: 'asc'
+            },
             include: {
-                discoteca: true,
+                discoteca: {
+                    include: {
+                        provincia: true
+                    }
+                },
                 tavolo: true,
                 stato: true,
 

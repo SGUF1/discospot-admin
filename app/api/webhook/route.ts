@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 
   function generateUniqueCode() {
     const codeLength = 8;
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const characters = "ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let code = "";
 
     for (let i = 0; i < codeLength; i++) {
