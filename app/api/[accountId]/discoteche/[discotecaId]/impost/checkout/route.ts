@@ -42,7 +42,7 @@ export async function POST(
         product_data: {
           name: tavolo.numeroTavolo,
         },
-        unit_amount_decimal: (
+        unit_amount_decimal: Math.floor(
           (Number(tavolo.prezzo) / Number(numeroPersone)) *
           100
         ).toFixed(2),
