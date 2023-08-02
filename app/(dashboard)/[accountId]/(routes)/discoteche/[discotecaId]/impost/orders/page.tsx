@@ -46,7 +46,7 @@ const OrdersPage = async ({ params }: { params: { discotecaId: string } }) => {
       totalPrice: Number(item.orderItems.reduce((total, orderItem) => {
         return total + (orderItem.prodotto.prezzo * orderItem.quantity) / item.numeroPersone
       }, Number(Number(item.tavolo.prezzo) / item.numeroPersone)).toFixed(2)),
-      codice: item.codice,
+      codice: item.codice ?? "",
       numeroPersone: item.numeroPersone,
       stato: item.stato.nome,
       expiredDate: item?.expiredDate ? format(item?.expiredDate!, "MMMM do, yyyy") : ""
