@@ -10,10 +10,12 @@ import OrdersPage from './orders/page'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Overview } from '@/components/overview'
 import { getGraphRevenue } from '@/actions/get-graph-revenue'
-import { CreditCard, EuroIcon } from 'lucide-react'
+import { CreditCard, EuroIcon, Heart, User } from 'lucide-react'
 import { getSalesCount } from '@/actions/get-sales-count'
 import { getTotalDiscotecheRevenue } from '@/actions/get-total-discoteca-revenue'
 import DatePage from './date/page'
+import { getTotalPersonePagate } from '@/actions/get-total-discoteca-persone-tavoli'
+import { getDiscotecaLike } from '@/actions/get-discoteca-like'
 
 const DiscotecaImpostazioniPage = async ({ params }: { params: { accountId: string, discotecaId: string } }) => {
     const discoteca = await prismadb.discoteca.findUnique({
@@ -45,11 +47,29 @@ const DiscotecaImpostazioniPage = async ({ params }: { params: { accountId: stri
                         </Card>
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Vendite</CardTitle>
+                                <CardTitle className="text-sm font-medium">Tavoli venduti</CardTitle>
                                 <CreditCard className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">+{salesCount}</div>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Persone che hanno pagato</CardTitle>
+                                <User className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">+{getTotalPersonePagate(discoteca?.id!)}</div>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Like</CardTitle>
+                                <Heart className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">+{getDiscotecaLike(discoteca?.id!)}</div>
                             </CardContent>
                         </Card>
                     </div>

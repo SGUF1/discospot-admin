@@ -148,7 +148,11 @@ export async function GET(
                 numeroPortata: 'asc'
               },
               include: {
-                prodotti: true,
+                prodotti: {
+                  where: {
+                    itemProduct: false
+                  }
+                },
               },
             },
           },

@@ -275,7 +275,7 @@ model Prodotto {
   descrizione String      @db.Text
   prezzo      Float
   limite      Int
-  itemProduct Boolean @default(false)
+  itemProduct Boolean     @default(false)
   imageUrl    String
   orderItems  OrderItem[]
   createdAt   DateTime    @default(now())
@@ -320,10 +320,12 @@ model Order {
   isPaid              Boolean       @default(false)
   phone               String        @default("")
   codice              String?       @unique
+  prezzoTotale        Float         @default(0)
   numeroPersone       Int           @default(0)
   proprietario        Boolean       @default(false)
   orderDate           DateTime
   expiredDate         DateTime?
+  taxPrezzo Float @default(0)
   statoId             String
   stato               Stato         @relation("StatoToOrder", fields: [statoId], references: [id])
   userAccounts        UserAccount[]

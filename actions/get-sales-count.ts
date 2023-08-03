@@ -5,7 +5,9 @@ export const getSalesCount = async (discotecaId: string) => {
         where: {
             discotecaId,
             isPaid: true,
-        }
+        },
+    
     })
+    
     return salesCount;
 }

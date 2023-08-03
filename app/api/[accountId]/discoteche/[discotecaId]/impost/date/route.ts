@@ -1,3 +1,4 @@
+import getGlobalHours from "@/actions/getGlobalHours";
 import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 
@@ -12,9 +13,11 @@ export async function POST(
       if (!date) {
         return new NextResponse("Date is required", { status: 400 });
       }
+      const startDate = new Date(new Date(date.from).getFullYear(), new Date(date.from).getMonth(), new Date(date.from).getDate(), new Date(date.from).getHours() + getGlobalHours, 0)
+      const endDate = new Date(new Date(date.to).getFullYear(), new Date(date.to).getMonth(), new Date(date.to).getDate(), new Date(date.to).getHours() + getGlobalHours, 0)
       const data = await prismadb.data.create({
         data: {
-          dateRange: date,
+          dateRange: { from: startDate, to: endDate},
           discotecaId: params.discotecaId,
           type
         },

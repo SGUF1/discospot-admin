@@ -115,8 +115,6 @@ const DataForm = ({ initialData, evento }: DataFormProps) => {
             items: ["sabato"]
         }
     })
-    console.log(form.getValues().type)
-    console.log(date)
     const onSubmit = async (prova: DataFormValues) => {
         try {
             setLoading(true);
