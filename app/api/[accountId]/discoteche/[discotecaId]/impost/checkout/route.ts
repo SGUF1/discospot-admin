@@ -80,10 +80,18 @@ export async function POST(
       },
     });
 
+
     const orderItemsData = prod.map((product) => ({
       prodotto: {
-        connect: {
-          id: product.prodotto?.id,
+        create: {
+          descrizione: product.prodotto.descrizione,
+          nome: product.prodotto.nome,
+          limite: product.prodotto.limite,
+          imageUrl: product.prodotto.imageUrl,
+          prezzo: product.prodotto.prezzo,
+          portataId: product.prodotto.portataId,
+          itemProduct: true
+          // Assicurati di includere tutti i campi richiesti
         },
       },
       quantity: product.quantita,

@@ -9,7 +9,11 @@ const PortataPage = async ({ params }: { params: { discotecaId: string,menuId: s
       id: params.portataId
     },
     include: {
-      prodotti: true
+      prodotti: {
+        where: {
+          itemProduct: false
+        }
+      }
     }
   })
 

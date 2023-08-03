@@ -33,6 +33,7 @@ export async function PATCH(
       return new NextResponse("Prodotti is required", { status: 400 });
     }
 
+
     const portata = await prismadb.portata.update({
       where: {
         id: params.portataId,
@@ -45,7 +46,9 @@ export async function PATCH(
         numeroBibiteDiverse,
         numeroBibiteTotale,
         prodotti: {
-          deleteMany: {},
+          deleteMany: {
+            itemProduct: false
+          },
           createMany: {
             data: products.map((product: any) => ({
               descrizione: product.descrizione,
@@ -58,6 +61,7 @@ export async function PATCH(
         },
       },
     });
+
 
     return NextResponse.json(portata);
   } catch (error) {
@@ -85,7 +89,11 @@ export async function DELETE(
         id: params.portataId,
       },
       include: {
-        prodotti: true,
+        prodotti: {
+          where: {
+            itemProduct: false
+          }
+        },
       },
     });
 
@@ -109,6 +117,13 @@ export async function GET(
       where: {
         id: params.portataId,
       },
+      include: {
+        prodotti: {
+          where: {
+            itemProduct: false
+          }
+        }
+      }
     });
 
     return NextResponse.json(portata);

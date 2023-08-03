@@ -275,6 +275,7 @@ model Prodotto {
   descrizione String      @db.Text
   prezzo      Float
   limite      Int
+  itemProduct Boolean @default(false)
   imageUrl    String
   orderItems  OrderItem[]
   createdAt   DateTime    @default(now())
