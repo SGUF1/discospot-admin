@@ -30,7 +30,8 @@ interface EventoFormProps {
   } | null,
   tipologieEvento: TipologiaEvento[],
   tipoInformazione: TipoInformazione[]
-  sale: Sala[]
+  sale: Sala[],
+  superior: boolean
 }
 
 const formSchema = z.object({
@@ -52,7 +53,7 @@ const formSchema = z.object({
 })
 
 type EventoFormValues = z.infer<typeof formSchema>
-const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: EventoFormProps) => {
+const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, superior }: EventoFormProps) => {
 
   const params = useParams();
   const router = useRouter();
@@ -168,7 +169,7 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: Ev
                   <FormLabel>Priorità evento:</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={loading}
+                      disabled={loading || !superior}
                       type="number"
                       placeholder="priorità"
                       {...field}

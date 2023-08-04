@@ -8,9 +8,12 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
             where: {
                 discoteca: {
                     visibile: true
+                },
+                bigliettiRimanenti: {
+                    not: 0
                 }
             },
-            include:{
+            include: {
                 discoteca: true,
             },
         });

@@ -299,7 +299,7 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
                                         <FormLabel>Priorità:</FormLabel>
                                         <FormControl>
                                             <Input
-                                                disabled={loading}
+                                                disabled={loading || !superior}
                                                 type="number"
                                                 placeholder="0"
                                                 {...field}

@@ -155,9 +155,10 @@ const ListaForm = ({ initialData, isSuperior, tipoInformazione }: ListaFormProps
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Priorità Lista:</FormLabel>
+                  <FormDescription>Contattare un admin Superior per la priorità</FormDescription>
                   <FormControl>
                     <Input
-                      disabled={loading && !isSuperior}
+                      disabled={loading || !isSuperior}
                       type="number"
                       placeholder="priorità"
                       {...field}
