@@ -11,6 +11,9 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
                         id: params.userAccountId
                     }
                 },
+                discoteca: {
+                    visibile: true
+                },
                 codice: {
                     not: "",
                 }

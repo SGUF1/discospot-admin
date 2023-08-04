@@ -7,6 +7,11 @@ export async function GET(
 ) {
   try {
     const evento = await prismadb.evento.findMany({
+      where: {
+        discoteca: {
+          visibile: true
+        }
+      },
       orderBy: {
         startDate: "asc",
       },

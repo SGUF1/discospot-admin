@@ -5,6 +5,11 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
     try {
 
         const liste = await prismadb.lista.findMany({
+            where: {
+                discoteca: {
+                    visibile: true
+                }
+            },
             include:{
                 discoteca: true,
             },
