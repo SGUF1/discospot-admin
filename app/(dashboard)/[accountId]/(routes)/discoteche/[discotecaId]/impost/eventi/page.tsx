@@ -2,7 +2,7 @@ import prismadb from '@/lib/prismadb'
 import React from 'react'
 import { EventoColumn } from './components/columns'
 import { format, formatISO, parseISO } from 'date-fns'
-import TavoliClient from './components/client'
+import EventiClient from './components/client'
 import moment from 'moment'
 const EventiPage = async ({ params }: { params: { discotecaId: string } }) => {
 
@@ -31,7 +31,7 @@ const EventiPage = async ({ params }: { params: { discotecaId: string } }) => {
   return (
     <div className='flex-col'>
       <div className='flex-1 space-y-4 p-8 pt-6'>
-        <TavoliClient data={formattedEvento} />
+        <EventiClient data={formattedEvento} />
       </div>
     </div>
   )

@@ -19,9 +19,9 @@ export async function POST(req: Request) {
   } catch (error: any) {
     return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 })
   }
-
+  const session = event.data.object as Stripe.Checkout.Session;
   function generateUniqueCode() {
-    const codeLength = 8;
+    const codeLength = 12;
     const characters = "ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let code = "";
 
@@ -51,78 +51,110 @@ export async function POST(req: Request) {
 
     return code;
   }
-  const session = event.data.object as Stripe.Checkout.Session;
+  if (session?.metadata?.orderId) {
 
-  const code = await generateUniqueOrderCode()
-  if (event.type === "checkout.session.completed") {
-    var order: Order | null
-    if (!session?.metadata?.codiceTavolo) {
-      order = await prismadb.order.update({
-        where: {
-          id: session?.metadata?.orderId,
-        },
-        data: {
-          isPaid: true,
-          numeroPersonePagato: 1,
-          codice: code,
-          stato: {
-            connect: {
-              id: "471ce627-12af-44fc-bbcb-95f83c1827cf"
-            }
-          },
-          phone: session?.customer_details?.phone || "",
-          userAccounts: {
-            connect: {
-              id: session?.metadata?.userAccountId
-            }
-          }
-        },
-        include: {
-          orderItems: true,
-          tavolo: true
-        },
-      });
-    } else {
-      order = await prismadb.order.findUnique({
-        where: {
-          codice: session?.metadata?.codiceTavolo
-        },
-      })
-      if (order) {
+
+    const code = await generateUniqueOrderCode()
+    if (event.type === "checkout.session.completed") {
+      var order: Order | null
+      if (!session?.metadata?.codiceTavolo) {
         order = await prismadb.order.update({
           where: {
-            codice: session?.metadata?.codiceTavolo
+            id: session?.metadata?.orderId,
           },
           data: {
-            numeroPersonePagato: order.numeroPersonePagato + 1,
+            isPaid: true,
+            numeroPersonePagato: 1,
+            codice: code,
+            stato: {
+              connect: {
+                id: "471ce627-12af-44fc-bbcb-95f83c1827cf"
+              }
+            },
+            phone: session?.customer_details?.phone || "",
             userAccounts: {
               connect: {
                 id: session?.metadata?.userAccountId
               }
             }
+          },
+          include: {
+            orderItems: true,
+            tavolo: true
+          },
+        });
+      } else {
+        order = await prismadb.order.findUnique({
+          where: {
+            codice: session?.metadata?.codiceTavolo
+          },
+        })
+        if (order) {
+          order = await prismadb.order.update({
+            where: {
+              codice: session?.metadata?.codiceTavolo
+            },
+            data: {
+              numeroPersonePagato: order.numeroPersonePagato + 1,
+              userAccounts: {
+                connect: {
+                  id: session?.metadata?.userAccountId
+                }
+              }
+            }
+          })
+        }
+      }
+
+      const tavoloId = order!.proprietario ? order!.tavoloId : ""
+      const tavolo = await prismadb.tavolo.findUnique({
+        where: {
+          id: tavoloId
+        }
+      })
+
+      if (tavolo) {
+        const date = await prismadb.data.create({
+          data: {
+            data: order!.orderDate,
+            tavoloId: tavoloId,
+            statoId: "085bfc1d-a351-4976-9f0f-53aa08ea2da6"
           }
         })
       }
     }
+  } else if (session?.metadata?.orderBigliettoId) {
+    const code = await generateUniqueOrderCode()
 
-    const tavoloId = order!.proprietario ? order!.tavoloId : ""
-    const tavolo = await prismadb.tavolo.findUnique({
-      where: {
-        id: tavoloId
-      }
-    })
-
-    if (tavolo) {
-      const date = await prismadb.data.create({
+    if (event.type === "checkout.session.completed") {
+      const orderBiglietto = await prismadb.orderBiglietto.update({
+        where: {
+          id: session?.metadata?.orderBigliettoId,
+        },
         data: {
-          data: order!.orderDate,
-          tavoloId: tavoloId,
-          statoId: "085bfc1d-a351-4976-9f0f-53aa08ea2da6"
+          isPaid: true,
+          acccount: {
+            connect: {
+              id: session?.metadata?.userAccountId
+            }
+          },
+          codice: code,
+          lista: {
+            update: {
+              where: {
+                id: session?.metadata?.listaId
+              },
+              data: {
+                bigliettiRimanenti: {
+                  decrement: 1
+                }
+              }
+            }
+          }
         }
       })
     }
   }
-
 
   return new NextResponse(null, { status: 200 });
 

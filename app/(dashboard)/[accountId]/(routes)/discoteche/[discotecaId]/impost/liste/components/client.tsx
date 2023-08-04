@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import { EventoColumn, columns } from './columns'
+import { ListeColumn, columns } from './columns'
 import { useParams, useRouter } from 'next/navigation'
 import { Heading } from '@/components/ui/heading'
 import { Button } from '@/components/ui/button'
@@ -8,19 +8,19 @@ import { Plus } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 import { DataTable } from '@/components/ui/data-table'
 
-interface EventiClientProps {
-  data: EventoColumn[],
+interface ListeClientProps {
+  data: ListeColumn[],
 }
 
-const EventiClient = ({ data }: EventiClientProps) => {
+const ListeClient = ({ data }: ListeClientProps) => {
   const router = useRouter();
   const params = useParams();
 
   return (
     <>
       <div className='flex items-center justify-between'>
-        <Heading title={data.length > 1 ? `Eventi (${data.length})` : `Evento (${data.length})`} description='Gestisci gli eventi' />
-        <Button onClick={() => router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost/eventi/new`)} className='bg-blue-600'>
+        <Heading title={data.length > 1 ? `Liste (${data.length})` : `Lista (${data.length})`} description='Gestisci le liste' />
+        <Button onClick={() => router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost/liste/new`)} className='bg-blue-600'>
           <Plus className='mr-2 h-4 w-4' />
           Aggiungi
         </Button>
@@ -31,4 +31,4 @@ const EventiClient = ({ data }: EventiClientProps) => {
   )
 }
 
-export default EventiClient
+export default ListeClient

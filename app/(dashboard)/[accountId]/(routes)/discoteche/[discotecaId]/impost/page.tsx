@@ -16,6 +16,7 @@ import { getTotalDiscotecheRevenue } from '@/actions/get-total-discoteca-revenue
 import DatePage from './date/page'
 import { getTotalPersonePagate } from '@/actions/get-total-discoteca-persone-tavoli'
 import { getDiscotecaLike } from '@/actions/get-discoteca-like'
+import ListePage from './liste/page'
 
 const DiscotecaImpostazioniPage = async ({ params }: { params: { accountId: string, discotecaId: string } }) => {
     const discoteca = await prismadb.discoteca.findUnique({
@@ -87,6 +88,8 @@ const DiscotecaImpostazioniPage = async ({ params }: { params: { accountId: stri
             <Separator />
 
             <InformazioniPage params={params} />
+            <Separator/>
+            <ListePage params={params}/>
             <Separator />
             <EventiPage params={params} />
             <Separator />

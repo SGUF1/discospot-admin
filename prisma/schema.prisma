@@ -59,6 +59,7 @@ model Discoteca {
   like             Int            @default(0)
   userAccounts     UserAccount[]
   date             Data[]         @relation("DiscotecaToDate")
+  liste            Lista[]        @relation("ListaToDiscoteca")
 
   @@index([provinciaId])
 }
@@ -83,12 +84,15 @@ model Informazione {
   eventoId           String?
   evento             Evento?          @relation("EventoToInformazione", fields: [eventoId], references: [id])
   salaId             String?
+  listaId            String?
+  lista              Lista?           @relation("ListaToInformazione", fields: [listaId], references: [id])
   sala               Sala?            @relation("SalaToInformazione", fields: [salaId], references: [id])
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
 
   @@index([discotecaId])
   @@index([eventoId])
+  @@index([listaId])
   @@index([salaId])
   @@index([tipoInformazioneId])
 }
@@ -325,7 +329,7 @@ model Order {
   proprietario        Boolean       @default(false)
   orderDate           DateTime
   expiredDate         DateTime?
-  taxPrezzo Float @default(0)
+  taxPrezzo           Float         @default(0)
   statoId             String
   stato               Stato         @relation("StatoToOrder", fields: [statoId], references: [id])
   userAccounts        UserAccount[]
@@ -355,7 +359,46 @@ model OrderItem {
 }
 
 model UserAccount {
-  id         String      @id
-  discoteche Discoteca[]
-  orders     Order[]
+  id             String           @id
+  discoteche     Discoteca[]
+  orders         Order[]
+  orderBiglietti OrderBiglietto[] @relation("BigliettoToUser")
+}
+
+model Lista {
+  id                 String           @id @default(uuid())
+  nome               String
+  discotecaId        String
+  discoteca          Discoteca        @relation("ListaToDiscoteca", fields: [discotecaId], references: [id])
+  prezzoBiglietto    Float
+  quantity           Int?
+  priority           Int
+  bigliettiRimanenti Int?
+  imageUrl           String
+  bigliettiInfiniti  Boolean
+  informazioni       Informazione[]   @relation("ListaToInformazione")
+  dataLimite         DateTime
+  orderBiglietti     OrderBiglietto[] @relation("BigliettoToLista")
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  @@index([discotecaId])
+}
+
+model OrderBiglietto {
+  id        String       @id @default(uuid())
+  accountId String?
+  acccount  UserAccount? @relation("BigliettoToUser", fields: [accountId], references: [id])
+  phone     String       @default("")
+  prezzo    Float
+  data      DateTime
+  isPaid    Boolean      @default(false)
+  codice    String?      @unique
+  listaId   String
+  lista     Lista        @relation("BigliettoToLista", fields: [listaId], references: [id])
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@index([accountId])
+  @@index([listaId])
 }

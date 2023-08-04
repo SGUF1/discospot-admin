@@ -14,7 +14,7 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Evento, Informazione, Sala, TipoInformazione, TipologiaEvento } from '@prisma/client'
+import { Evento, Informazione, Lista, Sala, TipoInformazione, TipologiaEvento } from '@prisma/client'
 import axios from 'axios';
 import { format } from 'date-fns';
 import { CalendarIcon, Trash } from 'lucide-react';
@@ -24,35 +24,32 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import * as z from 'zod';
 
-interface EventoFormProps {
-  initialData: Evento & {
+interface ListaFormProps {
+  initialData: Lista & {
     informazioni: Informazione[]
   } | null,
-  tipologieEvento: TipologiaEvento[],
   tipoInformazione: TipoInformazione[]
-  sale: Sala[]
+  isSuperior: boolean
 }
 
 const formSchema = z.object({
   nome: z.string().min(1),
-  tipologiaEventoId: z.string().min(1),
   informations: z.object({
     descrizione: z.string().min(1),
     numeroInformazione: z.coerce.number().min(1),
     tipoInformazioneId: z.string().min(1)
   }).array(),
-  prioriti: z.string().min(1),
+  priority: z.coerce.number().default(1),
   imageUrl: z.string().min(1),
-  startDate: z.date(),
-  oraInizio: z.string().min(1),
-  endDate: z.date(),
-  oraFine: z.string().min(1),
-  eventoSala: z.boolean(),
-  salaId: z.string()
+  dataLimite: z.date(),
+  quantity: z.coerce.number().min(1).default(1),
+  bigliettiInfiniti: z.boolean().default(false),
+  prezzoBiglietto: z.coerce.number().min(1),
+
 })
 
-type EventoFormValues = z.infer<typeof formSchema>
-const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: EventoFormProps) => {
+type ListaFormValues = z.infer<typeof formSchema>
+const ListaForm = ({ initialData, isSuperior, tipoInformazione }: ListaFormProps) => {
 
   const params = useParams();
   const router = useRouter();
@@ -60,12 +57,12 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: Ev
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const title = initialData ? "Modifica l'evento" : "Crea un evento";
-  const description = initialData ? "Modifica l'evento" : "Crea un evento da far visualizzare tra gli eventi";
-  const toastMessage = initialData ? "L'evento è stato modificato" : "L'evento è stato creato"
-  const action = initialData ? "Salva le modifiche" : "Crea l'evento";
+  const title = initialData ? "Modifica la lista" : "Crea una lista";
+  const description = initialData ? "Modifica la lista per attiratare più gente nella tua discoteca" : "Crea una lista per attirare più gente nella tua discoteca";
+  const toastMessage = initialData ? "La lista è stata modificata" : "La lista è stata creata"
+  const action = initialData ? "Salva le modifiche" : "Crea la lista";
 
-  const form = useForm<EventoFormValues>({
+  const form = useForm<ListaFormValues>({
     resolver: zodResolver(formSchema),
     // @ts-ignore
     defaultValues: initialData
@@ -75,31 +72,23 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: Ev
       }
       : {
         nome: "",
-        tipologiaEventoId: "",
         informations: [],
-        prioriti: "",
+        priority: 1,
         imageUrl: "",
-        startDate: new Date(),
-        endDate: new Date(),
-        oraInizio: "",
-        oraFine: "",
-        eventoSala: false,
-        salaId: "",
+        dataLimite: new Date(),
+        quantity: 1,
+        bigliettiInfiniti: false,
+        prezzoBiglietto: 0,
       }
   })
 
-  const onSubmit = async (data: EventoFormValues) => {
+  const onSubmit = async (data: ListaFormValues) => {
     try {
       setLoading(true);
-      const [hoursInizio, minutesInizio] = data.oraInizio.split(':')
-      const [hoursFine, minutesFine] = data.oraFine.split(':')
-      data.startDate = (new Date(data.startDate.getFullYear(), data.startDate.getMonth(), data.startDate.getDate(), +hoursInizio + getGlobalHours, +minutesInizio))
-      data.endDate = (new Date(data.endDate.getFullYear(), data.endDate.getMonth(), data.endDate.getDate(), +hoursFine + getGlobalHours, +minutesFine))
-      console.log(data.startDate)
       if (!initialData) {
-        await axios.post(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/eventi`, data);
+        await axios.post(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/liste`, data);
       } else {
-        await axios.patch(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/eventi/${params.eventoId}`, data)
+        await axios.patch(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/liste/${params.listaId}`, data)
       }
       router.refresh();
       router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
@@ -114,10 +103,10 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: Ev
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/eventi/${params.eventoId}`)
+      await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/liste/${params.listaId}`)
       router.refresh();
       router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
-      toast.success("L'evento è stato eliminato");
+      toast.success("La lista è stata eliminata");
     } catch (error) {
       toast.error("Qualcosa è andato storto");
     }
@@ -148,7 +137,7 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: Ev
               name="nome"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nome evento:</FormLabel>
+                  <FormLabel>Nome Lista:</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
@@ -162,13 +151,13 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: Ev
             />
             <FormField
               control={form.control}
-              name="prioriti"
+              name="priority"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Priorità evento:</FormLabel>
+                  <FormLabel>Priorità Lista:</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={loading}
+                      disabled={loading && !isSuperior}
                       type="number"
                       placeholder="priorità"
                       {...field}
@@ -181,22 +170,19 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: Ev
 
             <FormField
               control={form.control}
-              name="tipologiaEventoId"
+              name="prezzoBiglietto"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tipo informazione:</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value} disabled={loading}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleziona il tipo di informazione" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {tipologieEvento.map((item) => (
-                        <SelectItem value={item.id} key={item.id}>{item.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormLabel>Prezzo biglietto singolo:</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading }
+                      type="number"
+                      placeholder="Prezzo biglietto singolo"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -205,7 +191,7 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: Ev
               name="imageUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Evento image</FormLabel>
+                  <FormLabel>Lista image</FormLabel>
                   <FormControl>
                     <ImageUpload
                       value={field.value ? [field.value] : []}
@@ -218,177 +204,104 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: Ev
                 </FormItem>
               )}
             />
+            
           </div>
+          
           <div className='flex flex-col space-y-8'>
             <div className='space-y-5'>
-
-              <div className='flex flex-row space-x-3'>
+           <div className='flex space-x-10'>
                 <FormField
                   control={form.control}
-                  name="startDate"
+                  name="bigliettiInfiniti"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Data di inizio dell'evento</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-[240px] pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            // @ts-ignore
-                            onSelect={field.onChange}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="oraInizio"
-
-                  render={({ field }) => (
-                    <FormItem className='mt-[-10px]'>
-                      <FormLabel>Inizio ora:</FormLabel>
+                    <FormItem className="flex flex-row w-[400px] items-center justify-between rounded-lg border p-4">
+                      <div className="space-y-0.5">
+                        <FormLabel className="text-base">Biglietti infiniti?</FormLabel>
+                        <FormDescription>
+                          Attivando questa opzioni i biglietti sanno infiniti e li si potrà acquistare fino a che non arriva il giorno di fine
+                        </FormDescription>
+                      </div>
                       <FormControl>
-                        <Input
-                          disabled={loading}
-                          placeholder="Inizio ora"
-                          {...field}
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          aria-readonly
                         />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
-              </div>
-              <div className='flex flex-row space-x-3'>
-                <FormField
+                {!form.getValues().bigliettiInfiniti && <FormField
                   control={form.control}
-                  name="endDate"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Data di fine dell'evento</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-[240px] pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            // @ts-ignore
-                            onSelect={field.onChange}
-                            initialFocus
-                            disabled={(date) => date < form.getValues().startDate}
-
-                          />
-                        </PopoverContent>
-                      </Popover>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="oraFine"
-
-                  render={({ field }) => (
-                    <FormItem className='mt-[-10px]'>
-                      <FormLabel>Fine alle:</FormLabel>
-                      <FormControl>
-                        <Input
-                          disabled={loading}
-                          placeholder="12:10"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-            <div className='grid grid-cols-4 '>
-              <FormField control={form.control} name='eventoSala' render={({ field }) => (
-                <FormItem className='flex flex-row items-center self-start '>
-                  <div className='space-x-0.5 w-2/3'>
-                    <FormLabel>Evento per sala?</FormLabel>
-                    <FormDescription>
-                      Permette di assegnare l'evento alla sala della discoteca
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                </FormItem>
-              )} />
-              {form.getValues().eventoSala &&
-                <FormField
-                  control={form.control}
-                  name="salaId"
+                  name="quantity"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Sala:</FormLabel>
-                      <Select
-                        // @ts-ignore
-                        onValueChange={field.onChange}
-                        // @ts-ignore
-                        defaultValue={field.value}
-                        disabled={loading}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Seleziona la sala" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {sale.map((item) => (
-                            <SelectItem value={item.id} key={item.id}>
-                              {item.nome}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <FormLabel>Numero Biglietti:</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={loading}
+                          type="number"
+                          placeholder="Numero biglietti"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
-                />
-              }
+                />}
+           </div>
+
+              <FormField
+                control={form.control}
+                name="dataLimite"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Data di fine</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-[240px] pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          // @ts-ignore
+                          onSelect={field.onChange}
+                          disabled={(date) =>
+                           date <= new Date()
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormDescription>
+                      Seleziona la data in cui la lista non sarà più disponibile
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
+            <div className='grid grid-cols-4 '>
+            </div>
+
+
+
             <FormField
               control={form.control}
               name="informations"
@@ -487,4 +400,4 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione }: Ev
 
   )
 }
-export default EventoForm
+export default ListaForm
