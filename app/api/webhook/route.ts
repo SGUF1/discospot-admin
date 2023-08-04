@@ -127,6 +127,11 @@ export async function POST(req: Request) {
     const code = await generateUniqueOrderCode()
 
     if (event.type === "checkout.session.completed") {
+      const lista = await prismadb.lista.findUnique({
+        where: {
+          id: session?.metadata?.listaId
+        }
+      })
       const orderBiglietto = await prismadb.orderBiglietto.update({
         where: {
           id: session?.metadata?.orderBigliettoId,
@@ -145,9 +150,7 @@ export async function POST(req: Request) {
                 id: session?.metadata?.listaId
               },
               data: {
-                bigliettiRimanenti: {
-                  decrement: 1
-                }
+                bigliettiRimanenti: lista?.bigliettiRimanenti! - 1 
               }
             }
           }
