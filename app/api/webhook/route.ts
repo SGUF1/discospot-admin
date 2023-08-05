@@ -138,7 +138,7 @@ export async function POST(req: Request) {
         },
         data: {
           isPaid: true,
-          acccount: {
+          userAccount: {
             connect: {
               id: session?.metadata?.userAccountId
             }
@@ -151,7 +151,7 @@ export async function POST(req: Request) {
                 id: session?.metadata?.listaId
               },
               data: {
-                bigliettiRimanenti: lista?.bigliettiRimanenti! - 1 
+                bigliettiRimanenti: lista?.bigliettiRimanenti! - 1
               }
             }
           }

@@ -3,8 +3,6 @@ import { NextResponse } from "next/server";
 
 import { stripe } from "@/lib/stripe";
 import prismadb from "@/lib/prismadb";
-import { Order, OrderItem, Prodotto } from "@prisma/client";
-import getGlobalHours from "@/actions/getGlobalHours";
 
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",

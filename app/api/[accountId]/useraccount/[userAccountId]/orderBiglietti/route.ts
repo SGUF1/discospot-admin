@@ -7,7 +7,7 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
 
         const orderBiglietti = await prismadb.orderBiglietto.findMany({
             where: {
-                acccount: {
+                userAccount: {
                     id: params.userAccountId
                 },
                 data: {
