@@ -79,7 +79,6 @@ export async function POST(
         unit_amount_decimal: Math.floor(totale * 100).toFixed(2),
       },
     });
-//
 
     const orderItemsData = prod.map((product) => ({
       prodotto: {
