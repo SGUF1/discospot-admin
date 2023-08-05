@@ -107,6 +107,7 @@ export async function POST(
     const prezzoTotale = line_items
       .slice(0, lastIndex)
       .reduce((total, item) => total + Number(item.price_data?.unit_amount_decimal), 0) / 100;
+
     order = await prismadb.order.create({
       data: {
         discotecaId: params.discotecaId,

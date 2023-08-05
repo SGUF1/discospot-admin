@@ -146,7 +146,6 @@ export async function POST(req: Request) {
           codice: code,
           lista: {
             update: {
-              // @ts-ignore
               where: {
                 id: session?.metadata?.listaId
               },
