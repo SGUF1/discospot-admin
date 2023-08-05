@@ -13,6 +13,9 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
                     not: 0
                 }
             },
+            orderBy: {
+                priority: 'desc'
+            },
             include: {
                 discoteca: true,
             },
