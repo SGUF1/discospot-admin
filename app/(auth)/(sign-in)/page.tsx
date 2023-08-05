@@ -64,12 +64,12 @@ const LoginPage = () => {
     try {
       setLoading(true)
       const res = await axios.post("api/auth/login", values)
-      if (!res.data.username) throw new Error("Errrore gravissimo");
+      if (!res.data.username) throw new Error("Errore gravissimo");
       router.push(`/${res.data.id}`)
-      toast.success("Incredibile, sei entrato")
+      toast.success("Accesso eseguito con successo")
 
     } catch (error) {
-      toast.error("Minchia ma come fai a non ricordarti le tue credenziali");
+      toast.error("Username/Password sbagliati");
     }
     finally {
       setLoading(false)
