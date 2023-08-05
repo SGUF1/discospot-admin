@@ -99,7 +99,7 @@ export async function DELETE(
 
     return NextResponse.json(portata);
   } catch (error) {
-    console.log("[PORTATA DELETE]", error);
+    console.log("[PORTATA IDS DELETE]", error);
     return new NextResponse("Internal Error" + error, { status: 500 });
   }
 }
