@@ -131,10 +131,20 @@ export async function POST(req: Request) {
         where: {
           id: session?.metadata?.listaId
         }
-      })
+      });
+
+      const updatedLista = await prismadb.lista.update({
+        where: {
+          id: lista!.id
+        },
+        data: {
+          bigliettiRimanenti: lista!.bigliettiRimanenti! - 1
+        }
+      });
+
       const orderBiglietto = await prismadb.orderBiglietto.update({
         where: {
-          id: session?.metadata?.orderBigliettoId,
+          id: session?.metadata?.orderBigliettoId
         },
         data: {
           isPaid: true,
@@ -145,17 +155,12 @@ export async function POST(req: Request) {
           },
           codice: code,
           lista: {
-            update: {
-              where: {
-                id: lista!.id
-              },
-              data: {
-                bigliettiRimanenti: lista?.bigliettiRimanenti! - 1
-              }
+            connect: {
+              id: updatedLista.id
             }
           }
         }
-      })
+      });
     }
   }
 
