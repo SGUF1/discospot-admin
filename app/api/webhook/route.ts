@@ -147,7 +147,7 @@ export async function POST(req: Request) {
           lista: {
             update: {
               where: {
-                id: session?.metadata?.listaId
+                id: lista!.id
               },
               data: {
                 bigliettiRimanenti: lista?.bigliettiRimanenti! - 1
