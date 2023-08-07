@@ -68,7 +68,7 @@ export async function POST(
       );
     }, Number(Number(tavolo.prezzo) / numeroPersone));
 
-    totale = (totale * 4.5) / 100;
+    totale = (totale * 5.2) / 100 + 0.68;
     line_items.push({
       quantity: 1,
       price_data: {

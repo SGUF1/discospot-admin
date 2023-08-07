@@ -48,22 +48,26 @@ export async function POST(
         }
     })
 
+    const taxRateId = process.env.STRIPxE_TAX_ID!;
 
-    const totale = (orderBiglietto.prezzo * 4.5) / 100;
+    const totale = (orderBiglietto.prezzo * 5.2) / 100 + 0.68;
+    // Aggiungi l'aliquota fiscale all'array line_items
     line_items.push({
         quantity: 1,
         price_data: {
-            currency: "EUR",
+            currency: 'EUR',
             product_data: {
-                name: "Commissioni",
+                name: 'Tassa', // Nome del prodotto tassa
             },
-            unit_amount_decimal: Math.floor(totale * 100).toFixed(2),
+            unit_amount_decimal: (Math.floor(totale * 100).toFixed(2)), // Importo totale delle tasse
         },
+        tax_rates: [taxRateId], // Aggiungi l'ID dell'aliquota fiscale qui
     });
 
 
+
     const session = await stripe.checkout.sessions.create({
-        line_items,
+        line_items,     
         mode: "payment",
         phone_number_collection: {
             enabled: true,
