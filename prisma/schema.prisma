@@ -386,19 +386,19 @@ model Lista {
 }
 
 model OrderBiglietto {
-  id         String       @id @default(uuid())
-  userAccountId  String?
-  userAccount    UserAccount? @relation("BigliettoToUser", fields: [userAccountId], references: [id])
-  phone      String       @default("")
-  prezzo     Float
-  data       DateTime
-  isPaid     Boolean      @default(false)
-  codice     String?      @unique
-  listaId    String
-  confermato Boolean      @default(false)
-  lista      Lista        @relation("BigliettoToLista", fields: [listaId], references: [id])
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
+  id            String       @id @default(uuid())
+  userAccountId String?
+  userAccount   UserAccount? @relation("BigliettoToUser", fields: [userAccountId], references: [id])
+  phone         String       @default("")
+  prezzo        Float
+  data          DateTime
+  isPaid        Boolean      @default(false)
+  codice        String?      @unique
+  listaId       String
+  confermato    Boolean      @default(false)
+  lista         Lista        @relation("BigliettoToLista", fields: [listaId], references: [id])
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 
   @@index([userAccountId])
   @@index([listaId])

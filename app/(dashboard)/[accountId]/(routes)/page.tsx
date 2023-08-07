@@ -8,11 +8,15 @@ import { getTotalGraphRevenue } from '@/actions/get-total-graph-revenue'
 import { Overview } from '@/components/overview'
 import { Heading } from '@/components/ui/heading'
 import { Separator } from '@/components/ui/separator'
-import { CreditCard, DiscIcon, EuroIcon } from 'lucide-react'
+import { BarChart2, BarChart2Icon, CreditCard, DiscIcon, EuroIcon } from 'lucide-react'
 import { getTotalRevenue } from '@/actions/get-total-revenue'
 import { getTotalSalesCount } from '@/actions/get-total-sales-count'
 import { getDiscoteche } from '@/actions/get-discoteche'
 import { getTaxPrezzoRevenue } from '@/actions/get-tax-total'
+import { getTotaleBigliettiVenduti } from '@/actions/get-total-biglietti-venduti'
+import { getTotaleBigliettiPrezzo } from '@/actions/get-total-biglietti-prezzo'
+import { getTotalTaxBiglietti } from '@/actions/get-total-tax-biglietti'
+import { getSalesCount } from '@/actions/get-sales-count'
 
 const DiscotechePage = async ({ params }: { params: { accountId: string } }) => {
   const account = await prismadb.accounts.findUnique({
@@ -35,7 +39,7 @@ const DiscotechePage = async ({ params }: { params: { accountId: string } }) => 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Guadagno Totale Discoteche
+                  Guadagno Totale Tavoli
                 </CardTitle>
                 <EuroIcon className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -46,7 +50,7 @@ const DiscotechePage = async ({ params }: { params: { accountId: string } }) => 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Guadagno Totale Commissioni
+                  Guadagno Totale Commissioni Tavoli
                 </CardTitle>
                 <EuroIcon className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -56,11 +60,46 @@ const DiscotechePage = async ({ params }: { params: { accountId: string } }) => 
             </Card>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Vendite</CardTitle>
-                <CreditCard className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium">
+                  Guadagno Totale Biglietti
+                </CardTitle>
+                <EuroIcon className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">+{salesCount}</div>
+                <div className="text-2xl font-bold">{getTotaleBigliettiPrezzo()}€</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Guadagno Totale Commissioni Biglietti
+                </CardTitle>
+                <EuroIcon className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{getTotalTaxBiglietti()}€</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  N. Tavoli venduti
+                </CardTitle>
+                <BarChart2 className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">+{getTotalSalesCount()}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  N. Biglietti venduti
+                </CardTitle>
+                <BarChart2 className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">+{getTotaleBigliettiVenduti()}</div>
               </CardContent>
             </Card>
             <Card>

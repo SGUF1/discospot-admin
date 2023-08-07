@@ -148,6 +148,7 @@ export async function POST(req: Request) {
         },
         data: {
           isPaid: true,
+          phone: session?.customer_details?.phone || "",
           userAccount: {
             connect: {
               id: session?.metadata?.userAccountId

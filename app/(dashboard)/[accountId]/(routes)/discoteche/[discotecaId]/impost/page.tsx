@@ -7,7 +7,7 @@ import EventiPage from './eventi/page'
 import SalePage from './sale/page'
 import MenusPage from './menus/page'
 import OrdersPage from './orders/page'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Overview } from '@/components/overview'
 import { getGraphRevenue } from '@/actions/get-graph-revenue'
 import { CreditCard, EuroIcon, Heart, User } from 'lucide-react'
@@ -17,6 +17,10 @@ import DatePage from './date/page'
 import { getTotalPersonePagate } from '@/actions/get-total-discoteca-persone-tavoli'
 import { getDiscotecaLike } from '@/actions/get-discoteca-like'
 import ListePage from './liste/page'
+import OrdersBigliettiPage from './order-biglietti/page'
+import { getTotalDiscotecheBigliettiPrezzo } from '@/actions/get-total-discoteca-biglietto-prezzo'
+import { getTotalDiscotecheBiglietti } from '@/actions/get-total-discoteca-biglietti-venduti'
+import { getDiscotecaPriority } from '@/actions/getPriority-discoteca'
 
 const DiscotecaImpostazioniPage = async ({ params }: { params: { accountId: string, discotecaId: string } }) => {
     const discoteca = await prismadb.discoteca.findUnique({
@@ -38,7 +42,7 @@ const DiscotecaImpostazioniPage = async ({ params }: { params: { accountId: stri
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">
-                                    Guadagno totale
+                                    Guadagno Tavoli
                                 </CardTitle>
                                 <EuroIcon className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
@@ -48,7 +52,16 @@ const DiscotecaImpostazioniPage = async ({ params }: { params: { accountId: stri
                         </Card>
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Tavoli venduti</CardTitle>
+                                <CardTitle className="text-sm font-medium">Guadagno Biglietti</CardTitle>
+                                <EuroIcon className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">+{getTotalDiscotecheBigliettiPrezzo(discoteca?.id!)}€</div>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">N. Tavoli Venduti</CardTitle>
                                 <CreditCard className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent>
@@ -57,7 +70,16 @@ const DiscotecaImpostazioniPage = async ({ params }: { params: { accountId: stri
                         </Card>
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Persone che hanno pagato</CardTitle>
+                                <CardTitle className="text-sm font-medium">N. Biglietti Venduti</CardTitle>
+                                <CreditCard className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">+{getTotalDiscotecheBiglietti(discoteca?.id!)}</div>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">N. Transazioni di tavoli</CardTitle>
                                 <User className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent>
@@ -72,6 +94,16 @@ const DiscotecaImpostazioniPage = async ({ params }: { params: { accountId: stri
                             <CardContent>
                                 <div className="text-2xl font-bold">+{getDiscotecaLike(discoteca?.id!)}</div>
                             </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Discoteca Priority</CardTitle>
+                                <Heart className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">{getDiscotecaPriority(discoteca?.id!)}</div>
+                            </CardContent>
+                            <CardDescription>Chiedi a un amministratore di aumentare</CardDescription>
                         </Card>
                     </div>
                     <Card className="col-span-4">
@@ -88,16 +120,20 @@ const DiscotecaImpostazioniPage = async ({ params }: { params: { accountId: stri
             <Separator />
 
             <InformazioniPage params={params} />
-            <Separator/>
-            <ListePage params={params}/>
             <Separator />
+            <ListePage params={params} />
+            <Separator />
+
+            <OrdersBigliettiPage params={params} />
+            <Separator />
+
             <EventiPage params={params} />
             <Separator />
             <MenusPage params={params} />
             <Separator />
             <OrdersPage params={params} />
             <Separator />
-            <DatePage params={params}/>
+            <DatePage params={params} />
         </div>
     )
 }

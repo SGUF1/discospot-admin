@@ -48,8 +48,6 @@ export async function POST(
         }
     })
 
-    const taxRateId = process.env.STRIPxE_TAX_ID!;
-
     const totale = (orderBiglietto.prezzo * 5.2) / 100 + 0.68;
     // Aggiungi l'aliquota fiscale all'array line_items
     line_items.push({
@@ -61,7 +59,6 @@ export async function POST(
             },
             unit_amount_decimal: (Math.floor(totale * 100).toFixed(2)), // Importo totale delle tasse
         },
-        tax_rates: [taxRateId], // Aggiungi l'ID dell'aliquota fiscale qui
     });
 
 
