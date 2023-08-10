@@ -7,7 +7,9 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
         const orderBiglietto = await prismadb.orderBiglietto.findUnique({
             where: {
                 codice: params.bigliettoId,
-                confermato: false
+                AND: {
+                    confermato: false
+                }
             },
             include: {
                 lista: {
