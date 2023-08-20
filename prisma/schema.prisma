@@ -327,7 +327,6 @@ model Order {
   prezzoTotale        Float         @default(0)
   numeroPersone       Int           @default(0)
   proprietario        Boolean       @default(false)
-  nomeProprietarioId String
   orderDate           DateTime
   expiredDate         DateTime?
   taxPrezzo           Float         @default(0)
