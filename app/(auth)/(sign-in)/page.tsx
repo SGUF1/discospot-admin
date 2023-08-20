@@ -117,6 +117,7 @@ const LoginPage = () => {
                       type="password"
                       {...field}
                       className="w-[300px]"
+                      
                     />
                   </FormControl>
                   <FormMessage />

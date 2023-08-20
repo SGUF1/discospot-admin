@@ -12,7 +12,6 @@ export type ListeColumn = {
 	limiteData: string;
 	quantity: number;
 	prezzoBiglietto: number,
-	bigliettiRimanenti: number,
 	infinite: boolean
 };
 
@@ -32,10 +31,6 @@ export const columns: ColumnDef<ListeColumn>[] = [
 	{
 		accessorKey: 'prezzoBiglietto',
 		header: 'Prezzo Biglietto'
-	},
-	{
-		accessorKey: 'bigliettiRimanenti',
-		header: 'Biglietti Rimanenti'
 	},
 	{
 		accessorKey: 'infinite',

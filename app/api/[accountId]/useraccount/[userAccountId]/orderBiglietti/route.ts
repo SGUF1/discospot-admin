@@ -11,7 +11,7 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
                     id: params.userAccountId
                 },
                 data: {
-                    gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours() + 26, 0),
+                    gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours() - 35, 0),
                     lt: new Date(new Date().getFullYear(), new Date().getMonth() + 10, new Date().getDate(), new Date().getHours() + getGlobalHours, 0)
                 },
                 codice: {
