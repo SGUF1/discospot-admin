@@ -111,7 +111,6 @@ export async function POST(
       data: {
         discotecaId: params.discotecaId,
         isPaid: false,
-        proprietario: codiceTavolo ? false : true,
         createdAt: dataAttuale.toISOString(),
         orderDate: data,
         numeroPersone,

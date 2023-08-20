@@ -103,6 +103,20 @@ export async function POST(req: Request) {
               }
             }
           })
+          if (order.numeroPersonePagato === order.numeroPersone) {
+            order = await prismadb.order.update({
+              where: {
+                codice: session?.metadata?.codiceTavolo
+              },
+              data: {
+                stato: {
+                  connect: {
+                    id: "14495dd9-da9f-4870-a64c-68a660bd293b",
+                  }
+                }
+              }
+            })
+          }
         }
       }
 

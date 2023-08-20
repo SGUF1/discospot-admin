@@ -1,9 +1,9 @@
 import prismadb from "@/lib/prismadb";
+import { id } from "date-fns/locale";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request, { params }: { params: { accountId: string, userAccountId: string } }) {
     try {
-
         const orders = await prismadb.order.findMany({
             where: {
                 userAccounts: {

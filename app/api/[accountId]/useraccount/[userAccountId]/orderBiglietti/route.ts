@@ -17,7 +17,7 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
                 codice: {
                     not: "",
                 },
-                lista:{
+                lista: {
                     discoteca: {
                         visibile: true
                     }
@@ -30,7 +30,6 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
                 lista: {
                     include: {
                         discoteca: {
-                            
                             include: {
                                 provincia: true,
 
