@@ -309,25 +309,7 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
                                     </FormItem>
                                 )}
                             />
-                            <FormField
-                                control={form.control}
-                                name="maximumOrderDate"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Data limite per la prenotazione tavoli:</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                disabled={loading}
-                                                type="number"
-                                                placeholder="0"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormDescription>Dopo aver superato il numero di giorni inserito dopo la prenotazione del tavolo, il tavolo diventerà automaticamente "Non prenotato" se non viene confermato dal cliente</FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                           
                         </div>
                     </div>
                     <Button disabled={loading} className='ml-auto' type='submit'>
