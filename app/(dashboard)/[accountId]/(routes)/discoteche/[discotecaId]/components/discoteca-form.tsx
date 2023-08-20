@@ -265,7 +265,7 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
                             )}
                         />
                         <div className='grid grid-cols-1 grid-row-2 justify-center items-center w-[102%]' >
-                            <FormField control={form.control} name='caparra' render={({ field }) => (
+                            {/* <FormField control={form.control} name='caparra' render={({ field }) => (
                                 <FormItem className='flex flex-row items-center self-start '>
                                     <div className='space-x-0.5 w-2/3'>
                                         <FormLabel>Caparra</FormLabel>
@@ -277,7 +277,7 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
                                         <Switch checked={field.value} onCheckedChange={field.onChange} />
                                     </FormControl>
                                 </FormItem>
-                            )} />
+                            )} /> */}
                             <FormField control={form.control} name='visibile' render={({ field }) => (
                                 <FormItem className='flex flex-row items-center self-start '>
                                     <div className='space-x-0.5 w-2/3'>
@@ -309,7 +309,25 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
                                     </FormItem>
                                 )}
                             />
-                           
+                            {/* <FormField
+                                control={form.control}
+                                name="maximumOrderDate"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Data limite per la prenotazione tavoli:</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                disabled={loading}
+                                                type="number"
+                                                placeholder="0"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormDescription>Dopo aver superato il numero di giorni inserito dopo la prenotazione del tavolo, il tavolo diventerà automaticamente "Non prenotato" se non viene confermato dal cliente</FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            /> */}
                         </div>
                     </div>
                     <Button disabled={loading} className='ml-auto' type='submit'>

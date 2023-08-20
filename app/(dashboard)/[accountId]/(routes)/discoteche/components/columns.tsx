@@ -14,7 +14,7 @@ export type DiscotecaColumn = {
     city: string,
     provincia: string,
     createdAt: string
-    caparra: boolean,
+    // caparra: boolean,
     visible: boolean,
     maximumOrderDate: number,
     isSuperior?: boolean
@@ -45,11 +45,11 @@ export const columns: ColumnDef<DiscotecaColumn>[] = [
         accessorKey: "maximumOrderDate",
         header: "Limite giorni ordine"
     },
-    {
-        accessorKey: "caparra",
-        header: "Caparra",
-        cell: ({ row }) => <div className="ml-5">{row.original.caparra ? <Check className="h-4 w-4 bg-green-500" /> : <X className="h-4 w-4 bg-red-500" />}</div>
-    },
+    // {
+    //     accessorKey: "caparra",
+    //     header: "Caparra",
+    //     cell: ({ row }) => <div className="ml-5">{row.original.caparra ? <Check className="h-4 w-4 bg-green-500" /> : <X className="h-4 w-4 bg-red-500" />}</div>
+    // },
     {
         accessorKey: "visibile",
         header: "Visibile",

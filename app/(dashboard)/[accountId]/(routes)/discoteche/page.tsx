@@ -32,7 +32,7 @@ const DiscotechePage = async ({ params }: { params: { accountId: string } }) => 
       createdAt: format(item.createdAt, "MMMM do, yyyy"),
       isSuperior: admin?.superior,
       provincia: item.provincia.name,
-      caparra: item.caparra,
+      // caparra: item.caparra,
       visible: item.visibile,
       maximumOrderDate: item.maximumOrderDate
     }))
@@ -51,7 +51,7 @@ const DiscotechePage = async ({ params }: { params: { accountId: string } }) => 
       // @ts-ignore
       provincia: admin?.discoteca?.name,
       // @ts-ignore
-      caparra: admin?.discoteca?.caparra ,
+      // caparra: admin?.discoteca?.caparra ,
       // @ts-ignore
       visible: admin?.discoteca?.visibile,
       // @ts-ignore
