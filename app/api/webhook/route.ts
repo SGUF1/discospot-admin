@@ -103,39 +103,25 @@ export async function POST(req: Request) {
               }
             }
           })
-          if (order.numeroPersonePagato === order.numeroPersone) {
-            order = await prismadb.order.update({
-              where: {
-                codice: session?.metadata?.codiceTavolo
-              },
-              data: {
-                stato: {
-                  connect: {
-                    id: "14495dd9-da9f-4870-a64c-68a660bd293b",
-                  }
-                }
-              }
-            })
-          }
         }
       }
 
-      const tavoloId = order!.proprietario ? order!.tavoloId : ""
-      const tavolo = await prismadb.tavolo.findUnique({
-        where: {
-          id: tavoloId
-        }
-      })
+    //   const tavoloId = order!.tavoloId
+    //   const tavolo = await prismadb.tavolo.findUnique({
+    //     where: {
+    //       id: tavoloId
+    //     }
+    //   })
 
-      if (tavolo) {
-        const date = await prismadb.data.create({
-          data: {
-            data: order!.orderDate,
-            tavoloId: tavoloId,
-            statoId: "085bfc1d-a351-4976-9f0f-53aa08ea2da6"
-          }
-        })
-      }
+    //   if (tavolo) {
+    //     const date = await prismadb.data.create({
+    //       data: {
+    //         data: order!.orderDate,
+    //         tavoloId: tavoloId,
+    //         statoId: "085bfc1d-a351-4976-9f0f-53aa08ea2da6"
+    //       }
+    //     })
+    //   }
     }
   } else if (session?.metadata?.orderBigliettoId) {
     const code = await generateUniqueOrderCode()
@@ -162,7 +148,6 @@ export async function POST(req: Request) {
         },
         data: {
           isPaid: true,
-          phone: session?.customer_details?.phone || "",
           userAccount: {
             connect: {
               id: session?.metadata?.userAccountId

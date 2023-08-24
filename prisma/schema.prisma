@@ -326,7 +326,7 @@ model Order {
   codice              String?       @unique
   prezzoTotale        Float         @default(0)
   numeroPersone       Int           @default(0)
-  proprietario        Boolean       @default(false)
+  proprietario        Boolean       @default(true)
   orderDate           DateTime
   expiredDate         DateTime?
   taxPrezzo           Float         @default(0)

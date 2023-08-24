@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 import { stripe } from "@/lib/stripe";
 import prismadb from "@/lib/prismadb";
-import { Order, Prodotto } from "@prisma/client";
+import { Data, Order, Prodotto } from "@prisma/client";
 import getGlobalHours from "@/actions/getGlobalHours";
 
 const corsHeaders = {
@@ -32,7 +32,7 @@ export async function POST(
   const prod: ProdottoConQuantity[] = prodotti;
   const date = new Date(data)
   var order: Order | null;
-
+  var calendarioOrdine : Data | null
   if (tavolo && prodotti && data && numeroPersone) {
     line_items.push({
       quantity: 1,
@@ -90,7 +90,7 @@ export async function POST(
           prezzo: product.prodotto.prezzo,
           portataId: product.prodotto.portataId,
           itemProduct: true
-          // Assicurati di includere tutti i campi richiesti
+          
         },
       },
       quantity: product.quantita,
@@ -123,6 +123,23 @@ export async function POST(
         },
       },
     });
+
+    // calendarioOrdine = await prismadb.data.create({
+    //   data: {
+    //     data: order.orderDate,
+    //     stato: {
+    //       connect: {
+    //         id: "9a3d047f-350d-4fb5-9dfa-45f5869f705f",
+    //       },
+    //     },
+    //     tavolo: {
+    //       connect: {
+    //         id: tavolo?.id
+    //       }
+    //     },
+
+    //   }
+    // })
   }
 
   if (codiceTavolo) {
@@ -152,6 +169,7 @@ export async function POST(
       orderId: order!.id,
       userAccountId,
       codiceTavolo,
+      // calendarioOrdineId: calendarioOrdine!.id
     },
   });
 
