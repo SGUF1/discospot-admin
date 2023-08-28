@@ -19,7 +19,7 @@ export async function POST(
     req: Request,
     { params }: { params: { discotecaId: string } }
 ) {
-    const { userAccountId, listaId } =
+    const { userAccountId, listaId, firstName, lastName } =
         await req.json();
 
     const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
@@ -34,6 +34,7 @@ export async function POST(
             prezzo: lista?.prezzoBiglietto!,
             data: lista?.dataLimite!,
             listaId,
+            completeName: firstName + " " + lastName,
         }
     })
 
@@ -55,7 +56,7 @@ export async function POST(
         price_data: {
             currency: 'EUR',
             product_data: {
-                name: 'Tassa', // Nome del prodotto tassa
+                name: 'Commissioni discoXspot', // Nome del prodotto tassa
             },
             unit_amount_decimal: (Math.floor(totale * 100).toFixed(2)), // Importo totale delle tasse
         },

@@ -106,22 +106,22 @@ export async function POST(req: Request) {
         }
       }
 
-    //   const tavoloId = order!.tavoloId
-    //   const tavolo = await prismadb.tavolo.findUnique({
-    //     where: {
-    //       id: tavoloId
-    //     }
-    //   })
+      //   const tavoloId = order!.tavoloId
+      //   const tavolo = await prismadb.tavolo.findUnique({
+      //     where: {
+      //       id: tavoloId
+      //     }
+      //   })
 
-    //   if (tavolo) {
-    //     const date = await prismadb.data.create({
-    //       data: {
-    //         data: order!.orderDate,
-    //         tavoloId: tavoloId,
-    //         statoId: "085bfc1d-a351-4976-9f0f-53aa08ea2da6"
-    //       }
-    //     })
-    //   }
+      //   if (tavolo) {
+      //     const date = await prismadb.data.create({
+      //       data: {
+      //         data: order!.orderDate,
+      //         tavoloId: tavoloId,
+      //         statoId: "085bfc1d-a351-4976-9f0f-53aa08ea2da6"
+      //       }
+      //     })
+      //   }
     }
   } else if (session?.metadata?.orderBigliettoId) {
     const code = await generateUniqueOrderCode()
@@ -154,6 +154,7 @@ export async function POST(req: Request) {
             }
           },
           codice: code,
+          phone: session?.customer_details?.phone || "",
           lista: {
             connect: {
               id: updatedLista.id

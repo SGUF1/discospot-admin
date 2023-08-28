@@ -34,6 +34,7 @@ const OrdersPage = async ({ params }: { params: { discotecaId: string } }) => {
       id: item.id,
       createdAt: format(item.createdAt, "Pp"),
       isPaid: item.isPaid,
+      completeName: item.completeName,
       phone: item.phone,
       // prodotti: item.orderItems.map((orderItem) => orderItem.prodotto.portata.numeroPortata + ") " + orderItem.prodotto.nome ),
       // tavolo: item.orderItems[0]?.tavolo.numeroTavolo,
@@ -48,7 +49,6 @@ const OrdersPage = async ({ params }: { params: { discotecaId: string } }) => {
       numeroPersone: item.numeroPersone,
       stato: item.stato.nome,
       numeroPersonePagato: item.numeroPersonePagato,
-      expiredDate: item?.expiredDate ? format(item?.expiredDate!, "MMMM do, yyyy") : ""
     }))
 
     

@@ -49,7 +49,7 @@ export async function POST(
       return new NextResponse("Priority is required", { status: 400 });
     }
 
-    
+
     if (!params.accountId)
       return new NextResponse("Account Id is required", { status: 400 });
 
@@ -89,8 +89,21 @@ export async function GET(
         priority: 'desc'
       }
       ,
-      include: {
-        userAccounts: true,
+      select: {
+        userAccounts: {
+          select: {
+            id: true
+          }
+        },
+        name: true,
+        indirizzo: true,
+        city: true,
+        cap: true,
+        civico: true,
+        priority: true,
+        imageUrl: true,
+        like: true,
+        id: true,
         provincia: true
       }
     });

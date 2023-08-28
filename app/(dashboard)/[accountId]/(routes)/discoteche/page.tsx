@@ -34,7 +34,7 @@ const DiscotechePage = async ({ params }: { params: { accountId: string } }) => 
       provincia: item.provincia.name,
       // caparra: item.caparra,
       visible: item.visibile,
-      maximumOrderDate: item.maximumOrderDate
+      // maximumOrderDate: item.maximumOrderDate
     }))
   }else{
     formattedDiscoteche = [{
@@ -55,7 +55,7 @@ const DiscotechePage = async ({ params }: { params: { accountId: string } }) => 
       // @ts-ignore
       visible: admin?.discoteca?.visibile,
       // @ts-ignore
-      maximumOrderDate: admin?.discoteca?.maximumOrderDate
+      // maximumOrderDate: admin?.discoteca?.maximumOrderDate
     }]
   }
   return (

@@ -25,7 +25,7 @@ export async function POST(
   req: Request,
   { params }: { params: { discotecaId: string } }
 ) {
-  const { tavolo, prodotti, data, numeroPersone, codiceTavolo, userAccountId } =
+  const { tavolo, prodotti, data, numeroPersone, codiceTavolo, userAccountId, firstName, lastName  } =
     await req.json();
 
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
@@ -111,7 +111,7 @@ export async function POST(
       data: {
         discotecaId: params.discotecaId,
         isPaid: false,
-        createdAt: dataAttuale.toISOString(),
+        createdAt: dataAttuale.toISOString() ,
         orderDate: data,
         numeroPersone,
         prezzoTotale,
@@ -121,6 +121,7 @@ export async function POST(
         orderItems: {
           create: orderItemsData,
         },
+        completeName: firstName + " " + lastName
       },
     });
 
@@ -156,7 +157,7 @@ export async function POST(
   if (!order!) {
     return new NextResponse("Errore nel trovare l'ordine", { status: 400 })
   }
-
+  
   const session = await stripe.checkout.sessions.create({
     line_items,
     mode: "payment",
@@ -169,6 +170,8 @@ export async function POST(
       orderId: order!.id,
       userAccountId,
       codiceTavolo,
+      firstName,
+      lastName,
       // calendarioOrdineId: calendarioOrdine!.id
     },
   });

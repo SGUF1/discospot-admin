@@ -323,6 +323,7 @@ model Order {
   numeroPersonePagato Int           @default(0)
   isPaid              Boolean       @default(false)
   phone               String        @default("")
+  completeName        String        @default("")
   codice              String?       @unique
   prezzoTotale        Float         @default(0)
   numeroPersone       Int           @default(0)
@@ -392,6 +393,7 @@ model OrderBiglietto {
   phone         String       @default("")
   prezzo        Float
   data          DateTime
+  completeName  String       @default("")
   isPaid        Boolean      @default(false)
   codice        String?      @unique
   listaId       String

@@ -1,3 +1,4 @@
+import getGlobalHours from "@/actions/getGlobalHours";
 import prismadb from "@/lib/prismadb";
 import { id } from "date-fns/locale";
 import { NextResponse } from "next/server";
@@ -10,6 +11,9 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
                     some: {
                         id: params.userAccountId
                     }
+                },
+                orderDate: {
+                    lt: new Date(new Date().getFullYear(), new Date().getMonth() + 12, new Date().getDate(), new Date().getHours() + getGlobalHours, 0)
                 },
                 discoteca: {
                     visibile: true

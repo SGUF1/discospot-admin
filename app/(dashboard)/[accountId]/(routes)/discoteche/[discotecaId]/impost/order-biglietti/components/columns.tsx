@@ -7,8 +7,9 @@ import { X } from 'lucide-react';
 
 export type OrdersColumn = {
 	id: string;
-	phone: string;
+	phone: string | null;
 	isPaid: Boolean;
+	completeName: string | null,
 	totalPrice: number;
 	createdAt: string;
 	orderData: string;
@@ -17,15 +18,16 @@ export type OrdersColumn = {
 
 export const columns: ColumnDef<OrdersColumn>[] = [
 	{
-		accessorKey: 'phone',
-		header: 'Telefono'
+		accessorKey: "completeName",
+		header: "Nome & Cognome"
 	},
+
 	{
 		accessorKey: 'totalPrice',
 		header: 'Prezzo Totale'
 	},{
 		accessorKey: "codice",
-		header: "Codice Tavolo",
+		header: "Codice Biglietto",
 	},
 	{
 		accessorKey: "orderData",

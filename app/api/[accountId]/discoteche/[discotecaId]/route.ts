@@ -106,7 +106,11 @@ export async function GET(
         id: params.discotecaId,
       },
       include: {
-        userAccounts: true,
+        userAccounts: {
+          select: {
+            id: true,
+          }
+        },
         provincia: true,
         sale: {
           include: {
@@ -122,8 +126,8 @@ export async function GET(
             tavoli: {
               include: {
                 posizione: true,
-                posti: true,
                 stato: true,
+                posti: true,
                 calendarioTavolo: {
                   include: {
                     data: true

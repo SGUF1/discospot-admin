@@ -12,16 +12,20 @@ export type OrdersColumn = {
 	totalPrice: number;
 	tavolo: string;
 	prodotti: string[]
-	createdAt: string;
+	createdAt: string
+	completeName: string
 	orderData: string;
 	codice: string,
 	numeroPersone: number;
 	stato: string,
-	expiredDate?: string
 	numeroPersonePagato: number
 };
 
 export const columns: ColumnDef<OrdersColumn>[] = [
+	{
+		accessorKey: "completeName",
+		header: 'Nome'
+	},
 	{
 		accessorKey: 'tavolo',
 		header: 'Tavolo'
@@ -31,6 +35,7 @@ export const columns: ColumnDef<OrdersColumn>[] = [
 		header: "Prodotti",
 		cell: ({row}) => row.original.prodotti.map((prodotto) => <div className='w-[200px]'>{prodotto}</div>)
 	},
+
 	{
 		accessorKey: 'phone',
 		header: 'Telefono'
@@ -50,10 +55,7 @@ export const columns: ColumnDef<OrdersColumn>[] = [
 		accessorKey: "orderData",
 		header: "Ordine per il:"
 	},
-	{
-		accessorKey: "expiredDate",
-		header: "Limite giorno"
-	},
+
 	{
 		accessorKey: "numeroPersonePagato",
 		header: "Pagato in:"

@@ -17,16 +17,24 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
             orderBy: {
                 orderDate: 'asc'
             },
-            include: {
-                discoteca: {
-                    include: {
-                        provincia: true
+            select: {
+                orderDate: true,
+                tavoloId: true,
+                tavolo: {
+                    select: {
+                        id: true,
+                        numeroTavolo: true,
                     }
                 },
-                tavolo: true,
-                stato: true,
-            }
+                stato: {
+                    select: {
+                        colore: true,
+                    }
+                },
+                
+            },
         });
+
         return NextResponse.json(orders);
     } catch (error) {
         console.log("[ORDERS GET]", error);

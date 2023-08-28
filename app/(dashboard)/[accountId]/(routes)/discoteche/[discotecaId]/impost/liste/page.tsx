@@ -17,7 +17,7 @@ const ListePage = async ({ params }: { params: { discotecaId: string } }) => {
       nome: item.nome,
       limiteData: format(item.dataLimite, "MMMM do, yyyy"),
       prezzoBiglietto: item.prezzoBiglietto,
-      quantity: item.quantity ?? Number(),
+      quantity: item.bigliettiRimanenti ?? Number(),
       infinite: item.bigliettiInfiniti
     }))
 
