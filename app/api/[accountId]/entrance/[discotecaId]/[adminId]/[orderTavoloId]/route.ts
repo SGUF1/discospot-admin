@@ -7,7 +7,14 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
         const orderTavolo = await prismadb.order.findUnique({
             where: {
                 codice: params.orderTavoloId,
-
+                // @ts-ignore
+                AND: {
+                    tavolo: {
+                        sala: {
+                            discotecaId: params.discotecaId
+                        }
+                    }
+                }
             },
             include: {
                 tavolo: true,
