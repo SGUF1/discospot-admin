@@ -185,11 +185,11 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
               name="tipologiaEventoId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tipo informazione:</FormLabel>
+                  <FormLabel>Tipo Evento:</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value} disabled={loading}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Seleziona il tipo di informazione" />
+                        <SelectValue placeholder="Seleziona il tipo di evento" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>

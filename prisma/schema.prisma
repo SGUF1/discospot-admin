@@ -364,6 +364,19 @@ model UserAccount {
   discoteche     Discoteca[]
   orders         Order[]
   orderBiglietti OrderBiglietto[] @relation("BigliettoToUser")
+  domanda2       String           @default("")
+  domanda3       String           @default("")
+  eta            Int              @default(5)
+  generi         Generi[]         @relation("UserToGenere")
+}
+
+model Generi {
+  id     String      @id @default(uuid())
+  nome   String
+  userId String
+  user   UserAccount @relation("UserToGenere", fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 model Lista {
