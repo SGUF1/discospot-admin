@@ -9,7 +9,11 @@ const ListaPage = async ({ params }: { params: {accountId: string, discotecaId: 
       id: params.listaId,
     },
     include: {
-      informazioni: true
+      informazioni: {
+        orderBy: {
+          numeroInformazione: 'asc'
+        }
+      }
     }
   })
   const account = await prismadb.accounts.findUnique({

@@ -9,7 +9,8 @@ const ListePage = async ({ params }: { params: { discotecaId: string } }) => {
     where: {
       discotecaId: params.discotecaId,
     },
-  })
+    
+  });
   
   const formattedListe: ListeColumn[] = liste.map((item) => (
     {

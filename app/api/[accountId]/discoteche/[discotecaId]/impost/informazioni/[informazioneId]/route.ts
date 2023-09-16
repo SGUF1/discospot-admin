@@ -78,6 +78,7 @@ export async function GET(
       where: {
         id: params.informazioneId,
       },
+      
     });
 
     return NextResponse.json(informazione);

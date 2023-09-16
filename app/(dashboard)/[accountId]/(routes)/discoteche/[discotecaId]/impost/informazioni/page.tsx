@@ -13,6 +13,9 @@ const InformazioniPage = async ({ params }: { params: { discotecaId: string } })
     },
     where: {
       discotecaId: params.discotecaId
+    },
+    orderBy: {
+      numeroInformazione: 'asc'
     }
   })
   const formattedTavoli: InformazioneColumn[] = informazioni.map((item) => ({
