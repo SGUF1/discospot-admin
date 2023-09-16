@@ -64,11 +64,11 @@ export async function POST(
     });
     var totale = prod.reduce((total, orderItem) => {
       return (
-        total + (orderItem.prodotto.prezzo * orderItem.quantita) / numeroPersone
+        total + (orderItem.prodotto.prezzo * orderItem.quantita)
       );
-    }, Number(Number(tavolo.prezzo) / numeroPersone));
-
-    totale = (totale * 5.2) / 100 + 0.68;
+    }, Number(Number(tavolo.prezzo)));
+    
+    var totalePersona = ((totale /  numeroPersone * 5.2)) / 100 + 0.68;
     line_items.push({
       quantity: 1,
       price_data: {
@@ -76,7 +76,7 @@ export async function POST(
         product_data: {
           name: "Commissioni",
         },
-        unit_amount_decimal: Math.floor(totale * 100).toFixed(2),
+        unit_amount_decimal: Math.floor(totalePersona * 100).toFixed(2),
       },
     });
 
@@ -114,7 +114,7 @@ export async function POST(
         createdAt: dataAttuale.toISOString() ,
         orderDate: data,
         numeroPersone,
-        prezzoTotale,
+        prezzoTotale: totale,
         tavoloId: tavolo?.id,
         taxPrezzo: Number(line_items[lastIndex].price_data?.unit_amount_decimal) / 100,
         statoId: "8d356af8-dc09-42f1-86da-90c64c20638b",

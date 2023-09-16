@@ -49,7 +49,7 @@ export async function POST(
         }
     })
 
-    const totale = (orderBiglietto.prezzo * 5.2) / 100 + 0.68;
+    const totale = (orderBiglietto.prezzo * 4.5) / 100 + 0.60;
     // Aggiungi l'aliquota fiscale all'array line_items
     line_items.push({
         quantity: 1,
