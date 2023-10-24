@@ -89,7 +89,7 @@ export async function POST(
         price_data: {
             currency: "EUR",
             product_data: {
-                name: "Commissioni DiscoXSpot",
+                name: "Commissioni discoXspot",
             },
             unit_amount_decimal: Math.floor(totale * 100).toFixed(2),
         },

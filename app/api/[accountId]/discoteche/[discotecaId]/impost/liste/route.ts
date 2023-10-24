@@ -39,6 +39,7 @@ export async function POST(req: Request, { params }: { params: { accountId: stri
 		}
 
 		const data = new Date(dataLimite)
+		if(bigliettiInfiniti) quantity === 9999999;
 		const lista = await prismadb.lista.create({
 			data: {
 				nome,

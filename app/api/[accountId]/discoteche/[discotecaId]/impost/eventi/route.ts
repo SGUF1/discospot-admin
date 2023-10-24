@@ -47,31 +47,31 @@ export async function POST(req: Request, { params }: { params: { accountId: stri
 		if (!oraFine) {
 			return new NextResponse('Ora fine is required', { status: 400 });
 		}
-			
+
 		const evento = await prismadb.evento.create({
-      data: {
-        nome,
-        imageUrl,
-        startDate,
-        endDate,
-        prioriti,
-        tipologiaEventoId,
-        discotecaId: params.discotecaId,
-        oraInizio,
-        oraFine,
-        eventoSala,
-        salaId,
-        informazioni: {
-          createMany: {
-            data: informations.map((item: any) => ({
-              descrizione: item.descrizione,
-              numeroInformazione: item.numeroInformazione,
-              tipoInformazioneId: item.tipoInformazioneId,
-            })),
-          },
-        },
-      },
-    });
+			data: {
+				nome,
+				imageUrl,
+				startDate,
+				endDate,
+				prioriti,
+				tipologiaEventoId,
+				discotecaId: params.discotecaId,
+				oraInizio,
+				oraFine,
+				eventoSala,
+				salaId,
+				informazioni: {
+					createMany: {
+						data: informations.map((item: any) => ({
+							descrizione: item.descrizione,
+							numeroInformazione: item.numeroInformazione,
+							tipoInformazioneId: item.tipoInformazioneId,
+						})),
+					},
+				},
+			},
+		});
 
 		return NextResponse.json(evento);
 	} catch (error) {

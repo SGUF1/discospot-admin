@@ -25,15 +25,17 @@ export async function POST(
   req: Request,
   { params }: { params: { discotecaId: string } }
 ) {
-  const { tavolo, prodotti, data, numeroPersone, codiceTavolo, userAccountId, firstName, lastName  } =
+  const { tavolo, prodotti, data, numeroPersone, codiceTavolo, userAccountId, firstName, lastName } =
     await req.json();
 
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
   const prod: ProdottoConQuantity[] = prodotti;
   const date = new Date(data)
   var order: Order | null;
-  var calendarioOrdine : Data | null
+  var calendarioOrdine: Data | null
+
   if (tavolo && prodotti && data && numeroPersone) {
+
     line_items.push({
       quantity: 1,
       price_data: {
@@ -67,8 +69,8 @@ export async function POST(
         total + (orderItem.prodotto.prezzo * orderItem.quantita)
       );
     }, Number(Number(tavolo.prezzo)));
-    
-    var totalePersona = ((totale /  numeroPersone * 5.2)) / 100 + 0.68;
+
+    var totalePersona = ((totale / numeroPersone * 5.2)) / 100 + 0.68;
     line_items.push({
       quantity: 1,
       price_data: {
@@ -90,15 +92,14 @@ export async function POST(
           prezzo: product.prodotto.prezzo,
           portataId: product.prodotto.portataId,
           itemProduct: true
-          
         },
       },
       quantity: product.quantita,
-      portata: {
-        connect: {
-          id: product.prodotto.portataId,
-        },
-      },
+      // portata: {
+      //   connect: {
+      //     id: product.prodotto.portataId,
+      //   },
+      // },
     }));
 
     const dataAttuale = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours() + getGlobalHours, new Date().getMinutes())
@@ -111,7 +112,7 @@ export async function POST(
       data: {
         discotecaId: params.discotecaId,
         isPaid: false,
-        createdAt: dataAttuale.toISOString() ,
+        createdAt: dataAttuale.toISOString(),
         orderDate: data,
         numeroPersone,
         prezzoTotale: totale,
@@ -157,7 +158,7 @@ export async function POST(
   if (!order!) {
     return new NextResponse("Errore nel trovare l'ordine", { status: 400 })
   }
-  
+
   const session = await stripe.checkout.sessions.create({
     line_items,
     mode: "payment",

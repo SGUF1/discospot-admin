@@ -346,8 +346,9 @@ model OrderItem {
   id         String   @id @default(uuid())
   orderId    String
   order      Order    @relation(fields: [orderId], references: [id])
-  portataId  String
-  portata    Portata  @relation(fields: [portataId], references: [id])
+  portataId  String?
+  portata    Portata?  @relation(fields: [portataId], references: [id])
+  portataString String @default("")
   prodottoId String
   prodotto   Prodotto @relation(fields: [prodottoId], references: [id])
   quantity   Int
