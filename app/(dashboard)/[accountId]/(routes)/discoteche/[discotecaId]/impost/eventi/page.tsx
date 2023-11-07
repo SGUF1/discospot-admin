@@ -20,8 +20,8 @@ const EventiPage = async ({ params }: { params: { discotecaId: string } }) => {
     {
       id: item.id,
       nome: item.nome,
-      startDate: format(parseISO(item.startDate.toISOString()), "MMMM do, yyyy HH:mm"),
-      endDate: format(new Date(item.endDate), "MMMM do, yyyy HH:mm"), 
+      startDate: format(parseISO(item.startDate.toISOString()), "MMMM do, yyyy"),
+      endDate: format(new Date(item.endDate), "MMMM do, yyyy"), 
       tipologiaEvento: item.tipologiaEvento.name,
       eventoSala: item.eventoSala,
       sala: item.sala?.nome
