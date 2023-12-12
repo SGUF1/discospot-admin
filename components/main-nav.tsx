@@ -15,33 +15,38 @@ export function MainNav({imageUrl, className}: MainNavProps ) {
     const params = useParams()
     const router = useRouter()
     const routes = [
-        {
-            href: `/${params.accountId}`,
-            label: "Overview",
-            active: pathname === `/${params.accountId}`
-        },
-        {
-            href: `/${params.accountId}/province`,
-            label: "Province",
-            active: pathname === `/${params.accountId}/province`
-        },
-        {
-            href: `/${params.accountId}/discoteche`,
-            label: "Discoteche",
-            active: pathname === `/${params.accountId}/discoteche`
-        },
-        {
-            href: `/${params.accountId}/altre`,
-            label: "Altre Cose",
-            active: pathname === `/${params.accountId}/altre`
-        },
-        {
-            href: `/${params.accountId}/admins`,
-            label: "Admins",
-            active: pathname === `/${params.accountId}/admins`
-        },
-        
-    ]
+      {
+        href: `/${params.accountId}`,
+        label: "Overview",
+        active: pathname === `/${params.accountId}`,
+      },
+      {
+        href: `/${params.accountId}/province`,
+        label: "Province",
+        active: pathname === `/${params.accountId}/province`,
+      },
+      {
+        href: `/${params.accountId}/discoteche`,
+        label: "Discoteche",
+        active: pathname === `/${params.accountId}/discoteche`,
+      },
+      {
+        href: `/${params.accountId}/scuole`,
+        label: "Scuole",
+        active: pathname === `/${params.accountId}/scuole`,
+      },
+      {
+        href: `/${params.accountId}/altre`,
+        label: "Altre Cose",
+        active: pathname === `/${params.accountId}/altre`,
+      },
+
+      {
+        href: `/${params.accountId}/admins`,
+        label: "Admins",
+        active: pathname === `/${params.accountId}/admins`,
+      },
+    ];
     const fakeImage = "https://asset.cloudinary.com/dg2hpjtdh/b7a513fd4bd30a908ce82e7960026a6e"
     const realImage = "https://res.cloudinary.com/dg2hpjtdh/image/upload/v1688595030/cqi5mouupo1g8vs7y6ql.jpg"
     return (

@@ -17,7 +17,7 @@ const DiscotechePage = async ({
       provincia: true,
     },
     where: {
-      scuola: false
+      scuola: true
     }
   });
 

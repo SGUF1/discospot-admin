@@ -60,6 +60,7 @@ model Discoteca {
   userAccounts     UserAccount[]
   date             Data[]         @relation("DiscotecaToDate")
   liste            Lista[]        @relation("ListaToDiscoteca")
+  scuola           Boolean        @default(false)
 
   @@index([provinciaId])
 }
@@ -343,17 +344,17 @@ model Order {
 }
 
 model OrderItem {
-  id         String   @id @default(uuid())
-  orderId    String
-  order      Order    @relation(fields: [orderId], references: [id])
-  portataId  String?
-  portata    Portata?  @relation(fields: [portataId], references: [id])
-  portataString String @default("")
-  prodottoId String
-  prodotto   Prodotto @relation(fields: [prodottoId], references: [id])
-  quantity   Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id            String   @id @default(uuid())
+  orderId       String
+  order         Order    @relation(fields: [orderId], references: [id])
+  portataId     String?
+  portata       Portata? @relation(fields: [portataId], references: [id])
+  portataString String   @default("")
+  prodottoId    String
+  prodotto      Prodotto @relation(fields: [prodottoId], references: [id])
+  quantity      Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   @@index([portataId])
   @@index([orderId])

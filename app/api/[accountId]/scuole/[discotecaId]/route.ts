@@ -169,7 +169,6 @@ export async function GET(
             tipologiaEvento: true,
           },
         },
-        liste: true,
         piani: true,
         date: true
       },

@@ -19,6 +19,7 @@ export async function POST(
       visibile,
       priority,
       maximumOrderDate,
+      scuola
     } = body;
 
     if (!name) {
@@ -65,7 +66,8 @@ export async function POST(
         caparra,
         visibile,
         priority,
-        maximumOrderDate
+        maximumOrderDate,
+        scuola
       },
     });
 
@@ -84,6 +86,7 @@ export async function GET(
     const discoteche = await prismadb.discoteca.findMany({
       where: {
         visibile: true,
+        scuola: false
       },
       orderBy: {
         priority: 'desc'
