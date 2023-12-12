@@ -22,14 +22,14 @@ const CellAction = ({ data, }: CellActionProps) => {
 
     const onCopy = (id: string) => {
         navigator.clipboard.writeText(id)
-        toast.success("Discoteca Id è stato copiato")
+        toast.success("Scuola Id è stato copiato")
     }
     const onDelete = async () => {
         try {
             setLoading(true);
             await axios.delete(`/api/${params.accountId}/discoteche/${data.id}`)
             router.refresh()
-            toast.success("La discoteca è stata eliminata")
+            toast.success("La scuola è stata eliminata")
         } catch (error) {
             toast.error("Qualcosa è andato storto")
 
@@ -55,7 +55,7 @@ const CellAction = ({ data, }: CellActionProps) => {
                         <Copy className="mr-2 h-4 w-4" />
                         Copia
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.replace(`/${params.accountId}/discoteche/${data.id}`)}>
+                    <DropdownMenuItem onClick={() => router.replace(`/${params.accountId}/scuole/${data.id}`)}>
                         <Edit className="mr-2 h-4 w-4" />
                         Modifica
                     </DropdownMenuItem>

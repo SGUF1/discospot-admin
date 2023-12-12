@@ -38,7 +38,7 @@ export async function GET(req: Request) {
   try {
     const userAccounts = await prismadb.userAccount.findMany({
       include: {
-        discoteche: true
+        discoteche: true,
       }
     }
     )
