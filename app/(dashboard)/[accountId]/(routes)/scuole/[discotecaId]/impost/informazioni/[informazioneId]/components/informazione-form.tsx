@@ -11,7 +11,7 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import prismadb from '@/lib/prismadb';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Accounts, Discoteca, Informazione, Piano, Posizione, Posto, Provincia, Stato, Tavolo, TipoInformazione } from '@prisma/client'
+import { Accounts, Discoteca, Informazione, Piano, Posizione, Provincia, Stato, Tavolo, TipoInformazione } from '@prisma/client'
 import axios from 'axios';
 import { Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';

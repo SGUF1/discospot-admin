@@ -15,6 +15,8 @@ export async function POST(
       statoId,
       imageUrl,
       numeroMinimo,
+      prezzoPerPosto,
+      numeroMassimo
     } = body;
 
     if (!descrizione) {
@@ -48,6 +50,8 @@ export async function POST(
         imageUrl,
         salaId: params.salaId,
         posizioneId,
+        prezzoPerPosto,
+        numeroMassimo
       },
     });
 
