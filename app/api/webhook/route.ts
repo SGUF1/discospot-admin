@@ -95,6 +95,7 @@ export async function POST(req: Request) {
               codice: session?.metadata?.codiceTavolo
             },
             data: {
+              prezzoTotale: order.prezzoTotale * order.numeroPersonePagato,
               numeroPersonePagato: order.numeroPersonePagato + 1,
               userAccounts: {
                 connect: {

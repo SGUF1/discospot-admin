@@ -11,7 +11,6 @@ const TavoliPage = async ({ params }: { params: { discotecaId: string, salaId: s
       salaId: params.salaId
     },
     include: {
-      posti: true,
       stato: true,
       posizione: true
     }
@@ -20,7 +19,7 @@ const TavoliPage = async ({ params }: { params: { discotecaId: string, salaId: s
     id: item.id,
     numerotavolo: item.numeroTavolo,
     posizione: item.posizione.nome,
-    posti: item.posti.length.toString(),
+    posti: item.numeroMassimo!,
     createdAt: format(item.createdAt, "MMMM do, yyyy"),
     prezzo: item.prezzo,
     stato: item.stato.nome,

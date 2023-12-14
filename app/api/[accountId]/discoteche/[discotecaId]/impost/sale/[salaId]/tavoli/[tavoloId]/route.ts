@@ -19,6 +19,8 @@ export async function PATCH(
       statoId,
       imageUrl,
       numeroMinimo,
+      numeroMassimo,
+      prezzoPerPosto
     } = body;
 
     if (!descrizione) {
@@ -51,9 +53,19 @@ export async function PATCH(
         numeroTavolo,
         prezzo,
         numeroMinimo,
-        statoId,
+        numeroMassimo,
+        stato: {
+          connect: {
+            id: statoId
+          }
+        },
         imageUrl,
-        posizioneId,
+        posizione: {
+          connect: {
+            id: posizioneId
+          }
+        },
+        prezzoPerPosto
       },
     });
 
@@ -73,19 +85,10 @@ export async function DELETE(
   }
 ) {
   try {
-    const posti = await prismadb.posto.deleteMany({
-      where: {
-        tavoloId: params.tavoloId
-      }
-    })
     const tavolo = await prismadb.tavolo.delete({
       where: {
         id: params.tavoloId,
       },
-      include: {
-        posti: true
-      }
-
     });
 
     return NextResponse.json(tavolo);

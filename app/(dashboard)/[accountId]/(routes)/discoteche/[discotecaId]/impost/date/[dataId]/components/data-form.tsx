@@ -16,7 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import prismadb from '@/lib/prismadb';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Accounts, Data, Discoteca, Evento, Informazione, Piano, Posizione, Posto, Provincia, Sala, Stato, Tavolo, TipoInformazione } from '@prisma/client'
+import { Accounts, Data, Discoteca, Evento, Informazione, Piano, Posizione, Provincia, Sala, Stato, Tavolo, TipoInformazione } from '@prisma/client'
 import axios from 'axios';
 import { addDays, format, parseISO } from 'date-fns';
 import { Trash, Calendar as CalendarIcon } from 'lucide-react';
@@ -65,7 +65,8 @@ const items = [
 const formSchema = z.object({
     type: z.enum(["ferie", "aperto"], {
         required_error: "Devi selezionare il tipo di data"
-    }),
+        
+    }).default("ferie"),
     items: z.array(z.string()).refine((value) => value.some((item) => item), {
         message: "Scegline almeno uno.",
     }),
@@ -152,154 +153,180 @@ const DataForm = ({ initialData, evento }: DataFormProps) => {
         }
     }
     return (
-        <>
-            <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={loading} />
+      <>
+        <AlertModal
+          isOpen={open}
+          onClose={() => setOpen(false)}
+          onConfirm={onDelete}
+          loading={loading}
+        />
 
-            <div className='flex items-center justify-between'>
-                <Heading title={title} description={description} />
-                {initialData && (
-                    <Button disabled={loading} variant={"destructive"} size={"sm"} onClick={() => setOpen(true)}>
-                        <Trash className='h-4 w-4' />
-                    </Button>
+        <div className="flex items-center justify-between">
+          <Heading title={title} description={description} />
+          {initialData && (
+            <Button
+              disabled={loading}
+              variant={"destructive"}
+              size={"sm"}
+              onClick={() => setOpen(true)}
+            >
+              <Trash className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+        <Separator />
+        <Form {...form}>
+          <form
+            className="space-y-8 w-full  "
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
+            <div
+              className={cn("grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-5")}
+            >
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel className="text-xl">
+                      Seleziona il tipo di data...
+                    </FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        // @ts-ignore
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-col space-y-1"
+                      >
+                        <FormItem className="flex items-center space-x-3 space-y-0 ">
+                          <FormControl>
+                            <RadioGroupItem value="aperto" />
+                          </FormControl>
+                          <FormLabel className="font-normal text-lg">
+                            Data di apertura
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="ferie" />
+                          </FormControl>
+                          <FormLabel className="font-normal text-lg">
+                            Data di chiusura
+                          </FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-            </div>
-            <Separator />
-            <Form {...form}>
-                <form className='space-y-8 w-full  ' onSubmit={form.handleSubmit(onSubmit)}>
-                    <div className={cn("grid gap-2",)}>
-                        <FormField
+              />
+              {form.getValues().type === "ferie" ? (
+                <div className="mt-4">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        id="date"
+                        variant={"outline"}
+                        className={cn(
+                          "w-[300px] justify-start text-left font-normal",
+                          !date && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {date?.from ? (
+                          date.to ? (
+                            <>
+                              {format(date.from, "LLL dd, y")} -{" "}
+                              {format(date.to, "LLL dd, y")}
+                            </>
+                          ) : (
+                            format(date.from, "LLL dd, y")
+                          )
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        initialFocus
+                        mode="range"
+                        defaultMonth={date?.from}
+                        selected={date}
+                        onSelect={setDate}
+                        numberOfMonths={2}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              ) : (
+                <div className="mt-4">
+                  <FormField
+                    control={form.control}
+                    name="items"
+                    render={() => (
+                      <FormItem>
+                        <div className="mb-4">
+                          <FormLabel className="text-xl">
+                            Giorni della settimana
+                          </FormLabel>
+                          <FormDescription className="text-lg">
+                            Selezione i giorni della settimana e ricordati di
+                            ripassare da data di chiusura e tornare in data di
+                            apertura
+                          </FormDescription>
+                        </div>
+                        {items.map((item) => (
+                          <FormField
+                            key={item.id}
                             control={form.control}
-                            name="type"
-                            render={({ field }) => (
-                                <FormItem className="space-y-3">
-                                    <FormLabel className='text-xl'>Seleziona il tipo di data...</FormLabel>
-                                    <FormControl>
-                                        <RadioGroup
-                                            // @ts-ignore
-                                            onValueChange={field.onChange}
-                                            defaultValue={field.value}
-                                            className="flex flex-col space-y-1"
-                                        >
-                                            <FormItem className="flex items-center space-x-3 space-y-0 ">
-                                                <FormControl>
-                                                    <RadioGroupItem value="aperto" />
-                                                </FormControl>
-                                                <FormLabel className="font-normal text-lg">
-                                                    Data di apertura
-                                                </FormLabel>
-                                            </FormItem>
-                                            <FormItem className="flex items-center space-x-3 space-y-0">
-                                                <FormControl>
-                                                    <RadioGroupItem value="ferie" />
-                                                </FormControl>
-                                                <FormLabel className="font-normal text-lg">
-                                                    Data di chiusura
-                                                </FormLabel>
-                                            </FormItem>
-                                        </RadioGroup>
-                                    </FormControl>
-                                    <FormMessage />
+                            name="items"
+                            render={({ field }) => {
+                              return (
+                                <FormItem
+                                  key={item.id}
+                                  className="flex flex-row items-start space-x-3 space-y-0"
+                                >
+                                  <FormControl>
+                                    <Checkbox
+                                      checked={field.value?.includes(item.id)}
+                                      onCheckedChange={(checked) => {
+                                        return checked
+                                          ? field.onChange([
+                                              ...field.value,
+                                              item.id,
+                                            ])
+                                          : field.onChange(
+                                              field.value?.filter(
+                                                (value) => value !== item.id
+                                              )
+                                            );
+                                      }}
+                                      className="p-2"
+                                    />
+                                  </FormControl>
+                                  <FormLabel className="font-normal">
+                                    {item.label}
+                                  </FormLabel>
                                 </FormItem>
-                            )}
-                        />
-                        {form.getValues().type === 'ferie' ?
-                            <div className='mt-4'>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <Button
-                                            id="date"
-                                            variant={"outline"}
-                                            className={cn(
-                                                "w-[300px] justify-start text-left font-normal",
-                                                !date && "text-muted-foreground"
-                                            )}
-                                        >
-                                            <CalendarIcon className="mr-2 h-4 w-4" />
-                                            {date?.from ? (
-                                                date.to ? (
-                                                    <>
-                                                        {format(date.from, "LLL dd, y")} -{" "}
-                                                        {format(date.to, "LLL dd, y")}
-                                                    </>
-                                                ) : (
-                                                    format(date.from, "LLL dd, y")
-                                                )
-                                            ) : (
-                                                <span>Pick a date</span>
-                                            )}
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                        <Calendar
-                                            initialFocus
-                                            mode="range"
-                                            defaultMonth={date?.from}
-                                            selected={date}
-                                            onSelect={setDate}
-                                            numberOfMonths={2}
-                                        />
-                                    </PopoverContent>
-                                </Popover>
-                            </div> : <div className='mt-4'>
-                                <FormField
-                                    control={form.control}
-                                    name="items"
-                                    render={() => (
-                                        <FormItem>
-                                            <div className="mb-4">
-                                                <FormLabel className="text-xl">Giorni della settimana</FormLabel>
-                                                <FormDescription className='text-lg'>
-                                                    Selezione i giorni della settimana e ricordati di ripassare da data di chiusura e tornare in data di apertura
-                                                </FormDescription>
-                                            </div>
-                                            {items.map((item) => (
-                                                <FormField
-                                                    key={item.id}
-                                                    control={form.control}
-                                                    name="items"
-                                                    render={({ field }) => {
-                                                        return (
-                                                            <FormItem
-                                                                key={item.id}
-                                                                className="flex flex-row items-start space-x-3 space-y-0"
-                                                            >
-                                                                <FormControl>
-                                                                    <Checkbox
-                                                                        checked={field.value?.includes(item.id)}
-                                                                        onCheckedChange={(checked) => {
-                                                                            return checked
-                                                                                ? field.onChange([...field.value, item.id])
-                                                                                : field.onChange(
-                                                                                    field.value?.filter(
-                                                                                        (value) => value !== item.id
-                                                                                    )
-                                                                                )
-                                                                        }}
-                                                                        className='p-2'
-                                                                    />
-                                                                </FormControl>
-                                                                <FormLabel className="font-normal">
-                                                                    {item.label}
-                                                                </FormLabel>
-                                                            </FormItem>
-                                                        )
-                                                    }}
-                                                />
-                                            ))}
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                /></div>}
-
-                    </div>
-                    <Button disabled={loading} className='ml-auto' type='submit'>
-                        {action}
-                    </Button>
-                </form>
-            </Form>
-        </>
-
-    )
+                              );
+                            }}
+                          />
+                        ))}
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
+            </div>
+            <Button disabled={loading} className="ml-auto" type="submit">
+              {action}
+            </Button>
+          </form>
+        </Form>
+      </>
+    );
 }
 
 export default DataForm

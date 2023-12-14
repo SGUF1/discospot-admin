@@ -1,47 +1,75 @@
-"use client"
-import getGlobalHours from '@/actions/getGlobalHours';
-import { AlertModal } from '@/components/modals/alert-modal';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Heading } from '@/components/ui/heading';
-import ImageUpload from '@/components/ui/image-upload';
-import { Input } from '@/components/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Evento, Informazione, Sala, TipoInformazione, TipologiaEvento } from '@prisma/client'
-import axios from 'axios';
-import { format } from 'date-fns';
-import { CalendarIcon, Trash } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react'
-import { useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
-import * as z from 'zod';
+"use client";
+import getGlobalHours from "@/actions/getGlobalHours";
+import { AlertModal } from "@/components/modals/alert-modal";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Heading } from "@/components/ui/heading";
+import ImageUpload from "@/components/ui/image-upload";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Evento,
+  Informazione,
+  Sala,
+  TipoInformazione,
+  TipologiaEvento,
+} from "@prisma/client";
+import axios from "axios";
+import { format } from "date-fns";
+import { CalendarIcon, Trash } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import * as z from "zod";
 
 interface EventoFormProps {
-  initialData: Evento & {
-    informazioni: Informazione[]
-  } | null,
-  tipologieEvento: TipologiaEvento[],
-  tipoInformazione: TipoInformazione[]
-  sale: Sala[],
-  superior: boolean
+  initialData:
+    | (Evento & {
+        informazioni: Informazione[];
+      })
+    | null;
+  tipologieEvento: TipologiaEvento[];
+  tipoInformazione: TipoInformazione[];
+  sale: Sala[];
+  superior: boolean;
 }
 
 const formSchema = z.object({
   nome: z.string().min(1),
   tipologiaEventoId: z.string().min(1),
-  informations: z.object({
-    descrizione: z.string().min(1),
-    numeroInformazione: z.coerce.number().min(1),
-    tipoInformazioneId: z.string().min(1)
-  }).array(),
+  informations: z
+    .object({
+      descrizione: z.string().min(1),
+      numeroInformazione: z.coerce.number().min(1),
+      tipoInformazioneId: z.string().min(1),
+    })
+    .array(),
   prioriti: z.string().min(1),
   imageUrl: z.string().min(1),
   startDate: z.date(),
@@ -49,21 +77,30 @@ const formSchema = z.object({
   endDate: z.date(),
   oraFine: z.string().min(1),
   eventoSala: z.boolean(),
-  salaId: z.string()
-})
+  salaId: z.string(),
+});
 
-type EventoFormValues = z.infer<typeof formSchema>
-const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, superior }: EventoFormProps) => {
-
+type EventoFormValues = z.infer<typeof formSchema>;
+const EventoForm = ({
+  initialData,
+  tipologieEvento,
+  sale,
+  tipoInformazione,
+  superior,
+}: EventoFormProps) => {
   const params = useParams();
   const router = useRouter();
 
-  const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const title = initialData ? "Modifica l'evento" : "Crea un evento";
-  const description = initialData ? "Modifica l'evento" : "Crea un evento da far visualizzare tra gli eventi";
-  const toastMessage = initialData ? "L'evento è stato modificato" : "L'evento è stato creato"
+  const description = initialData
+    ? "Modifica l'evento"
+    : "Crea un evento da far visualizzare tra gli eventi";
+  const toastMessage = initialData
+    ? "L'evento è stato modificato"
+    : "L'evento è stato creato";
   const action = initialData ? "Salva le modifiche" : "Crea l'evento";
 
   const form = useForm<EventoFormValues>({
@@ -71,79 +108,115 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
     // @ts-ignore
     defaultValues: initialData
       ? {
-        ...initialData,
-        informations: initialData?.informazioni
-      }
+          ...initialData,
+          informations: initialData?.informazioni,
+        }
       : {
-        nome: "",
-        tipologiaEventoId: "",
-        informations: [],
-        prioriti: "",
-        imageUrl: "",
-        startDate: new Date(),
-        endDate: new Date(),
-        oraInizio: "",
-        oraFine: "",
-        eventoSala: false,
-        salaId: "",
-      }
-  })
+          nome: "",
+          tipologiaEventoId: "",
+          informations: [],
+          prioriti: "",
+          imageUrl: "",
+          startDate: new Date(),
+          endDate: new Date(),
+          oraInizio: "",
+          oraFine: "",
+          eventoSala: false,
+          salaId: "",
+        },
+  });
 
   const onSubmit = async (data: EventoFormValues) => {
     try {
       setLoading(true);
-      const [hoursInizio, minutesInizio] = data.oraInizio.split(':')
-      const [hoursFine, minutesFine] = data.oraFine.split(':')
-      data.startDate = (new Date(data.startDate.getFullYear(), data.startDate.getMonth(), data.startDate.getDate(), +hoursInizio + getGlobalHours, +minutesInizio))
-      data.endDate = (new Date(data.endDate.getFullYear(), data.endDate.getMonth(), data.endDate.getDate(), +hoursFine + getGlobalHours, +minutesFine))
-      console.log(data.startDate)
+      const [hoursInizio, minutesInizio] = data.oraInizio.split(":");
+      const [hoursFine, minutesFine] = data.oraFine.split(":");
+      data.startDate = new Date(
+        data.startDate.getFullYear(),
+        data.startDate.getMonth(),
+        data.startDate.getDate(),
+        +hoursInizio + getGlobalHours,
+        +minutesInizio
+      );
+      data.endDate = new Date(
+        data.endDate.getFullYear(),
+        data.endDate.getMonth(),
+        data.endDate.getDate(),
+        +hoursFine + getGlobalHours,
+        +minutesFine
+      );
+      console.log(data.startDate);
       if (!initialData) {
-        await axios.post(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/eventi`, data);
+        await axios.post(
+          `/api/${params.accountId}/discoteche/${params.discotecaId}/impost/eventi`,
+          data
+        );
       } else {
-        await axios.patch(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/eventi/${params.eventoId}`, data)
+        await axios.patch(
+          `/api/${params.accountId}/discoteche/${params.discotecaId}/impost/eventi/${params.eventoId}`,
+          data
+        );
       }
       router.refresh();
-      router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
-      toast.success(toastMessage)
+      router.replace(
+        `/${params.accountId}/discoteche/${params.discotecaId}/impost`
+      );
+      toast.success(toastMessage);
     } catch (error) {
-      toast.error("Qualcosa è andato storto")
+      toast.error("Qualcosa è andato storto");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/eventi/${params.eventoId}`)
+      await axios.delete(
+        `/api/${params.accountId}/discoteche/${params.discotecaId}/impost/eventi/${params.eventoId}`
+      );
       router.refresh();
-      router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
+      router.replace(
+        `/${params.accountId}/discoteche/${params.discotecaId}/impost`
+      );
       toast.success("L'evento è stato eliminato");
     } catch (error) {
       toast.error("Qualcosa è andato storto");
+    } finally {
+      setLoading(false);
+      setOpen(false);
     }
-    finally {
-      setLoading(false)
-      setOpen(false)
-    }
-  }
+  };
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={loading} />
+      <AlertModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onConfirm={onDelete}
+        loading={loading}
+      />
 
-      <div className='flex items-center justify-between'>
+      <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
         {initialData && (
-          <Button disabled={loading} variant={"destructive"} size={"sm"} onClick={() => setOpen(true)}>
-            <Trash className='h-4 w-4' />
+          <Button
+            disabled={loading}
+            variant={"destructive"}
+            size={"sm"}
+            onClick={() => setOpen(true)}
+          >
+            <Trash className="h-4 w-4" />
           </Button>
         )}
       </div>
       <Separator />
       <Form {...form}>
-        <form className='space-y-8 w-full ' onSubmit={form.handleSubmit(onSubmit)}>
-          <div className='grid grid-cols-5 grid-row-2 space-x-5'>
+        <form
+          className="space-y-8 w-full "
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-5">
             <FormField
               control={form.control}
               name="nome"
@@ -186,7 +259,11 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Tipo Evento:</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value} disabled={loading}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={loading}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Seleziona il tipo di evento" />
@@ -194,7 +271,9 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
                     </FormControl>
                     <SelectContent>
                       {tipologieEvento.map((item) => (
-                        <SelectItem value={item.id} key={item.id}>{item.name}</SelectItem>
+                        <SelectItem value={item.id} key={item.id}>
+                          {item.name}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -212,7 +291,7 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
                       value={field.value ? [field.value] : []}
                       disabled={loading}
                       onChange={(url) => field.onChange(url)}
-                      onRemove={() => field.onChange('')}
+                      onRemove={() => field.onChange("")}
                     />
                   </FormControl>
                   <FormMessage />
@@ -220,10 +299,9 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
               )}
             />
           </div>
-          <div className='flex flex-col space-y-8'>
-            <div className='space-y-5'>
-
-              <div className='flex flex-row space-x-3'>
+          <div className="flex flex-col space-y-8">
+            <div className="space-y-5">
+              <div className="flex flex-row space-x-3">
                 <FormField
                   control={form.control}
                   name="startDate"
@@ -266,9 +344,8 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
                 <FormField
                   control={form.control}
                   name="oraInizio"
-
                   render={({ field }) => (
-                    <FormItem className='mt-[-10px]'>
+                    <FormItem className="mt-[-10px]">
                       <FormLabel>Inizio ora:</FormLabel>
                       <FormControl>
                         <Input
@@ -282,7 +359,7 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
                   )}
                 />
               </div>
-              <div className='flex flex-row space-x-3'>
+              <div className="flex flex-row space-x-3">
                 <FormField
                   control={form.control}
                   name="endDate"
@@ -315,8 +392,9 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
                             // @ts-ignore
                             onSelect={field.onChange}
                             initialFocus
-                            disabled={(date) => date < form.getValues().startDate}
-
+                            disabled={(date) =>
+                              date < form.getValues().startDate
+                            }
                           />
                         </PopoverContent>
                       </Popover>
@@ -327,9 +405,8 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
                 <FormField
                   control={form.control}
                   name="oraFine"
-
                   render={({ field }) => (
-                    <FormItem className='mt-[-10px]'>
+                    <FormItem className="mt-[-10px]">
                       <FormLabel>Fine alle:</FormLabel>
                       <FormControl>
                         <Input
@@ -344,21 +421,28 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
                 />
               </div>
             </div>
-            <div className='grid grid-cols-4 '>
-              <FormField control={form.control} name='eventoSala' render={({ field }) => (
-                <FormItem className='flex flex-row items-center self-start '>
-                  <div className='space-x-0.5 w-2/3'>
-                    <FormLabel>Evento per sala?</FormLabel>
-                    <FormDescription>
-                      Permette di assegnare l'evento alla sala della discoteca
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                </FormItem>
-              )} />
-              {form.getValues().eventoSala &&
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-5">
+              <FormField
+                control={form.control}
+                name="eventoSala"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center self-start  ">
+                    <div className="md:space-x-0.5 md:w-2/3">
+                      <FormLabel>Evento per sala?</FormLabel>
+                      <FormDescription>
+                        Permette di assegnare l'evento alla sala della discoteca
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              {form.getValues().eventoSala && (
                 <FormField
                   control={form.control}
                   name="salaId"
@@ -388,7 +472,7 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
                     </FormItem>
                   )}
                 />
-              }
+              )}
             </div>
             <FormField
               control={form.control}
@@ -397,7 +481,10 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
                 <FormItem className="mt-5">
                   <FormLabel>Aggiungi descrizione:</FormLabel>
                   {field.value?.map((informazione, index) => (
-                    <div className="flex  w-[900px] space-x-2 space-y-2 items-start" key={index}>
+                    <div
+                      className="flex  w-[900px] space-x-2 space-y-2 items-start"
+                      key={index}
+                    >
                       <div className="flex flex-col mt-2 w-[400px] space-y-4">
                         <FormLabel>Descrizione:</FormLabel>
                         <Textarea
@@ -406,7 +493,9 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
                           onChange={(e) =>
                             field.onChange(
                               field.value.map((p, i) =>
-                                i === index ? { ...p, descrizione: e.target.value } : p
+                                i === index
+                                  ? { ...p, descrizione: e.target.value }
+                                  : p
                               )
                             )
                           }
@@ -422,7 +511,14 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
                           onChange={(e) =>
                             field.onChange(
                               field.value.map((p, i) =>
-                                i === index ? { ...p, numeroInformazione: parseInt(e.target.value) } : p
+                                i === index
+                                  ? {
+                                      ...p,
+                                      numeroInformazione: parseInt(
+                                        e.target.value
+                                      ),
+                                    }
+                                  : p
                               )
                             )
                           }
@@ -435,14 +531,21 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
                           disabled={loading}
                           onValueChange={(value) =>
                             field.onChange(
-                              field.value.map((p, i) => (i === index ? { ...p, tipoInformazioneId: value } : p))
+                              field.value.map((p, i) =>
+                                i === index
+                                  ? { ...p, tipoInformazioneId: value }
+                                  : p
+                              )
                             )
                           }
                           value={informazione.tipoInformazioneId}
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue defaultValue={informazione.tipoInformazioneId} placeholder="Seleziona la tipologia di informazione" />
+                              <SelectValue
+                                defaultValue={informazione.tipoInformazioneId}
+                                placeholder="Seleziona la tipologia di informazione"
+                              />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -459,7 +562,11 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
                         variant="destructive"
                         size="sm"
                         type="button"
-                        onClick={() => field.onChange(field.value.filter((_, i) => i !== index))}
+                        onClick={() =>
+                          field.onChange(
+                            field.value.filter((_, i) => i !== index)
+                          )
+                        }
                       >
                         <Trash className="h-4 w-4" />
                       </Button>
@@ -468,7 +575,16 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
                   <Button
                     disabled={loading}
                     size="sm"
-                    onClick={() => field.onChange([...field.value, { descrizione: '', numeroInformazione: 1, tipoInformazioneId: "" }])}
+                    onClick={() =>
+                      field.onChange([
+                        ...field.value,
+                        {
+                          descrizione: "",
+                          numeroInformazione: 1,
+                          tipoInformazioneId: "",
+                        },
+                      ])
+                    }
                   >
                     Aggiungi
                   </Button>
@@ -478,14 +594,12 @@ const EventoForm = ({ initialData, tipologieEvento, sale, tipoInformazione, supe
             />
           </div>
 
-
-          <Button disabled={loading} className='ml-auto' type='submit'>
+          <Button disabled={loading} className="ml-auto" type="submit">
             {action}
           </Button>
         </form>
       </Form>
     </>
-
-  )
-}
-export default EventoForm
+  );
+};
+export default EventoForm;

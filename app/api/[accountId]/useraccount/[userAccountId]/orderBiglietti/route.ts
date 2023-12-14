@@ -32,7 +32,6 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
                         discoteca: {
                             include: {
                                 provincia: true,
-
                             }
                         }
                     }

@@ -19,7 +19,9 @@ export async function PATCH(
       visibile,
       priority,
       maximumOrderDate,
-      scuola
+      scuola,
+      tableCommission,
+      ticketCommission
     } = body;
 
     if (!name) {
@@ -69,7 +71,9 @@ export async function PATCH(
         visibile,
         priority,
         maximumOrderDate,
-        scuola
+        scuola,
+        tableCommission,
+        ticketCommission
       },
     });
 
@@ -129,7 +133,6 @@ export async function GET(
               include: {
                 posizione: true,
                 stato: true,
-                posti: true,
                 calendarioTavolo: {
                   include: {
                     data: true

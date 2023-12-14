@@ -77,13 +77,24 @@ export async function POST(
             },
         });
     });
-    var totale = prod.reduce((total, orderItem) => {
-        return (
-            total + (orderItem.prodotto.prezzo * orderItem.quantita) / order!.numeroPersone
-        );
-    }, Number(Number(order!.tavolo.prezzo) / order!.numeroPersone));
+    var totale = 0
+    
+    if (order?.tavolo.prezzoPerPosto) {
+        totale = prod.reduce((total, orderItem) => {
+            return (
+                total + (orderItem.prodotto.prezzo * orderItem.quantita) / order!.numeroPersone
+            );
+        }, Number(order!.tavolo.prezzo));
+    } else (
+        totale = prod.reduce((total, orderItem) => {
+            return (
+                total + (orderItem.prodotto.prezzo * orderItem.quantita) / order!.numeroPersone
+            );
+        }, Number(Number(order!.tavolo.prezzo) / order!.numeroPersone))
+    )
 
-    totale = (totale * 4.5) / 100;
+    totale = (totale * order?.discoteca.tableCommission!) / 100;
+    
     line_items.push({
         quantity: 1,
         price_data: {

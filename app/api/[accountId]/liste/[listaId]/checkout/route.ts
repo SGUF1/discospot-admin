@@ -35,6 +35,13 @@ export async function POST(
             data: lista?.dataLimite!,
             listaId,
             completeName: firstName + " " + lastName,
+        },
+        include: {
+            lista: {
+                include: {
+                    discoteca: true
+                }
+            }
         }
     })
 
@@ -49,14 +56,14 @@ export async function POST(
         }
     })
 
-    const totale = (orderBiglietto.prezzo * 4.5) / 100 + 0.60;
+    const totale = (orderBiglietto.prezzo * orderBiglietto.lista.discoteca.ticketCommission) / 100 + 0.60;
     // Aggiungi l'aliquota fiscale all'array line_items
     line_items.push({
         quantity: 1,
         price_data: {
             currency: 'EUR',
             product_data: {
-                name: 'Commissioni discoXspot', // Nome del prodotto tassa
+                name: 'Commissioni', // Nome del prodotto tassa
             },
             unit_amount_decimal: (Math.floor(totale * 100).toFixed(2)), // Importo totale delle tasse
         },
@@ -65,7 +72,7 @@ export async function POST(
 
 
     const session = await stripe.checkout.sessions.create({
-        line_items,     
+        line_items,
         mode: "payment",
         phone_number_collection: {
             enabled: true,

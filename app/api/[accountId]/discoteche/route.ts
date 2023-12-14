@@ -19,7 +19,9 @@ export async function POST(
       visibile,
       priority,
       maximumOrderDate,
-      scuola
+      scuola,
+      tableCommission,
+      ticketCommission
     } = body;
 
     if (!name) {
@@ -67,7 +69,9 @@ export async function POST(
         visibile,
         priority,
         maximumOrderDate,
-        scuola
+        scuola,
+        ticketCommission,
+        tableCommission
       },
     });
 

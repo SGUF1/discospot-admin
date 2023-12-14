@@ -61,6 +61,8 @@ model Discoteca {
   date             Data[]         @relation("DiscotecaToDate")
   liste            Lista[]        @relation("ListaToDiscoteca")
   scuola           Boolean        @default(false)
+  ticketCommission Int            @default(0)
+  tableCommission  Int            @default(0)
 
   @@index([provinciaId])
 }
@@ -103,13 +105,14 @@ model Tavolo {
   numeroTavolo     String
   posizioneId      String
   posizione        Posizione         @relation("TavoloToPosizione", fields: [posizioneId], references: [id])
-  posti            Posto[]           @relation("TavoloToPosto")
   salaId           String
   sala             Sala              @relation("SalaToTavolo", fields: [salaId], references: [id])
   descrizione      String            @db.Text
   prezzo           String
   imageUrl         String
   numeroMinimo     Int?
+  numeroMassimo    Int?              @default(0)
+  prezzoPerPosto   Boolean           @default(false)
   calendarioTavolo CalendarioTavolo? @relation()
   order            Order[]           @relation("OrderToTavolo")
   statoId          String
@@ -135,7 +138,6 @@ model Stato {
   id        String   @id @default(uuid())
   nome      String
   tavoli    Tavolo[] @relation("TavoloToStato")
-  posti     Posto[]  @relation("PostoToStato")
   sale      Sala[]   @relation("StatoToSale")
   order     Order[]  @relation("StatoToOrder")
   colore    String   @default("#fff")
@@ -144,19 +146,19 @@ model Stato {
   date      Data[]   @relation("StatoToData")
 }
 
-model Posto {
-  id        String   @id @default(uuid())
-  numero    Int
-  tavoloId  String
-  tavolo    Tavolo   @relation("TavoloToPosto", fields: [tavoloId], references: [id])
-  stato     Stato    @relation("PostoToStato", fields: [statoId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  statoId   String
+// model Posto {
+//   id        String   @id @default(uuid())
+//   numero    Int
+//   tavoloId  String
+//   tavolo    Tavolo   @relation("TavoloToPosto", fields: [tavoloId], references: [id])
+//   stato     Stato    @relation("PostoToStato", fields: [statoId], references: [id])
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   statoId   String
 
-  @@index([tavoloId])
-  @@index([statoId])
-}
+//   @@index([tavoloId])
+//   @@index([statoId])
+// }
 
 model TipoInformazione {
   id           String         @id @default(uuid())
@@ -216,6 +218,8 @@ model Sala {
   nome         String
   imageUrl     String
   discotecaId  String
+  interaSala   Boolean        @default(false)
+  prezzoSala   Int            @default(0)
   discoteca    Discoteca      @relation("DiscotecaToSala", fields: [discotecaId], references: [id])
   tavoli       Tavolo[]       @relation("SalaToTavolo")
   eventi       Evento[]       @relation("SalaToEvento")
