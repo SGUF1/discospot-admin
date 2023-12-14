@@ -8,7 +8,7 @@ import CellTavoli from "./cell-tavoli"
 export type TavoloColumn = {
     id: string
     numerotavolo: string
-    posti: number,
+    posti: number | null,
     prezzo: string,
     stato: string,
     posizione: string

@@ -129,7 +129,6 @@ export async function GET(
               include: {
                 posizione: true,
                 stato: true,
-                posti: true,
                 calendarioTavolo: {
                   include: {
                     data: true
