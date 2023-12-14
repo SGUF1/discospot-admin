@@ -7,7 +7,6 @@ import StatoClient from './components/client'
 const StatiPage = async ({ params }: { params: { accountId: string } }) => {
     const stati = await prismadb.stato.findMany({
         include: {
-            posti: true,
             tavoli: true,
         }
     })
@@ -21,7 +20,6 @@ const StatiPage = async ({ params }: { params: { accountId: string } }) => {
     const formattedStato: StatoColumn[] = stati.map((item) => ({
         id: item.id,
         name: item.nome,
-        posti: item.posti.length,
         tavoli: item.tavoli.length,
         colore: item.colore,
         createdAt: format(item.createdAt, "MMMM do, yyyy"),

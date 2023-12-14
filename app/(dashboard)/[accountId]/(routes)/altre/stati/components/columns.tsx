@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button"
 export type StatoColumn = {
     id: string
     name: string,
-    posti: number,
     tavoli: number,
     colore: string,
     createdAt: string,
