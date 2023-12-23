@@ -1,6 +1,5 @@
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
-
 import { stripe } from "@/lib/stripe";
 import prismadb from "@/lib/prismadb";
 
@@ -14,114 +13,72 @@ export async function OPTIONS() {
     return NextResponse.json({}, { headers: corsHeaders });
 }
 
+export async function POST(req: Request, { params }: { params: { discotecaId: string } }) {
+    try {
+        const { userAccountId, listaId, firstName, lastName, gender } = await req.json();
 
-export async function POST(
-    req: Request,
-    { params }: { params: { discotecaId: string } }
-) {
-    const { userAccountId, listaId, firstName, lastName, gender } =
-        await req.json();
-
-
-    const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
-
-    const lista = await prismadb.lista.findUnique({
-        where: {
-            id: listaId
+        if (!userAccountId || !listaId || !firstName || !lastName || !gender) {
+            throw new Error("Missing required fields");
         }
-    })
-    const orderBiglietto = await prismadb.orderBiglietto.create({
-        data: {
-            prezzo: lista?.prezzoBiglietto!,
-            data: lista?.dataLimite!,
-            listaId,
-            completeName: firstName + " " + lastName,
-            gender: gender
-        },
-        include: {
-            lista: {
-                include: {
-                    discoteca: true
-                }
-            }
+
+        const lista = await prismadb.lista.findUnique({
+            where: { id: listaId }
+        });
+
+        if (!lista) {
+            throw new Error("Lista not found");
         }
-    })
 
-    if (gender === 'm') {
-        line_items.push({
-            quantity: 1,
-            price_data: {
-                currency: "EUR",
-                product_data: {
-                    name: "Biglietto",
-                },
-                unit_amount_decimal: (Math.floor(orderBiglietto.prezzo * 100).toFixed(2))
-            }
-        })
-    } else {
-        line_items.push({
-            quantity: 1,
-            price_data: {
-                currency: "EUR",
-                product_data: {
-                    name: "Biglietto",
-                },
-                unit_amount_decimal: (Math.floor(lista?.prezzoDonna! * 100).toFixed(2))
-            }
-        })
-    }
-
-    const totale = (orderBiglietto.prezzo * orderBiglietto.lista.discoteca.ticketCommission) / 100 + 0.60;
-    // Aggiungi l'aliquota fiscale all'array line_items
-    line_items.push({
-        quantity: 1,
-        price_data: {
-            currency: 'EUR',
-            product_data: {
-                name: 'Commissioni', // Nome del prodotto tassa
-            },
-            unit_amount_decimal: (Math.floor(totale * 100).toFixed(2)), // Importo totale delle tasse
-        },
-    });
-
-    const account = await prismadb.userAccount.findUnique({
-        where: {
-            id: userAccountId
-        }
-    })
-    if (account?.name.length! <= 0) {
-        const account2 = await prismadb.userAccount.update({
-            where: {
-                id: userAccountId,
-            },
+        const orderBiglietto = await prismadb.orderBiglietto.create({
             data: {
-                name: firstName,
-                surname: lastName,
-                gender: gender
+                prezzo: gender === 'm' ? lista.prezzoBiglietto : lista.prezzoDonna!,
+                data: lista.dataLimite,
+                listaId,
+                completeName: `${firstName} ${lastName}`,
+                gender
+            },
+            include: { lista: { include: { discoteca: true } } }
+        });
+
+        const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [{
+            quantity: 1,
+            price_data: {
+                currency: "EUR",
+                product_data: { name: "Biglietto" },
+                unit_amount_decimal: Math.floor(orderBiglietto.prezzo * 100).toFixed(2)
             }
-        })
-    }
+        }];
 
-    const session = await stripe.checkout.sessions.create({
-        line_items,
-        mode: "payment",
-        phone_number_collection: {
-            enabled: true,
-        },
-        success_url: `${process.env.FRONTEND_STORE_URL}/liste?success=1`,
-        cancel_url: `${process.env.FRONTEND_STORE_URL}/liste?canceled=1`,
-        metadata: {
-            orderBigliettoId: orderBiglietto.id,
-            userAccountId,
-            listaId,
-            gender
-        },
-    });
+        const totale = orderBiglietto.prezzo * orderBiglietto.lista.discoteca.ticketCommission / 100 + 0.60;
+        line_items.push({
+            quantity: 1,
+            price_data: {
+                currency: 'EUR',
+                product_data: { name: 'Commissioni' },
+                unit_amount_decimal: Math.floor(totale * 100).toFixed(2)
+            },
+        });
 
-    return NextResponse.json(
-        { url: session.url },
-        {
-            headers: corsHeaders,
+        const account = await prismadb.userAccount.findUnique({ where: { id: userAccountId } });
+        if (!account || account.name.length <= 0) {
+            await prismadb.userAccount.update({
+                where: { id: userAccountId },
+                data: { name: firstName, surname: lastName, gender }
+            });
         }
-    );
+
+        const session = await stripe.checkout.sessions.create({
+            line_items,
+            mode: "payment",
+            phone_number_collection: { enabled: true },
+            success_url: `${process.env.FRONTEND_STORE_URL}/liste?success=1`,
+            cancel_url: `${process.env.FRONTEND_STORE_URL}/liste?canceled=1`,
+            metadata: { orderBigliettoId: orderBiglietto.id, userAccountId, listaId, gender }
+        });
+
+        return NextResponse.json({ url: session.url }, { headers: corsHeaders });
+    } catch (e) {
+        console.error(e);
+        return NextResponse.json({ error: e }, { status: 500, headers: corsHeaders });
+    }
 }

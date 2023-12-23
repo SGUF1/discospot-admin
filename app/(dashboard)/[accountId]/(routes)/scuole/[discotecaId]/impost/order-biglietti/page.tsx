@@ -15,8 +15,10 @@ const OrdersBigliettiPage = async ({
         discotecaId: params.discotecaId,
       },
     },
+
     include: {
       userAccount: true,
+      lista: true
     },
     orderBy: {
       createdAt: "desc",

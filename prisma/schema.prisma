@@ -369,7 +369,7 @@ model UserAccount {
   id             String           @id
   name           String           @default("")
   surname        String           @default("")
-  gender String @default("")
+  gender         String           @default("")
   discoteche     Discoteca[]
   orders         Order[]
   orderBiglietti OrderBiglietto[] @relation("BigliettoToUser")

@@ -10,7 +10,7 @@ export type OrdersColumn = {
 	phone: string | null;
 	isPaid: Boolean;
 	completeName: string | null,
-	totalPrice: number;
+	totalPrice: number | null;
 	createdAt: string;
 	orderData: string;
 	codice: string,
