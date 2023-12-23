@@ -171,7 +171,7 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
           className="space-y-8 w-full "
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <div className="grid grid-cols-5 space-x-5">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-5 ">
             <FormField
               control={form.control}
               name="name"
@@ -209,7 +209,7 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
                 name="indirizzo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Indirizzo discoteca:</FormLabel>
+                    <FormLabel>Indirizzo:</FormLabel>
                     <FormControl>
                       <Input
                         disabled={loading}
@@ -243,7 +243,7 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
                 name="provinciaId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Provincia discoteca:</FormLabel>
+                    <FormLabel>Provincia:</FormLabel>
                     <Select
                       disabled={loading}
                       onValueChange={field.onChange}
@@ -328,7 +328,7 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
                     <div className="space-x-0.5 w-2/3">
                       <FormLabel>Visibile?</FormLabel>
                       <FormDescription>
-                        Permette alla discoteca di essere visibile
+                        Permette alla scuola di essere visibile
                         nell'applicazione
                       </FormDescription>
                     </div>

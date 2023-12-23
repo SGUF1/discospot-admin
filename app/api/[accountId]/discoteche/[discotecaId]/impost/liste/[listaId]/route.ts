@@ -10,8 +10,8 @@ export async function PATCH(
     params: { accountId: string; discotecaId: string; listaId: string };
   }
 ) {
-	try {
-		const body = await req.json();
+  try {
+    const body = await req.json();
     const {
       nome,
       imageUrl,
@@ -21,6 +21,8 @@ export async function PATCH(
       prezzoBiglietto,
       priority,
       dataLimite,
+      unisex,
+      prezzoDonna
     } = body;
 
     if (!informations) {
@@ -44,12 +46,15 @@ export async function PATCH(
       return new NextResponse('Prezzo biglietto is required', { status: 400 });
     }
     const data = new Date(dataLimite)
-		const lista = await prismadb.lista.update({
+    
+    if(unisex){
+    const lista = await prismadb.lista.update({
       where: {
         id: params.listaId,
       },
       data: {
         nome,
+        unisex,
         imageUrl,
         priority,
         quantity,
@@ -68,7 +73,37 @@ export async function PATCH(
         },
       },
     });
-		return NextResponse.json(lista);
+    return NextResponse.json(lista);
+    }else{
+      const lista = await prismadb.lista.update({
+        where: {
+          id: params.listaId,
+        },
+        data: {
+          nome,
+          imageUrl,
+          priority,
+          quantity,
+          dataLimite: new Date(data.getFullYear(), data.getMonth(), data.getDate(), data.getHours() === 22 ? data.getHours() + getGlobalHours : data.getHours(), 0),
+          unisex,
+          prezzoDonna,
+          prezzoBiglietto,
+          bigliettiInfiniti,
+          informazioni: {
+            deleteMany: {},
+            createMany: {
+              data: informations.map((item: any) => ({
+                descrizione: item.descrizione,
+                numeroInformazione: item.numeroInformazione,
+                tipoInformazioneId: item.tipoInformazioneId,
+              })),
+            },
+          },
+        },
+      });
+      return NextResponse.json(lista);
+
+    }
 
   } catch (error) {
     console.log("[LISTA PATCH]", error);

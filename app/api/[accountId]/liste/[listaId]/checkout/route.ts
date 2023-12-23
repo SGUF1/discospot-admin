@@ -19,8 +19,9 @@ export async function POST(
     req: Request,
     { params }: { params: { discotecaId: string } }
 ) {
-    const { userAccountId, listaId, firstName, lastName } =
+    const { userAccountId, listaId, firstName, lastName, gender } =
         await req.json();
+
 
     const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
 
@@ -35,6 +36,7 @@ export async function POST(
             data: lista?.dataLimite!,
             listaId,
             completeName: firstName + " " + lastName,
+            gender: gender
         },
         include: {
             lista: {
@@ -45,16 +47,29 @@ export async function POST(
         }
     })
 
-    line_items.push({
-        quantity: 1,
-        price_data: {
-            currency: "EUR",
-            product_data: {
-                name: "Biglietto",
-            },
-            unit_amount_decimal: (Math.floor(orderBiglietto.prezzo * 100).toFixed(2))
-        }
-    })
+    if (gender === 'm') {
+        line_items.push({
+            quantity: 1,
+            price_data: {
+                currency: "EUR",
+                product_data: {
+                    name: "Biglietto",
+                },
+                unit_amount_decimal: (Math.floor(orderBiglietto.prezzo * 100).toFixed(2))
+            }
+        })
+    } else {
+        line_items.push({
+            quantity: 1,
+            price_data: {
+                currency: "EUR",
+                product_data: {
+                    name: "Biglietto",
+                },
+                unit_amount_decimal: (Math.floor(lista?.prezzoDonna! * 100).toFixed(2))
+            }
+        })
+    }
 
     const totale = (orderBiglietto.prezzo * orderBiglietto.lista.discoteca.ticketCommission) / 100 + 0.60;
     // Aggiungi l'aliquota fiscale all'array line_items
@@ -69,7 +84,23 @@ export async function POST(
         },
     });
 
-
+    const account = await prismadb.userAccount.findUnique({
+        where: {
+            id: userAccountId
+        }
+    })
+    if (account?.name.length! <= 0) {
+        const account2 = await prismadb.userAccount.update({
+            where: {
+                id: userAccountId,
+            },
+            data: {
+                name: firstName,
+                surname: lastName,
+                gender: gender
+            }
+        })
+    }
 
     const session = await stripe.checkout.sessions.create({
         line_items,
@@ -83,6 +114,7 @@ export async function POST(
             orderBigliettoId: orderBiglietto.id,
             userAccountId,
             listaId,
+            gender
         },
     });
 

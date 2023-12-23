@@ -14,6 +14,8 @@ export async function POST(req: Request, { params }: { params: { accountId: stri
 			prezzoBiglietto,
 			priority,
 			dataLimite,
+			unisex,
+			prezzoDonna
 		} = body;
 
 		if (!informations) {
@@ -40,30 +42,60 @@ export async function POST(req: Request, { params }: { params: { accountId: stri
 
 		const data = new Date(dataLimite)
 		if (bigliettiInfiniti) quantity === 9999999;
-		const lista = await prismadb.lista.create({
-			data: {
-				nome,
-				imageUrl,
-				priority,
-				discotecaId: params.discotecaId,
-				bigliettiInfiniti,
-				prezzoBiglietto,
-				quantity,
-				dataLimite: new Date(data.getFullYear(), data.getMonth(), data.getDate(), data.getHours() + getGlobalHours, 0),
-				bigliettiRimanenti: quantity,
-				informazioni: {
-					createMany: {
-						data: informations.map((item: any) => ({
-							descrizione: item.descrizione,
-							numeroInformazione: item.numeroInformazione,
-							tipoInformazioneId: item.tipoInformazioneId,
-						})),
+		if (unisex) {
+			const lista = await prismadb.lista.create({
+				data: {
+					nome,
+					imageUrl,
+					priority,
+					unisex,
+					discotecaId: params.discotecaId,
+					bigliettiInfiniti,
+					prezzoBiglietto,
+					quantity,
+					dataLimite: new Date(data.getFullYear(), data.getMonth(), data.getDate(), data.getHours() + getGlobalHours, 0),
+					bigliettiRimanenti: quantity,
+					informazioni: {
+						createMany: {
+							data: informations.map((item: any) => ({
+								descrizione: item.descrizione,
+								numeroInformazione: item.numeroInformazione,
+								tipoInformazioneId: item.tipoInformazioneId,
+							})),
+						},
 					},
 				},
-			},
-		});
+			});
+			return NextResponse.json(lista);
 
-		return NextResponse.json(lista);
+		} else {
+			const lista = await prismadb.lista.create({
+				data: {
+					nome,
+					unisex,
+					prezzoDonna,
+					imageUrl,
+					priority,
+					discotecaId: params.discotecaId,
+					bigliettiInfiniti,
+					prezzoBiglietto,
+					quantity,
+					dataLimite: new Date(data.getFullYear(), data.getMonth(), data.getDate(), data.getHours() + getGlobalHours, 0),
+					bigliettiRimanenti: quantity,
+					informazioni: {
+						createMany: {
+							data: informations.map((item: any) => ({
+								descrizione: item.descrizione,
+								numeroInformazione: item.numeroInformazione,
+								tipoInformazioneId: item.tipoInformazioneId,
+							})),
+						},
+					},
+				},
+			});
+			return NextResponse.json(lista);
+
+		}
 	} catch (error) {
 		console.log('[LISTA POST]', error);
 		return new NextResponse('Internal Error' + error, { status: 500 });

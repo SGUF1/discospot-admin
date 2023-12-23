@@ -367,6 +367,9 @@ model OrderItem {
 
 model UserAccount {
   id             String           @id
+  name           String           @default("")
+  surname        String           @default("")
+  gender String @default("")
   discoteche     Discoteca[]
   orders         Order[]
   orderBiglietti OrderBiglietto[] @relation("BigliettoToUser")
@@ -394,6 +397,8 @@ model Lista {
   quantity           Int?
   priority           Int
   bigliettiRimanenti Int?
+  prezzoDonna        Float?
+  unisex             Boolean          @default(false)
   imageUrl           String
   bigliettiInfiniti  Boolean
   informazioni       Informazione[]   @relation("ListaToInformazione")
@@ -416,6 +421,7 @@ model OrderBiglietto {
   isPaid        Boolean      @default(false)
   codice        String?      @unique
   listaId       String
+  gender        String       @default("")
   confermato    Boolean      @default(false)
   lista         Lista        @relation("BigliettoToLista", fields: [listaId], references: [id])
   createdAt     DateTime     @default(now())

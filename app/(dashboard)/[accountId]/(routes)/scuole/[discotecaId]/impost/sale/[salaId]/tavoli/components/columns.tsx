@@ -27,7 +27,6 @@ export const columns: ColumnDef<TavoloColumn>[] = [
             </div>
 
         },
-        cell: ({ row }) => <CellTavoli data={row.original}/>
 
     },
 

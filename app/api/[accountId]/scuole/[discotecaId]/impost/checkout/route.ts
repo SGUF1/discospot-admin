@@ -35,7 +35,12 @@ export async function POST(
   var calendarioOrdine: Data | null
 
   if (tavolo && prodotti && data && numeroPersone) {
-
+    var prezzoTavolo = 0
+    if (tavolo.prezzoPerPosto) {
+      prezzoTavolo = Number(tavolo.prezzo)
+    } else {
+      prezzoTavolo = Number(Number(tavolo.prezzo) / numeroPersone)
+    }
     line_items.push({
       quantity: 1,
       price_data: {
@@ -44,8 +49,7 @@ export async function POST(
           name: tavolo.numeroTavolo,
         },
         unit_amount_decimal: Math.floor(
-          (Number(tavolo.prezzo) / Number(numeroPersone)) *
-          100
+          prezzoTavolo * 100
         ).toFixed(2),
       },
     });
@@ -64,13 +68,28 @@ export async function POST(
         },
       });
     });
-    var totale = prod.reduce((total, orderItem) => {
-      return (
-        total + (orderItem.prodotto.prezzo * orderItem.quantita)
-      );
-    }, Number(Number(tavolo.prezzo)));
+    var totale = 0
 
-    var totalePersona = ((totale / numeroPersone * 5.2)) / 100 + 0.68;
+    if (tavolo.prezzoPerPosto) {
+      totale = prod.reduce((total, orderItem) => {
+        return (
+          total + (orderItem.prodotto.prezzo * orderItem.quantita) / numeroPersone
+        );
+      }, Number(tavolo.prezzo));
+    } else (
+      totale = prod.reduce((total, orderItem) => {
+        return (
+          total + (orderItem.prodotto.prezzo * orderItem.quantita) / numeroPersone
+        );
+      }, Number(Number(tavolo.prezzo) / numeroPersone))
+    )
+
+    const discoteca = await prismadb.discoteca.findUnique({
+      where: {
+        id: params.discotecaId
+      }
+    })
+    var totalePersona = ((totale * discoteca?.tableCommission!)) / 100 + 0.68;
     line_items.push({
       quantity: 1,
       price_data: {
@@ -117,7 +136,7 @@ export async function POST(
         numeroPersone,
         prezzoTotale: totale,
         tavoloId: tavolo?.id,
-        taxPrezzo: Number(line_items[lastIndex].price_data?.unit_amount_decimal) / 100,
+        taxPrezzo: totalePersona,
         statoId: "8d356af8-dc09-42f1-86da-90c64c20638b",
         orderItems: {
           create: orderItemsData,
@@ -149,9 +168,18 @@ export async function POST(
       where: {
         codice: codiceTavolo
       },
+      
       include: {
         orderItems: true,
-        tavolo: true
+        tavolo: {
+          include: {
+            sala: {
+              include: {
+                discoteca: true
+              }
+            }
+          }
+        }
       }
     })
   }

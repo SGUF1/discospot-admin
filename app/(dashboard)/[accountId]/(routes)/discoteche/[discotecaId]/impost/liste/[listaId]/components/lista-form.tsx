@@ -74,6 +74,8 @@ const formSchema = z.object({
   quantity: z.coerce.number().min(1).default(1),
   bigliettiInfiniti: z.boolean().default(false),
   prezzoBiglietto: z.coerce.number().min(1),
+  unisex: z.boolean().default(false),
+  prezzoDonna: z.coerce.number(),
 });
 
 type ListaFormValues = z.infer<typeof formSchema>;
@@ -134,6 +136,8 @@ const ListaForm = ({
           quantity: 1,
           bigliettiInfiniti: false,
           prezzoBiglietto: 0,
+          unisex: true,
+          prezzoDonna: null,
         },
   });
 
@@ -217,6 +221,9 @@ const ListaForm = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nome Lista:</FormLabel>
+                  <FormDescription className="hidden md:block">
+                    <br />
+                  </FormDescription>
                   <FormControl>
                     <Input
                       disabled={loading}
@@ -255,12 +262,16 @@ const ListaForm = ({
               name="prezzoBiglietto"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Prezzo biglietto singolo:</FormLabel>
+                  <FormLabel>Prezzo biglietto:</FormLabel>
+                  <FormDescription className="hidden md:block">
+                    <br />
+                  </FormDescription>
+
                   <FormControl>
                     <Input
                       disabled={loading}
                       type="number"
-                      placeholder="Prezzo biglietto singolo"
+                      placeholder="Prezzo biglietto"
                       {...field}
                     />
                   </FormControl>
@@ -301,9 +312,9 @@ const ListaForm = ({
                           Biglietti infiniti?
                         </FormLabel>
                         <FormDescription>
-                          Attivando questa opzioni i biglietti sanno infiniti e
-                          li si potrà acquistare fino a che non arriva il giorno
-                          di fine
+                          Attivando questa opzioni i biglietti saranno infiniti
+                          e li si potrà acquistare fino a che non arriva il
+                          giorno di fine
                         </FormDescription>
                       </div>
                       <FormControl>
@@ -382,7 +393,55 @@ const ListaForm = ({
                 )}
               />
             </div>
-            <div className="grid grid-cols-4 "></div>
+            <div className="flex flex-col md:flex-row md:space-x-4 space-y-3 md:space-y-0">
+              <FormField
+                control={form.control}
+                name="unisex"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">
+                        Biglietti Unisex
+                      </FormLabel>
+                      <FormDescription>
+                        I biglietti non saranno differenziati per sesso
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        aria-readonly
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              {!form.getValues().unisex && (
+                <FormField
+                  control={form.control}
+                  name="prezzoDonna"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Prezzo biglietto donna:</FormLabel>
+                      <FormDescription className="hidden md:block">
+                        <br />
+                      </FormDescription>
+
+                      <FormControl>
+                        <Input
+                          disabled={loading}
+                          type="number"
+                          placeholder="Prezzo biglietto donna"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+            </div>
 
             <FormField
               control={form.control}

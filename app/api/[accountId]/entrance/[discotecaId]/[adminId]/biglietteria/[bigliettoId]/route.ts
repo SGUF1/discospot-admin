@@ -21,6 +21,7 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
                         discoteca: true
                     }
                 },
+                userAccount: true,
             }
         });
 

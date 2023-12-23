@@ -154,6 +154,7 @@ export async function POST(req: Request) {
               id: session?.metadata?.userAccountId
             }
           },
+          gender: session?.metadata?.gender,
           codice: code,
           phone: session?.customer_details?.phone || "",
           lista: {
