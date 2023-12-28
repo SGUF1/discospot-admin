@@ -56,7 +56,10 @@ export async function POST(
             product_data: {
                 name: order!.tavolo.numeroTavolo,
             },
-            unit_amount_decimal: Math.floor(
+            unit_amount_decimal: order?.tavolo.prezzoPerPosto ? Math.floor(
+                (Number(order!.tavolo.prezzo)) *
+                100
+            ).toFixed(2) : Math.floor(
                 (Number(order!.tavolo.prezzo) / Number(order!.numeroPersone)) *
                 100
             ).toFixed(2),
@@ -102,7 +105,7 @@ export async function POST(
             product_data: {
                 name: "Commissioni discoXspot",
             },
-            unit_amount_decimal: Math.floor(totale * 100).toFixed(2),
+            unit_amount_decimal: Math.floor(order?.taxPrezzo! *100).toFixed(2),
         },
     });
 
