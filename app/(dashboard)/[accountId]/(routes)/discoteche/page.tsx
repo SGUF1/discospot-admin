@@ -10,15 +10,16 @@ const DiscotechePage = async ({
   params: { accountId: string };
 }) => {
   const discoteche = await prismadb.discoteca.findMany({
+    where: {
+      scuola: false
+    },
     orderBy: {
       name: "desc",
     },
     include: {
       provincia: true,
     },
-    where: {
-      scuola: false
-    }
+    
   });
 
   const admin = await prismadb.accounts.findUnique({

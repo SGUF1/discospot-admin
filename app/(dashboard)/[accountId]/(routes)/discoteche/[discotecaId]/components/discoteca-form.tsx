@@ -370,6 +370,7 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
                     <FormControl>
                       <Input
                         type="number"
+                        disabled={loading || !superior}
                         placeholder="Commissione biglietti"
                         {...field}
                       />
@@ -389,6 +390,7 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
                     <FormControl>
                       <Input
                         type="number"
+                        disabled={loading || !superior}
                         placeholder="Commissione tavoli"
                         {...field}
                       />

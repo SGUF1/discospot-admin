@@ -125,6 +125,9 @@ export async function GET(
             informazioni: {
               orderBy: {
                 numeroInformazione: 'asc'
+              },
+              include: {
+                tipoInformazione: true
               }
 
             },
@@ -146,6 +149,9 @@ export async function GET(
           orderBy: {
             numeroInformazione: "asc",
           },
+          include: {
+            tipoInformazione: true
+          }
         },
         menu: {
           where: {
@@ -168,7 +174,11 @@ export async function GET(
         },
         eventi: {
           include: {
-            informazioni: true,
+            informazioni: {
+              include: {
+                tipoInformazione: true
+              }
+            },
             tipologiaEvento: true,
           },
         },
