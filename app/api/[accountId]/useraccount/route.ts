@@ -28,6 +28,8 @@ export async function POST(req: Request) {
     const userAccount = await prismadb.userAccount.create({
       data: {
         id: userId,
+        name: userId.firstName,
+        surname: userId.lastName,
       },
     });
   } catch (error) { }

@@ -60,7 +60,7 @@ export async function POST(req: Request, { params }: { params: { discotecaId: st
         });
 
         const account = await prismadb.userAccount.findUnique({ where: { id: userAccountId } });
-        if (!account || account.name.length <= 0) {
+        if (account) {
             await prismadb.userAccount.update({
                 where: { id: userAccountId },
                 data: { name: firstName, surname: lastName, gender }
