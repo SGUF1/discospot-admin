@@ -156,7 +156,7 @@ const ListaForm = ({
         );
       }
       router.refresh();
-      router.replace(
+      router.push(
         `/${params.accountId}/discoteche/${params.discotecaId}/impost`
       );
       toast.success(toastMessage);
@@ -174,7 +174,7 @@ const ListaForm = ({
         `/api/${params.accountId}/discoteche/${params.discotecaId}/impost/liste/${params.listaId}`
       );
       router.refresh();
-      router.replace(
+      router.push(
         `/${params.accountId}/discoteche/${params.discotecaId}/impost`
       );
       toast.success("La lista è stata eliminata");

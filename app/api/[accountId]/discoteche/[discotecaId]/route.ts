@@ -134,6 +134,11 @@ export async function GET(
             stato: true,
             tavoli: {
               include: {
+                sala: {
+                  include: {
+                    piano: true
+                  }
+                },
                 posizione: true,
                 stato: true,
                 calendarioTavolo: {

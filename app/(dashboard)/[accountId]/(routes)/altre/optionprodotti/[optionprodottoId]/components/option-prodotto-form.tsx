@@ -55,7 +55,7 @@ const OptionProdottoForm = ({ initialData }: OptionProdottoFormProps) => {
                 await axios.patch(`/api/${params.accountId}/altre/optionprodotti/${params.optionprodottoId}`, data)
             }
             router.refresh();
-            router.replace(`/${params.accountId}/altre`)
+            router.push(`/${params.accountId}/altre`)
             toast.success(toastMessage)
         } catch (error) {
             toast.error("Qualcosa è andato storto")
@@ -69,7 +69,7 @@ const OptionProdottoForm = ({ initialData }: OptionProdottoFormProps) => {
             setLoading(true);
             await axios.delete(`/api/${params.accountId}/altre/optionprodotti/${params.optionprodottoId}`)
             router.refresh();
-            router.replace(`/${params.accountId}/altre`)
+            router.push(`/${params.accountId}/altre`)
             toast.success("Bibita è stata eliminata");
         } catch (error) {
             toast.error("Qualcosa è andato storto");

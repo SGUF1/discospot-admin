@@ -55,7 +55,7 @@ const StatoForm = ({ initialData }: StatoFormProps) => {
                 await axios.patch(`/api/${params.accountId}/altre/stati/${params.statoId}`, data)
             }
             router.refresh();
-            router.replace(`/${params.accountId}/altre`)
+            router.push(`/${params.accountId}/altre`)
             toast.success(toastMessage)
         } catch (error) {
             toast.error("Qualcosa è andato storto")
@@ -69,7 +69,7 @@ const StatoForm = ({ initialData }: StatoFormProps) => {
             setLoading(true);
             await axios.delete(`/api/${params.accountId}/altre/stati/${params.statoId}`)
             router.refresh();
-            router.replace(`/${params.accountId}/altre`)
+            router.push(`/${params.accountId}/altre`)
             toast.success("Lo stato è stato eliminato");
         } catch (error) {
             toast.error("Qualcosa è andato storto");

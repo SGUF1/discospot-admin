@@ -99,7 +99,7 @@ const InformazioneForm = ({
         );
       }
       router.refresh();
-      router.replace(
+      router.push(
         `/${params.accountId}/discoteche/${params.discotecaId}/impost`
       );
       toast.success(toastMessage);
@@ -117,7 +117,7 @@ const InformazioneForm = ({
         `/api/${params.accountId}/discoteche/${params.discotecaId}/impost/informazioni/${params.informazioneId}`
       );
       router.refresh();
-      router.replace(
+      router.push(
         `/${params.accountId}/discoteche/${params.discotecaId}/impost`
       );
       toast.success("L'informazione è stata eliminata");

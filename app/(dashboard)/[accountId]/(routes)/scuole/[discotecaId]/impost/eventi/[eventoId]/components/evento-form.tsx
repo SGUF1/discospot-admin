@@ -158,7 +158,7 @@ const EventoForm = ({
         );
       }
       router.refresh();
-      router.replace(
+      router.push(
         `/${params.accountId}/discoteche/${params.discotecaId}/impost`
       );
       toast.success(toastMessage);
@@ -176,7 +176,7 @@ const EventoForm = ({
         `/api/${params.accountId}/discoteche/${params.discotecaId}/impost/eventi/${params.eventoId}`
       );
       router.refresh();
-      router.replace(
+      router.push(
         `/${params.accountId}/discoteche/${params.discotecaId}/impost`
       );
       toast.success("L'evento è stato eliminato");

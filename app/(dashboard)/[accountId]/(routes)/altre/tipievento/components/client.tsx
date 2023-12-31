@@ -20,7 +20,7 @@ const TipoEventoClient = ({ data }: TipoEventoClientProps) => {
     <>
       <div className='flex items-center justify-between'>
         <Heading title={data.length > 1 ? `Tipologia degli eventi (${data.length})` : `Tipologia dell'evento (${data.length})`} description='Gestisci le tipologie degli eventi' />
-        <Button onClick={() => router.replace(`/${params.accountId}/altre/tipievento/new`)} className='bg-blue-600'>
+        <Button onClick={() => router.push(`/${params.accountId}/altre/tipievento/new`)} className='bg-blue-600'>
           <Plus className='mr-2 h-4 w-4' />
           Aggiungi
         </Button>

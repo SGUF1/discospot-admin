@@ -106,7 +106,7 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
         );
       }
       router.refresh();
-      router.replace(`/${params.accountId}/discoteche`);
+      router.push(`/${params.accountId}/discoteche`);
       toast.success(toastMessage);
     } catch (error) {
       toast.error("Something went wrong");
@@ -122,7 +122,7 @@ const DiscotecaForm = ({ initialData, province }: DiscotecaFormProps) => {
         `/api/${params.accountId}/discoteche/${params.discotecaId}`
       );
       router.refresh();
-      router.replace(`/${params.accountId}/discoteche`);
+      router.push(`/${params.accountId}/discoteche`);
       toast.success("La discoteca è stata eliminata");
     } catch (error) {
       toast.error("Qualcosa è andato storto");

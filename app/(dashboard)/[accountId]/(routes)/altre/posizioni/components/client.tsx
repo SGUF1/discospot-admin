@@ -21,7 +21,7 @@ const PosizioneClient = ({ data }: PosizioneClientProps) => {
     <>
       <div className='flex items-center justify-between'>
         <Heading title={data.length > 1 ? `Posizioni (${data.length})` : `Posizione (${data.length})`} description='Gestisci le posizioni' />
-        <Button onClick={() => router.replace(`/${params.accountId}/altre/posizioni/new`)} className='bg-blue-600'>
+        <Button onClick={() => router.push(`/${params.accountId}/altre/posizioni/new`)} className='bg-blue-600'>
           <Plus className='mr-2 h-4 w-4' />
           Aggiungi
         </Button>

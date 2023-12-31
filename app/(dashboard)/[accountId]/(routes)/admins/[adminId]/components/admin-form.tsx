@@ -63,7 +63,7 @@ const AdminForm = ({ initialData, discoteche }: AdminPageProps) => {
                 await axios.patch(`/api/${params.accountId}/admins/${params.adminId}`, data)
             }
             router.refresh();
-            router.replace(`/${params.accountId}/admins`)
+            router.push(`/${params.accountId}/admins`)
             toast.success(toastMessage)
         } catch (error) {
             toast.error("Qualcosa è andato storto")
@@ -77,7 +77,7 @@ const AdminForm = ({ initialData, discoteche }: AdminPageProps) => {
             setLoading(true);
             await axios.delete(`/api/${params.accountId}/admins/${params.adminId}`)
             router.refresh();
-            router.replace(`/${params.accountId}`)
+            router.push(`/${params.accountId}`)
             toast.success("L'admin è stato eliminato");
         } catch (error) {
             toast.error("Qualcosa è andato storto");

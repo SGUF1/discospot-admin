@@ -28,7 +28,7 @@ const DiscotecaClient = ({ data }: DiscotecaClientProps) => {
           description="Gestisci le discoteche"
         />
         <Button
-          onClick={() => router.replace(`/${params.accountId}/scuole/new`)}
+          onClick={() => router.push(`/${params.accountId}/scuole/new`)}
           className="bg-blue-600"
         >
           <Plus className="mr-2 h-4 w-4" />

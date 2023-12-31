@@ -13,7 +13,7 @@ const CellDiscoteche = ({ data }: CellDiscotecheProps) => {
 
 
   return (
-        <Button variant="link" onClick={() => router.replace(`/${params.accountId}/scuole/${data.id}/impost`)}>
+        <Button variant="link" onClick={() => router.push(`/${params.accountId}/scuole/${data.id}/impost`)}>
             {data.name}
         </Button>
     )

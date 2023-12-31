@@ -114,7 +114,7 @@ const TavoloForm = ({
         );
       }
       router.refresh();
-      router.replace(
+      router.push(
         `/${params.accountId}/discoteche/${params.discotecaId}/impost/sale/${params.salaId}/tavoli`
       );
       toast.success(toastMessage);
@@ -132,7 +132,7 @@ const TavoloForm = ({
         `/api/${params.accountId}/discoteche/${params.discotecaId}/impost/sale/${params.salaId}/tavoli/${params.tavoloId}`
       );
       router.refresh();
-      router.replace(
+      router.push(
         `/${params.accountId}/discoteche/${params.discotecaId}/impost`
       );
       toast.success("Il tavolo è stato eliminato");

@@ -53,7 +53,7 @@ const PianoForm = ({ initialData }: PianoFormProps) => {
                 await axios.patch(`/api/${params.accountId}/altre/piani/${params.pianoId}`, data)
             }
             router.refresh();
-            router.replace(`/${params.accountId}/altre`)
+            router.push(`/${params.accountId}/altre`)
             toast.success(toastMessage)
         } catch (error) {
             toast.error("Qualcosa è andato storto")
@@ -67,7 +67,7 @@ const PianoForm = ({ initialData }: PianoFormProps) => {
             setLoading(true);
             await axios.delete(`/api/${params.accountId}/altre/piani/${params.pianoId}`)
             router.refresh();
-            router.replace(`/${params.accountId}/altre`)
+            router.push(`/${params.accountId}/altre`)
             toast.success("Il piano è stato eliminato");
         } catch (error) {
             toast.error("Qualcosa è andato storto");

@@ -52,13 +52,13 @@ export function MainNav({imageUrl, className}: MainNavProps ) {
     return (
         <nav className={cn("flex overflow-scroll sm:overflow-auto items-center space-x-4 lg:space-x-2 w-full ", className)} >
         {routes.map((route) => (
-                <Button variant={"link"} key={route.href} onClick={() => router.replace(route.href)} className={cn("text-sm font-medium transition-colors hover:text-primary", route.active ? "text-black dark:text-white" : "text-muted-foreground")}>
+                <Button variant={"link"} key={route.href} onClick={() => router.push(route.href)} className={cn("text-sm font-medium transition-colors hover:text-primary", route.active ? "text-black dark:text-white" : "text-muted-foreground")}>
                     {route.label}
                 </Button>
             ))}
             <div className='absolute right-10 self-end rounded-full w-9 h-9 overflow-hidden flex justify-center items-center '>
                 {imageUrl && 
-                    <Image src={imageUrl === fakeImage ? realImage : imageUrl} width={120} height={50} alt='image' className="hover:cursor-pointer" onClick={() => router.replace(`/${params.accountId}/account`)} />
+                    <Image src={imageUrl === fakeImage ? realImage : imageUrl} width={120} height={50} alt='image' className="hover:cursor-pointer" onClick={() => router.push(`/${params.accountId}/account`)} />
                 }
             </div>
         </nav>

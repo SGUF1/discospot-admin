@@ -53,7 +53,7 @@ const TipoEventoForm = ({ initialData }: TipoEventoFormProps) => {
                 await axios.patch(`/api/${params.accountId}/altre/tipievento/${params.tipoeventoId}`, data)
             }
             router.refresh();
-            router.replace(`/${params.accountId}/altre`)
+            router.push(`/${params.accountId}/altre`)
             toast.success(toastMessage)
         } catch (error) {
             toast.error("Qualcosa è andato storto")
@@ -67,7 +67,7 @@ const TipoEventoForm = ({ initialData }: TipoEventoFormProps) => {
             setLoading(true);
             await axios.delete(`/api/${params.accountId}/altre/tipievento/${params.tipoeventoId}`)
             router.refresh();
-            router.replace(`/${params.accountId}/altre`)
+            router.push(`/${params.accountId}/altre`)
             toast.success("La tipologia dell'evento è stata eliminata");
         } catch (error) {
             toast.error("Qualcosa è andato storto");

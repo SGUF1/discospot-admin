@@ -14,7 +14,7 @@ const CellSale = ({ data }: CellTavoliProps) => {
 		<Button
 			variant="link"
 			onClick={() =>
-				router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost/sale/${data.id}/tavoli`)}
+				router.push(`/${params.accountId}/discoteche/${params.discotecaId}/impost/sale/${data.id}/tavoli`)}
 		>
 			{data.nome}
 		</Button>

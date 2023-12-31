@@ -43,7 +43,7 @@ const AccountForm = ({ data }: AccountFormProps) => {
             setLoading(true);
             await axios.patch(`/api/${params.accountId}/account`, values);
             router.refresh();
-            router.replace(`/${params.accountId}`)
+            router.push(`/${params.accountId}`)
             toast.success("Account aggiornato con successo")
         }catch(error){
             toast.error("Errore durante la richiesta")
@@ -60,7 +60,7 @@ const AccountForm = ({ data }: AccountFormProps) => {
             setLoading(true);
             await axios.delete(`/api/${params.accountId}/account`);
             router.refresh();
-            router.replace(`/${params.accountId}`)
+            router.push(`/${params.accountId}`)
             toast.success("Account eliminato")
         } catch (error) {
             toast.error("Errore durante la richiesta")

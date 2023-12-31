@@ -54,7 +54,7 @@ const CellAction = ({ data, }: CellActionProps) => {
                         <Copy className="mr-2 h-4 w-4" />
                         Copia
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.replace(`/${params.accountId}/altre/tipievento/${data.id}`)}>
+                    <DropdownMenuItem onClick={() => router.push(`/${params.accountId}/altre/tipievento/${data.id}`)}>
                         <Edit className="mr-2 h-4 w-4" />
                         Modifica
                     </DropdownMenuItem>

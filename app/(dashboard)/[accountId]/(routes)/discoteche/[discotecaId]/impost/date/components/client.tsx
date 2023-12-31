@@ -21,7 +21,7 @@ const DateClient = ({ data }: DateClientProps) => {
     <>
       <div className='flex items-center justify-between'>
         <Heading title={data.length > 1 ? `Date (${data.length})` : `Data (${data.length})`} description='Gestisci le date' />
-        <Button onClick={() => router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost/date/new`)} className='bg-blue-600'>
+        <Button onClick={() => router.push(`/${params.accountId}/discoteche/${params.discotecaId}/impost/date/new`)} className='bg-blue-600'>
           <Plus className='mr-2 h-4 w-4' />
           Aggiungi
         </Button>

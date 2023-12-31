@@ -58,7 +58,7 @@ const MenuForm = ({ initialData }: MenuFormProps) => {
                 await axios.patch(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/menus/${params.menuId}`, data)
             }
             router.refresh();
-            router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
+            router.push(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
             toast.success(toastMessage)
         } catch (error) {
             toast.error("Qualcosa è andato storto")
@@ -72,7 +72,7 @@ const MenuForm = ({ initialData }: MenuFormProps) => {
             setLoading(true);
             await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/menus/${params.menuId}`)
             router.refresh();
-            router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
+            router.push(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
             toast.success("Il menu è stato eliminato");
         } catch (error) {
             toast.error("Qualcosa è andato storto");

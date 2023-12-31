@@ -128,7 +128,7 @@ const DataForm = ({ initialData, evento }: DataFormProps) => {
                 await axios.patch(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/date/${params.dataId}`, dataToSend)
             }
             router.refresh();
-            router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
+            router.push(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
             toast.success(toastMessage)
         } catch (error) {
             toast.error("Qualcosa è andato storto")
@@ -142,7 +142,7 @@ const DataForm = ({ initialData, evento }: DataFormProps) => {
             setLoading(true);
             await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/date/${params.dataId}`)
             router.refresh();
-            router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
+            router.push(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
             toast.success("La data è stata eliminata");
         } catch (error) {
             toast.error("Qualcosa è andato storto");

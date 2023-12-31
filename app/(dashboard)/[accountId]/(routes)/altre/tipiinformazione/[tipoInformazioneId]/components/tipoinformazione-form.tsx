@@ -53,7 +53,7 @@ const TipoInformazioneForm = ({ initialData }: TipoInformazioneFormProps) => {
                 await axios.patch(`/api/${params.accountId}/altre/tipiinformazione/${params.tipoInformazioneId}`, data)
             }
             router.refresh();
-            router.replace(`/${params.accountId}/altre`)
+            router.push(`/${params.accountId}/altre`)
             toast.success(toastMessage)
         } catch (error) {
             toast.error("Qualcosa è andato storto")
@@ -67,7 +67,7 @@ const TipoInformazioneForm = ({ initialData }: TipoInformazioneFormProps) => {
             setLoading(true);
             await axios.delete(`/api/${params.accountId}/altre/tipiinformazione/${params.tipoInformazioneId}`)
             router.refresh();
-            router.replace(`/${params.accountId}/altre`)
+            router.push(`/${params.accountId}/altre`)
             toast.success("La tipologia di informazione è stata eliminata");
         } catch (error) {
             toast.error("Qualcosa è andato storto");

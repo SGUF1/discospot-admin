@@ -89,7 +89,7 @@ const SalaForm = ({ initialData, piani, stati, tipoInformazione }: SalaFormProps
                 await axios.patch(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/sale/${params.salaId}`, data)
             }
             router.refresh();
-            router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
+            router.push(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
             toast.success(toastMessage)
         } catch (error) {
             toast.error("Qualcosa è andato storto")
@@ -103,7 +103,7 @@ const SalaForm = ({ initialData, piani, stati, tipoInformazione }: SalaFormProps
             setLoading(true);
             await axios.delete(`/api/${params.accountId}/discoteche/${params.discotecaId}/impost/sale/${params.salaId}`)
             router.refresh();
-            router.replace(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
+            router.push(`/${params.accountId}/discoteche/${params.discotecaId}/impost`)
             toast.success("La sala è stata eliminata");
         } catch (error) {
             toast.error("Elimina tutti i tavoli prima");

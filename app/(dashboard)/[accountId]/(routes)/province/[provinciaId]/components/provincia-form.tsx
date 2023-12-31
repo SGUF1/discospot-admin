@@ -57,7 +57,7 @@ const ProvinciaForm = ({ initialData }: ProvinciaFormProps) => {
                 await axios.patch(`/api/${params.accountId}/province/${params.provinciaId}`, data)
             }
             router.refresh();
-            router.replace(`/${params.accountId}/province`)
+            router.push(`/${params.accountId}/province`)
             toast.success(toastMessage)
         } catch (error) {
             toast.error("Qualcosa è andato storto")
@@ -71,7 +71,7 @@ const ProvinciaForm = ({ initialData }: ProvinciaFormProps) => {
             setLoading(true);
             await axios.delete(`/api/${params.accountId}/province/${params.provinciaId}`)
             router.refresh();
-            router.replace(`/${params.accountId}/province`)
+            router.push(`/${params.accountId}/province`)
             toast.success("La provincia è stata eliminata");
         } catch (error) {
             toast.error("Qualcosa è andato storto");

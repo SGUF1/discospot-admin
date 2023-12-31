@@ -90,7 +90,7 @@ const PortataForm = ({ initialData, optionProdotti }: PortataFormProps) => {
                 );
             }
             router.refresh();
-            router.replace(
+            router.push(
                 `/${params.accountId}/discoteche/${params.discotecaId}/impost/menus/${params.menuId}/impost`
             );
             toast.success(toastMessage);
@@ -108,7 +108,7 @@ const PortataForm = ({ initialData, optionProdotti }: PortataFormProps) => {
                 `/api/${params.accountId}/discoteche/${params.discotecaId}/impost/menus/${params.menuId}/impost/portate/${params.portataId}`
             );
             router.refresh();
-            router.replace(
+            router.push(
                 `/${params.accountId}/discoteche/${params.discotecaId}/impost/menus/${params.menuId}/impost`
             );
             toast.success('La portata è stata eliminata');

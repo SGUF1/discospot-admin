@@ -53,7 +53,7 @@ const PosizioneForm = ({ initialData }: PosizioneFormProps) => {
                 await axios.patch(`/api/${params.accountId}/altre/posizioni/${params.posizioneId}`, data)
             }
             router.refresh();
-            router.replace(`/${params.accountId}/altre`)
+            router.push(`/${params.accountId}/altre`)
             toast.success(toastMessage)
         } catch (error) {
             toast.error("Qualcosa è andato storto")
@@ -67,7 +67,7 @@ const PosizioneForm = ({ initialData }: PosizioneFormProps) => {
             setLoading(true);
             await axios.delete(`/api/${params.accountId}/altre/posizioni/${params.posizioneId}`)
             router.refresh();
-            router.replace(`/${params.accountId}/altre`)
+            router.push(`/${params.accountId}/altre`)
             toast.success("La posizione è stata eliminata");
         } catch (error) {
             toast.error("Qualcosa è andato storto");

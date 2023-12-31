@@ -26,7 +26,7 @@ export const columns: ColumnDef<MenuColumn>[] = [
     {
         accessorKey: "isVisible",
         header: "Visible",
-        cell: ({ row }) => <div className="ml-5">{row.original.isVisible ? <Check className="h-4 w-4 bg-green-300" /> : <X className="h-4 w-4 bg-red-300" />}</div>
+        cell: ({ row }) => <div className="ml-5">{row.original.isVisible ? <Check className="h-4 w-4 bg-green-500" /> : <X className="h-4 w-4 bg-red-600" />}</div>
     },
     {
         accessorKey: "createdAt",

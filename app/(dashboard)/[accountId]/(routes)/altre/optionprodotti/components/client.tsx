@@ -21,7 +21,7 @@ const OptionProdottoClient = ({ data }: OptionProdottoClientProps) => {
     <>
       <div className='flex items-center justify-between'>
           <Heading title={data.length > 1 ? `Bibite (${data.length})` : `Bibite (${data.length})`} description='Gestisci le bibite' />
-        <Button onClick={() => router.replace(`/${params.accountId}/altre/optionprodotti/new`)} className='bg-blue-600'>
+        <Button onClick={() => router.push(`/${params.accountId}/altre/optionprodotti/new`)} className='bg-blue-600'>
           <Plus className='mr-2 h-4 w-4' />
           Aggiungi
         </Button>
