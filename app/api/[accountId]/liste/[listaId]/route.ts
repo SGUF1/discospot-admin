@@ -7,24 +7,21 @@ export async function GET(req: Request, { params }: { params: { accountId: strin
 
         const lista = await prismadb.lista.findUnique({
             where: {
-              id: params.listaId,  
-                dataLimite: {
-                    gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours() - 15, 0),
-                    lt: new Date(new Date().getFullYear(), new Date().getMonth() + 10, new Date().getDate(), new Date().getHours() + getGlobalHours, 0)
-                }
+                id: params.listaId,
+             
             },
-            
+
             include: {
                 discoteca: true,
                 informazioni: {
                     orderBy: {
                         numeroInformazione: 'asc',
-                        
+
                     },
                     include: {
                         tipoInformazione: true,
                     },
-                    
+
                 },
             }
         });

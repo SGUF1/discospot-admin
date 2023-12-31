@@ -14,11 +14,6 @@ export async function GET(
     const evento = await prismadb.evento.findUnique({
       where: {
         id: params.eventoId,
-        
-        endDate: {
-          gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours() - 15, 0),
-          lt: new Date(new Date().getFullYear(), new Date().getMonth() + 10, new Date().getDate(), new Date().getHours() + getGlobalHours, 0)
-        }
       },
       include: {
         discoteca: true,

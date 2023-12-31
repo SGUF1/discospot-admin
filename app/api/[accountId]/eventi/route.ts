@@ -9,14 +9,13 @@ export async function GET(
   try {
     const evento = await prismadb.evento.findMany({
       where: {
-        endDate: {
-          gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours() - 15, 0),
-          lt: new Date(new Date().getFullYear(), new Date().getMonth() + 10, new Date().getDate(), new Date().getHours() + getGlobalHours, 0)
-        },
         discoteca: {
           visibile: true
         },
-       
+        endDate: {
+          gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours() - 24, 0),
+          lt: new Date(new Date().getFullYear(), new Date().getMonth() + 10, new Date().getDate(), new Date().getHours() + getGlobalHours, 0)
+        }
       },
       orderBy: {
         startDate: "asc",
