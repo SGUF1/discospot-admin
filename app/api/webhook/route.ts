@@ -68,7 +68,7 @@ export async function POST(req: Request) {
             codice: code,
             stato: {
               connect: {
-                id: "471ce627-12af-44fc-bbcb-95f83c1827cf"
+                id: "fc0f3920-2377-44d1-a2d7-bf4ec958c9c1"
               }
             },
             phone: session?.customer_details?.phone || "",
