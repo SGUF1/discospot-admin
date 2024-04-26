@@ -137,7 +137,7 @@ export async function POST(
         prezzoTotale: totale,
         tavoloId: tavolo?.id,
         taxPrezzo: totalePersona,
-        statoId: "8d356af8-dc09-42f1-86da-90c64c20638b",
+        statoId: "fc0f3920-2377-44d1-a2d7-bf4ec958c9c1",
         orderItems: {
           create: orderItemsData,
         },
